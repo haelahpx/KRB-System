@@ -1,33 +1,34 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     {{-- Header --}}
-    <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-900">Room Booking System</h1>
+    <div class="bg-[#0a0a0a] rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
+                Room Booking System
+            </h1>
 
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <div class="inline-flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                <div class="flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-full lg:w-auto">
                     <a href="{{ route('book-room') }}"
-                        @class([ 'px-3 md:px-4 py-2 text-sm font-medium transition-colors border-r border-gray-200 inline-flex items-center gap-1.5' , 'bg-gray-900' , 'text-white' ,
-                        ])>
+                        @class([ 'flex-1 lg:flex-none px-3 lg:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white' , 'bg-gray-900' , 'text-white' ,])>
                         Offline (Room)
                     </a>
                     <a href="{{ route('user.meetonline') }}"
-                        @class([ 'px-3 md:px-4 py-2 text-sm font-medium transition-colors inline-flex items-center gap-1.5' , 'bg-gray-900 text-white'=> request()->routeIs('user.meetonline'),
+                        @class([ 'flex-1 lg:flex-none px-3 lg:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white'=> request()->routeIs('user.meetonline'),
                         'text-gray-700 hover:text-gray-900' => !request()->routeIs('user.meetonline'),
                         ])>
                         Online Meeting
                     </a>
                 </div>
 
-                <div class="inline-flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                <div class="flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-full lg:w-auto">
                     <button wire:click="switchView('form')"
-                        @class([ 'px-3 md:px-4 py-2 text-sm font-medium transition-colors border-r border-gray-200 inline-flex items-center gap-1.5' , 'bg-gray-900 text-white'=> $view === 'form',
+                        @class([ 'flex-1 lg:flex-none px-3 lg:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white'=> $view === 'form',
                         'text-gray-600 hover:text-gray-900' => $view !== 'form',
                         ])>
                         Form
                     </button>
                     <button wire:click="switchView('calendar')"
-                        @class([ 'px-3 md:px-4 py-2 text-sm font-medium transition-colors inline-flex items-center gap-1.5' , 'bg-gray-900 text-white'=> $view === 'calendar',
+                        @class([ 'flex-1 lg:flex-none px-3 lg:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white'=> $view === 'calendar',
                         'text-gray-600 hover:text-gray-900' => $view !== 'calendar',
                         ])>
                         Calendar
@@ -39,7 +40,7 @@
 
     @if ($view === 'form')
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2">
+        <div class="order-1 lg:order-1 lg:col-span-2">
             <div class="bg-white rounded-xl border-2 border-black/80 shadow-md p-4 md:p-5">
                 <h2 class="text-lg font-semibold text-gray-900 mb-2">Book a Meeting Room</h2>
                 <p class="text-sm text-gray-600 mb-6">Fill out the form below to request a room booking</p>
@@ -166,57 +167,125 @@
             </div>
         </div>
 
-        <div class="space-y-6">
+        <div class="order-2 lg:order-2 space-y-6">
+
             {{-- Availability Card --}}
-            <div wire:poll.60s class="bg-white rounded-xl border-2 border-black/80 shadow-md p-4 md:p-5">
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">Room Availability</h3>
-                <p class="text-xs text-gray-600 mb-4">
-                    For {{ \Carbon\Carbon::parse($date)->format('l, F j, Y') }}
-                    @if($start_time && $end_time) — {{ $start_time }}–{{ $end_time }} @endif
-                </p>
-                <div class="space-y-3">
-                    @foreach($rooms as $room)
-                    <div class="flex items-center justify-between p-3 {{ $room['available_req'] ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200' }} border rounded-lg">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-2 h-2 {{ $room['available_req'] ? 'bg-green-500' : 'bg-red-500' }} rounded-full"></div>
-                            <span class="font-medium text-sm text-gray-900">{{ $room['name'] }}</span>
+            <div class="bg-white rounded-xl border-2 border-black/80 shadow-md">
+
+                {{-- Header --}}
+                <button
+                    onclick="
+                const c = document.getElementById('roomAvailability');
+                const a = document.getElementById('arrowAvailability');
+                c.classList.toggle('hidden');
+                a.classList.toggle('rotate-0');    // down
+                a.classList.toggle('-rotate-90'); // right
+            "
+                    class="w-full flex items-center justify-between px-4 md:px-5 py-4 lg:cursor-default">
+
+                    <h3 class="text-lg font-semibold text-gray-900">Room Availability</h3>
+
+                    {{-- Arrow (right → down) --}}
+                    <span class="lg:hidden transition-transform -rotate-90" id="arrowAvailability">
+                        <x-heroicon-o-chevron-down class="w-5 h-5 text-gray-600" />
+                    </span>
+                </button>
+
+                {{-- CONTENT --}}
+                <div id="roomAvailability" class="px-4 md:px-5 pb-4 space-y-3 hidden lg:block">
+
+                    <p class="text-xs text-gray-600">
+                        For {{ \Carbon\Carbon::parse($date)->format('l, F j, Y') }}
+                        @if($start_time && $end_time) — {{ $start_time }}–{{ $end_time }} @endif
+                    </p>
+
+                    <div class="space-y-3">
+                        @foreach($rooms as $room)
+                        <div class="flex items-center justify-between p-3 border rounded-lg
+                    {{ $room['available_req'] ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200' }}">
+
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 rounded-full
+                            {{ $room['available_req'] ? 'bg-green-500' : 'bg-red-500' }}">
+                                </div>
+
+                                <span class="font-medium text-sm text-gray-900">
+                                    {{ $room['name'] }}
+                                </span>
+                            </div>
+
+                            <span class="text-xs font-bold uppercase
+                        {{ $room['available_req'] ? 'text-green-700' : 'text-red-700' }}">
+                                {{ $room['available_req'] ? 'Available' : 'Occupied' }}
+                            </span>
                         </div>
-                        <span class="text-xs font-bold uppercase {{ $room['available_req'] ? 'text-green-700' : 'text-red-700' }}">
-                            {{ $room['available_req'] ? 'Available' : 'Occupied' }}
-                        </span>
+                        @endforeach
                     </div>
-                    @endforeach
                 </div>
             </div>
 
-            {{-- Recent Bookings Card --}}
-            <div class="bg-white rounded-xl border-2 border-black/80 shadow-md p-4 md:p-5">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Bookings</h3>
-                <div class="space-y-4">
+
+
+            {{-- Recent Bookings --}}
+            <div class="bg-white rounded-xl border-2 border-black/80 shadow-md">
+
+                {{-- Header --}}
+                <button
+                    onclick="
+                const c = document.getElementById('recentBookings');
+                const a = document.getElementById('arrowRecent');
+                c.classList.toggle('hidden');
+                a.classList.toggle('rotate-0');
+                a.classList.toggle('-rotate-90');
+            "
+                    class="w-full flex items-center justify-between px-4 md:px-5 py-4 lg:cursor-default">
+
+                    <h3 class="text-lg font-semibold text-gray-900">Recent Bookings</h3>
+
+                    {{-- Arrow (right → down) --}}
+                    <span class="lg:hidden transition-transform -rotate-90" id="arrowRecent">
+                        <x-heroicon-o-chevron-down class="w-5 h-5 text-gray-600" />
+                    </span>
+                </button>
+
+                {{-- CONTENT --}}
+                <div id="recentBookings" class="px-4 md:px-5 pb-4 space-y-4 hidden lg:block">
+
                     @foreach(array_slice($bookings, 0, 3) as $booking)
-                    <div class="flex items-start space-x-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
-                        <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200">
+                    <div class="flex items-start space-x-3 pb-3 border-b border-gray-100 last:pb-0 last:border-0">
+
+                        <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
                             <x-heroicon-o-calendar class="w-4 h-4 text-gray-600" />
                         </div>
+
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between gap-2">
-                                <h4 class="font-medium text-sm text-gray-900 truncate">{{ $booking['meeting_title'] }}</h4>
+                                <h4 class="font-medium text-sm text-gray-900 truncate">
+                                    {{ $booking['meeting_title'] }}
+                                </h4>
+
                                 @if(isset($booking['status']))
-                                @if($booking['status'] === 'approved')
-                                <span class="shrink-0 text-[10px] font-semibold text-green-800 bg-green-100 px-2 py-0.5 rounded">Approved</span>
-                                @elseif($booking['status'] === 'pending')
-                                <span class="shrink-0 text-[10px] font-semibold text-yellow-800 bg-yellow-100 px-2 py-0.5 rounded">Pending</span>
-                                @elseif($booking['status'] === 'rejected')
-                                <span class="shrink-0 text-[10px] font-semibold text-red-800 bg-red-100 px-2 py-0.5 rounded">Rejected</span>
-                                @else
-                                <span class="shrink-0 text-[10px] font-semibold text-green-800 bg-green-100 px-2 py-0.5 rounded">Completed</span>
-                                @endif
+                                @php
+                                $colors = [
+                                'approved' => 'bg-green-100 text-green-800',
+                                'pending' => 'bg-yellow-100 text-yellow-800',
+                                'rejected' => 'bg-red-100 text-red-800',
+                                'default' => 'bg-gray-100 text-gray-800',
+                                ];
+                                @endphp
+
+                                <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded
+                                {{ $colors[$booking['status']] ?? $colors['default'] }}">
+                                    {{ ucfirst($booking['status']) }}
+                                </span>
                                 @endif
                             </div>
+
                             <p class="text-xs text-gray-500 mt-1">
                                 {{ \Carbon\Carbon::parse($booking['date'])->format('M j') }},
                                 {{ \Carbon\Carbon::parse($booking['start_time'])->format('H:i') }} •
                                 {{ collect($rooms)->firstWhere('id', $booking['room_id'])['name'] ?? 'Unknown Room' }}
+
                                 @if(!empty($booking['requestinformation']))
                                 <span class="ml-1 text-xs text-blue-600">• Info Req</span>
                                 @endif
@@ -224,123 +293,182 @@
                         </div>
                     </div>
                     @endforeach
+
                 </div>
             </div>
+
         </div>
+
     </div>
 
     @else
-    {{-- Calendar View (FIXED ALIGNMENT) --}}
+    {{-- Calendar View (Mobile Optimized) --}}
     <div wire:poll.60s class="bg-white rounded-xl border-2 border-black/80 shadow-md overflow-hidden">
+
+        {{-- Header --}}
         <div class="bg-gray-50 border-b-2 border-black/10 p-4">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-900">Room Schedule</h2>
-                    <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($date)->format('l, F j, Y') }}</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button wire:click="previousMonth" class=" md:inline px-3 py-1.5 border border-gray-300 bg-white rounded-md text-xs font-medium hover:bg-gray-50 transition-colors inline-flex items-center gap-1.5">
-                        <x-heroicon-o-chevron-double-left class="w-3 h-3" />
-                        Month
-                    </button>
-                    <button wire:click="previousWeek" class=" md:inline px-3 py-1.5 border border-gray-300 bg-white rounded-md text-xs font-medium hover:bg-gray-50 transition-colors inline-flex items-center gap-1.5">
-                        <x-heroicon-o-chevron-left class="w-3 h-3" />
-                        Week
-                    </button>
 
-                    {{-- Day Navigation --}}
-                    <button wire:click="previousDay" class="px-3 py-1.5 border border-gray-300 bg-white rounded-md text-xs font-medium hover:bg-gray-50 transition-colors">
-                        <x-heroicon-o-chevron-left class="w-4 h-4" />
-                    </button>
-                    <input type="date" wire:model.live="date" wire:change="selectDate($event.target.value)" class="px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                    <button wire:click="nextDay" class="px-3 py-1.5 border border-gray-300 bg-white rounded-md text-xs font-medium hover:bg-gray-50 transition-colors">
-                        <x-heroicon-o-chevron-right class="w-4 h-4" />
-                    </button>
-
-                    <button wire:click="nextWeek" class="md:inline px-3 py-1.5 border border-gray-300 bg-white rounded-md text-xs font-medium hover:bg-gray-50 transition-colors inline-flex items-center gap-1.5">
-                        Week
-                        <x-heroicon-o-chevron-right class="w-3 h-3" />
-                    </button>
-                    <button wire:click="nextMonth" class="md:inline px-3 py-1.5 border border-gray-300 bg-white rounded-md text-xs font-medium hover:bg-gray-50 transition-colors inline-flex items-center gap-1.5">
-                        Month
-                        <x-heroicon-o-chevron-double-right class="w-3 h-3" />
-                    </button>
-                </div>
+            {{-- 1. TITLE + DATE --}}
+            <div class="text-center mb-3">
+                <h2 class="text-lg font-bold text-gray-900">Room Schedule</h2>
+                <p class="text-sm text-gray-600">
+                    {{ \Carbon\Carbon::parse($date)->format('l, F j, Y') }}
+                </p>
             </div>
 
-            <div class="mt-4 flex items-center justify-between">
-                <div class="text-xs text-gray-500 font-medium">
-                    Showing rooms {{ ($roomsPage - 1) * $roomsPerPage + 1 }} –
-                    {{ min($roomsPage * $roomsPerPage, count($rooms)) }}
-                    of {{ count($rooms) }}
-                </div>
-                <div class="flex gap-2">
-                    <button wire:click="prevRoomPage" class="px-3 py-1.5 border border-gray-300 bg-white rounded-md text-xs font-medium hover:bg-gray-50 disabled:opacity-50" {{ $roomsPage <= 1 ? 'disabled' : '' }}>
-                        <x-heroicon-o-chevron-left class="w-3 h-3" /> Rooms
-                    </button>
-                    <button wire:click="nextRoomPage" class="px-3 py-1.5 border border-gray-300 bg-white rounded-md text-xs font-medium hover:bg-gray-50 disabled:opacity-50" {{ $roomsPage >= $roomsTotalPages ? 'disabled' : '' }}>
-                        Rooms <x-heroicon-o-chevron-right class="w-3 h-3" />
-                    </button>
-                </div>
+
+            {{-- 2. DAY NAVIGATION --}}
+            <div class="flex items-center justify-center gap-2">
+
+                <button wire:click="previousDay"
+                    class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50">
+                    <x-heroicon-o-chevron-left class="w-4 h-4" />
+                </button>
+
+                <input type="date"
+                    wire:model.live="date"
+                    wire:change="selectDate($event.target.value)"
+                    class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-gray-900 w-[130px] text-center" />
+
+                <button wire:click="nextDay"
+                    class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50">
+                    <x-heroicon-o-chevron-right class="w-4 h-4" />
+                </button>
+
+            </div>
+
+
+            {{-- 3. MONTH + WEEK CONTROLS --}}
+            <div class="flex flex-wrap justify-center mt-3 gap-2">
+
+                <button wire:click="previousMonth"
+                    class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 flex items-center gap-1.5">
+                    <x-heroicon-o-chevron-double-left class="w-3 h-3" /> Month
+                </button>
+
+                <button wire:click="previousWeek"
+                    class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 flex items-center gap-1.5">
+                    <x-heroicon-o-chevron-left class="w-3 h-3" /> Week
+                </button>
+
+                <button wire:click="nextWeek"
+                    class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 flex items-center gap-1.5">
+                    Week <x-heroicon-o-chevron-right class="w-3 h-3" />
+                </button>
+
+                <button wire:click="nextMonth"
+                    class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 flex items-center gap-1.5">
+                    Month <x-heroicon-o-chevron-double-right class="w-3 h-3" />
+                </button>
+            </div>
+
+
+            {{-- 4. SHOWING ROOMS --}}
+            <div class="mt-4 text-center text-xs text-gray-500 font-medium">
+                Showing rooms
+                {{ ($roomsPage - 1) * $roomsPerPage + 1 }} –
+                {{ min($roomsPage * $roomsPerPage, count($rooms)) }}
+                of {{ count($rooms) }}
+            </div>
+
+
+            {{-- 5. COMPACT ROOM PAGINATION --}}
+            <div class="mt-2 flex justify-center gap-2 whitespace-nowrap">
+
+                {{-- COMPACT VERSION: [ < ] Rooms [ > ] --}}
+                <button wire:click="prevRoomPage"
+                    class="px-2 py-1 border border-gray-300 bg-white rounded-md text-[11px] font-medium hover:bg-gray-50 disabled:opacity-50"
+                    {{ $roomsPage <= 1 ? 'disabled' : '' }}>
+                    <x-heroicon-o-chevron-left class="w-3 h-3" />
+                </button>
+
+                <span class="text-[11px] font-semibold text-gray-700">
+                    Rooms
+                </span>
+
+                <button wire:click="nextRoomPage"
+                    class="px-2 py-1 border border-gray-300 bg-white rounded-md text-[11px] font-medium hover:bg-gray-50 disabled:opacity-50"
+                    {{ $roomsPage >= $roomsTotalPages ? 'disabled' : '' }}>
+                    <x-heroicon-o-chevron-right class="w-3 h-3" />
+                </button>
             </div>
         </div>
 
+        {{-- Mobile Swipe Hint --}}
+        <div class="lg:hidden text-center text-[11px] text-gray-500 pb-2 animate-pulse">
+            ← Swipe to see more →
+        </div>
+
+        {{-- Calendar Grid --}}
         <div class="relative">
             <div class="flex">
+
                 {{-- Time Column --}}
-                {{-- programmer's simple documentation: Added 'hidden' class conditional on $showQuickModal to prevent the time column from showing through the modal backdrop. Also added 'border-b border-gray-100' to time labels for perfect vertical alignment with the grid slots --}}
-                <div class="w-16 md:w-20 shrink-0 border-r border-gray-200 bg-gray-50 sticky left-0 z-10 @if($showQuickModal) hidden @endif">
+                <div class="w-16 md:w-20 shrink-0 border-r border-gray-200 bg-gray-50 sticky left-0 z-10
+                @if($showQuickModal) hidden @endif">
                     <div class="h-10 border-b border-gray-200 bg-gray-100"></div>
+
                     @foreach($timeSlots as $t)
-                    <div class="h-8 text-[10px] text-gray-500 font-medium flex items-center justify-center border-b border-gray-100">{{ $t }}</div>
+                    <div class="h-8 text-[10px] text-gray-500 font-medium flex items-center justify-center border-b border-gray-100">
+                        {{ $t }}
+                    </div>
                     @endforeach
                 </div>
 
-                <div class="overflow-x-auto">
+                {{-- Scrollable Room Grid --}}
+                <div class="overflow-x-auto touch-pan-x snap-x snap-mandatory [-webkit-overflow-scrolling:touch]"
+                    style="scrollbar-width:none;-ms-overflow-style:none">
+
                     <div class="min-w-[640px]">
+
                         {{-- Room Headers --}}
-                        <div class="grid" style="grid-template-columns: repeat({{ count($visibleRooms) }}, minmax(160px,1fr));">
+                        <div class="grid"
+                            style="grid-template-columns: repeat({{ count($visibleRooms) }}, minmax(120px,1fr));">
                             @foreach($visibleRooms as $room)
                             <div class="h-10 bg-gray-50 border-b border-r border-gray-200 px-3 flex items-center justify-center">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-1.5 h-1.5 rounded-full {{ $room['available_req'] ? 'bg-green-500' : 'bg-red-500' }}"></div>
-                                    <span class="text-xs font-bold text-gray-700 truncate">{{ $room['name'] }}</span>
+                                    <div class="w-1.5 h-1.5 rounded-full
+                                    {{ $room['available_req'] ? 'bg-green-500' : 'bg-red-500' }}">
+                                    </div>
+                                    <span class="text-xs font-bold text-gray-700 truncate">
+                                        {{ $room['name'] }}
+                                    </span>
                                 </div>
                             </div>
                             @endforeach
                         </div>
 
-                        {{-- Grid Slots --}}
+                        {{-- Calendar Slots --}}
                         @foreach($timeSlots as $t)
-                        {{-- programmer's simple documentation: Removed redundant 'border-b border-gray-100' from the grid row for clean alignment --}}
-                        <div class="grid" style="grid-template-columns: repeat({{ count($visibleRooms) }}, minmax(160px,1fr));">
+                        <div class="grid"
+                            style="grid-template-columns: repeat({{ count($visibleRooms) }}, minmax(120px,1fr));">
+
                             @foreach($visibleRooms as $room)
                             @php
                             $slotBooking = $this->getBookingForSlot($room['id'], $date, $t);
-                            $slotCarbon = \Carbon\Carbon::parse($date . ' ' . $t, 'Asia/Jakarta');
-                            // Passed logic: if slot is earlier than now + buffer
+                            $slotCarbon = \Carbon\Carbon::parse($date.' '.$t, 'Asia/Jakarta');
                             $isPast = $slotCarbon->lt(\Carbon\Carbon::now('Asia/Jakarta')->addMinutes(15));
                             @endphp
 
                             <div class="h-8 relative border-r border-gray-100">
+
+                                {{-- Booked --}}
                                 @if($slotBooking)
-                                {{-- Booked: Full Red Box (Non-clickable) --}}
                                 <div class="w-full h-full bg-red-100 flex items-center justify-center px-2 cursor-not-allowed"
-                                    title="{{ $slotBooking['meeting_title'] }} ({{ $slotBooking['start_time'] }} - {{ $slotBooking['end_time'] }})">
-                                    <div class="truncate text-[10px] text-red-900 font-medium w-full text-center">
+                                    title="{{ $slotBooking['meeting_title'] }}">
+                                    <div class="truncate text-[10px] text-red-900 font-medium text-center">
                                         {{ $slotBooking['meeting_title'] }}
                                     </div>
                                 </div>
 
+                                {{-- Past --}}
                                 @elseif($isPast)
-                                {{-- Past: Gray Box (Non-clickable) --}}
-                                {{-- programmer's simple documentation: Added 'Past' text to the gray box --}}
                                 <div class="w-full h-full bg-gray-100 flex items-center justify-center cursor-not-allowed">
                                     <span class="text-[10px] text-gray-400 font-medium">Past</span>
                                 </div>
 
+                                {{-- Available --}}
                                 @else
-                                {{-- Available: White Box, Hover Green, Reveal Book Text --}}
                                 <button
                                     wire:click="selectCalendarSlot({{ $room['id'] }}, '{{ $date }}', '{{ $t }}')"
                                     class="w-full h-full bg-white hover:bg-green-200 transition-colors group flex items-center justify-center cursor-pointer"
@@ -348,23 +476,38 @@
                                     <span class="hidden group-hover:block text-[10px] font-bold text-green-800">Book</span>
                                 </button>
                                 @endif
+
                             </div>
                             @endforeach
+
                         </div>
                         @endforeach
+
                     </div>
                 </div>
+
             </div>
         </div>
 
+
+        {{-- Legend --}}
         <div class="bg-gray-50 border-t border-gray-200 p-3">
             <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-gray-600">
-                <span class="inline-flex items-center gap-2"><span class="w-3 h-3 bg-red-100 border border-red-200 rounded inline-block"></span> Booked</span>
-                <span class="inline-flex items-center gap-2"><span class="w-3 h-3 bg-gray-100 border border-gray-200 rounded inline-block"></span> Past/Closed</span>
-                <span class="inline-flex items-center gap-2"><span class="w-3 h-3 bg-white border border-gray-200 rounded inline-block"></span> Available</span>
-                <span class="inline-flex items-center gap-2"><span class="w-3 h-3 bg-green-200 border border-green-300 rounded inline-block"></span> Click to book</span>
+                <span class="inline-flex items-center gap-2">
+                    <span class="w-3 h-3 bg-red-100 border border-red-200 rounded inline-block"></span> Booked
+                </span>
+                <span class="inline-flex items-center gap-2">
+                    <span class="w-3 h-3 bg-gray-100 border border-gray-200 rounded inline-block"></span> Past/Closed
+                </span>
+                <span class="inline-flex items-center gap-2">
+                    <span class="w-3 h-3 bg-white border border-gray-200 rounded inline-block"></span> Available
+                </span>
+                <span class="inline-flex items-center gap-2">
+                    <span class="w-3 h-3 bg-green-200 border border-green-300 rounded inline-block"></span> Click to book
+                </span>
             </div>
         </div>
+
     </div>
     @endif
 

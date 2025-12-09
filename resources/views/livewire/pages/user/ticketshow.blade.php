@@ -24,20 +24,22 @@ $hasAgent = $agents->isNotEmpty();
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     {{-- Header --}}
-    <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-900">Support Ticket System</h1>
+    <div class="bg-[#0a0a0a] rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <h1 class="text-xl md:text-2xl font-bold text-white text-center md:text-left">
+                Support Ticket System
+            </h1>
 
             {{-- Navigation Tabs --}}
-            <div class="inline-flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 self-start md:self-center">
+            <div class="flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-full md:w-auto">
                 <a href="{{ route('create-ticket') }}"
-                    @class([ 'px-3 md:px-4 py-2 text-sm font-medium transition-colors border-r border-gray-200 inline-flex items-center' , 'bg-gray-900 text-white'=> $isCreate,
+                    @class([ 'flex-1 md:flex-none px-3 md:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white'=> $isCreate,
                     'text-gray-700 hover:text-gray-900 hover:bg-gray-50' => ! $isCreate,
                     ])>
                     Create Ticket
                 </a>
                 <a href="{{ route('ticketstatus') }}"
-                    @class([ 'px-3 md:px-4 py-2 text-sm font-medium transition-colors inline-flex items-center' , 'bg-gray-900 text-white'=> true, // Active state for this view context
+                    @class([ 'flex-1 md:flex-none px-3 md:px-4 py-2 text-sm font-medium cursor-default text-center' , 'bg-gray-900 text-white'=> true, // Active state for this view context
                     ])>
                     Ticket Status
                 </a>
@@ -62,6 +64,10 @@ $hasAgent = $agents->isNotEmpty();
                             $isHigh = $priority === 'high';
                             $isMedium = $priority === 'medium';
                             $isLow = $priority === 'low' || $priority === '';
+
+                            $isOpen = $status === 'open';
+                            $isAssignedOrProgress = in_array($status, ['assigned','in_progress','process'], true);
+                            $isResolved = in_array($status, ['resolved','closed','complete'], true);
                             @endphp
                             <span @class([ 'inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide border' , 'bg-orange-50 text-orange-800 border-orange-200'=> $isHigh,
                                 'bg-yellow-50 text-yellow-800 border-yellow-200' => $isMedium,
@@ -69,6 +75,17 @@ $hasAgent = $agents->isNotEmpty();
                                 ])>
                                 <x-heroicon-o-bolt class="w-3 h-3" />
                                 {{ $priority ? ucfirst($priority) : 'Low' }}
+                            </span>
+                            <span @class([ 'block md:hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border shadow-sm ' , 'bg-yellow-100 text-yellow-800 border-yellow-200'=> $isOpen,
+                                'bg-blue-100 text-blue-800 border-blue-200' => $isAssignedOrProgress,
+                                'bg-green-100 text-green-800 border-green-200' => $isResolved,
+                                'bg-gray-100 text-gray-800 border-gray-200' => (! $isOpen && ! $isAssignedOrProgress && ! $isResolved),
+                                ])>
+                                @if($isResolved) <x-heroicon-o-check-circle class="w-4 h-4" />
+                                @elseif($isAssignedOrProgress) <x-heroicon-o-arrow-path class="w-4 h-4 animate-spin-slow" />
+                                @else <x-heroicon-o-clock class="w-4 h-4" />
+                                @endif
+                                {{ str_replace('_', ' ', ucfirst($status)) }}
                             </span>
                         </div>
 
@@ -78,12 +95,7 @@ $hasAgent = $agents->isNotEmpty();
                     </div>
 
                     {{-- Status Badge --}}
-                    @php
-                    $isOpen = $status === 'open';
-                    $isAssignedOrProgress = in_array($status, ['assigned','in_progress','process'], true);
-                    $isResolved = in_array($status, ['resolved','closed','complete'], true);
-                    @endphp
-                    <div class="flex flex-col items-end gap-2">
+                    <div class="hidden md:block flex flex-col items-end gap-2">
                         <span @class([ 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border shadow-sm' , 'bg-yellow-100 text-yellow-800 border-yellow-200'=> $isOpen,
                             'bg-blue-100 text-blue-800 border-blue-200' => $isAssignedOrProgress,
                             'bg-green-100 text-green-800 border-green-200' => $isResolved,
@@ -208,57 +220,57 @@ $hasAgent = $agents->isNotEmpty();
 
                 {{-- CONDITIONAL COMMENT FORM START --}}
                 @if ($canComment)
-                    <form wire:submit.prevent="addComment" class="mb-8">
-                        <div class="flex items-start gap-3">
-                            <div class="flex-shrink-0 hidden sm:block">
-                                @php $meInitials = $initials(auth()->user()->full_name ?? auth()->user()->name ?? 'User'); @endphp
-                                <span class="inline-flex h-8 w-8 rounded-full bg-black text-white items-center justify-center text-xs font-bold ring-2 ring-white shadow-sm">
-                                    {{ $meInitials }}
-                                </span>
+                <form wire:submit.prevent="addComment" class="mb-8">
+                    <div class="flex items-start gap-3">
+                        <div class="flex-shrink-0 hidden sm:block">
+                            @php $meInitials = $initials(auth()->user()->full_name ?? auth()->user()->name ?? 'User'); @endphp
+                            <span class="inline-flex h-8 w-8 rounded-full bg-black text-white items-center justify-center text-xs font-bold ring-2 ring-white shadow-sm">
+                                {{ $meInitials }}
+                            </span>
+                        </div>
+                        <div class="min-w-0 flex-1 relative">
+                            <textarea
+                                wire:model.defer="newComment"
+                                rows="3"
+                                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-black focus:ring-1 focus:ring-black transition-colors resize-none shadow-sm"
+                                placeholder="Type your reply here..."></textarea>
+
+                            @error('newComment')
+                            <div class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                                <x-heroicon-o-exclamation-circle class="w-3 h-3" /> {{ $message }}
                             </div>
-                            <div class="min-w-0 flex-1 relative">
-                                <textarea
-                                    wire:model.defer="newComment"
-                                    rows="3"
-                                    class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-black focus:ring-1 focus:ring-black transition-colors resize-none shadow-sm"
-                                    placeholder="Type your reply here..."></textarea>
+                            @enderror
 
-                                @error('newComment')
-                                <div class="text-red-600 text-xs mt-1 flex items-center gap-1">
-                                    <x-heroicon-o-exclamation-circle class="w-3 h-3" /> {{ $message }}
-                                </div>
-                                @enderror
-
-                                <div class="mt-2 flex justify-end">
-                                    <button type="submit"
-                                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow">
-                                        <x-heroicon-o-paper-airplane class="w-3.5 h-3.5 -rotate-45 translate-y-[-1px]" />
-                                        Post Reply
-                                    </button>
-                                </div>
+                            <div class="mt-2 flex justify-end">
+                                <button type="submit"
+                                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow">
+                                    <x-heroicon-o-paper-airplane class="w-3.5 h-3.5 -rotate-45 translate-y-[-1px]" />
+                                    Post Reply
+                                </button>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                </form>
                 @else
-                    {{-- Display a message if commenting is not allowed --}}
-                    @php
-                        $isClosed = in_array($status, ['resolved', 'closed', 'complete'], true);
-                    @endphp
+                {{-- Display a message if commenting is not allowed --}}
+                @php
+                $isClosed = in_array($status, ['resolved', 'closed', 'complete'], true);
+                @endphp
 
-                    @if ($isClosed)
-                        <div class="mb-8 p-4 bg-gray-50 text-center rounded-lg border border-gray-200">
-                            <p class="text-sm font-medium text-gray-700">
-                                This ticket is {{ str_replace('_', ' ', ucfirst($status)) }} and can no longer receive comments.
-                            </p>
-                        </div>
-                    @elseif($canViewComments)
-                        {{-- The ticket is NOT closed, but the user still can't comment (e.g., they are a non-admin user/agent not assigned) --}}
-                        <div class="mb-8 p-4 bg-yellow-50 text-center rounded-lg border border-yellow-200">
-                            <p class="text-sm font-medium text-yellow-800">
-                                You cannot post comments on this ticket. Only the creator and Assigned agents.
-                            </p>
-                        </div>
-                    @endif
+                @if ($isClosed)
+                <div class="mb-8 p-4 bg-gray-50 text-center rounded-lg border border-gray-200">
+                    <p class="text-sm font-medium text-gray-700">
+                        This ticket is {{ str_replace('_', ' ', ucfirst($status)) }} and can no longer receive comments.
+                    </p>
+                </div>
+                @elseif($canViewComments)
+                {{-- The ticket is NOT closed, but the user still can't comment (e.g., they are a non-admin user/agent not assigned) --}}
+                <div class="mb-8 p-4 bg-yellow-50 text-center rounded-lg border border-yellow-200">
+                    <p class="text-sm font-medium text-yellow-800">
+                        You cannot post comments on this ticket. Only the creator and Assigned agents.
+                    </p>
+                </div>
+                @endif
                 @endif
                 {{-- CONDITIONAL COMMENT FORM END --}}
 
@@ -269,79 +281,79 @@ $hasAgent = $agents->isNotEmpty();
                     @endif
                 ">
                     @if ($canViewComments)
-                        @forelse ($ticket->comments as $comment)
-                        @php
-                        $isMine = $comment->user_id === auth()->id();
-                        $name = $comment->user->full_name ?? $comment->user->name ?? 'User';
-                        $init = $initials($name);
-                        
-                        // Check if the current user has read this comment by checking the loaded 'reads' relationship.
-                        $isUnread = ! $isMine && $comment->reads->isEmpty(); 
-                        @endphp
+                    @forelse ($ticket->comments as $comment)
+                    @php
+                    $isMine = $comment->user_id === auth()->id();
+                    $name = $comment->user->full_name ?? $comment->user->name ?? 'User';
+                    $init = $initials($name);
 
-                        <div class="relative flex gap-3 group">
-                            <div class="flex-shrink-0 relative z-10">
-                                <span @class([ 'inline-flex h-8 w-8 rounded-full items-center justify-center text-[10px] font-bold ring-4 ring-white shadow-sm' , 'bg-black text-white'=> $isMine,
-                                    'bg-white border-2 border-gray-200 text-gray-600' => ! $isMine,
-                                    ])>
-                                    {{ $init }}
+                    // Check if the current user has read this comment by checking the loaded 'reads' relationship.
+                    $isUnread = ! $isMine && $comment->reads->isEmpty();
+                    @endphp
+
+                    <div class="relative flex gap-3 group">
+                        <div class="flex-shrink-0 relative z-10">
+                            <span @class([ 'inline-flex h-8 w-8 rounded-full items-center justify-center text-[10px] font-bold ring-4 ring-white shadow-sm' , 'bg-black text-white'=> $isMine,
+                                'bg-white border-2 border-gray-200 text-gray-600' => ! $isMine,
+                                ])>
+                                {{ $init }}
+                            </span>
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-bold text-gray-900">{{ $name }}</span>
+                                    @if($isMine)
+                                    <span class="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium border border-gray-200">You</span>
+                                    @endif
+
+                                    {{-- UNREAD BADGE --}}
+                                    @if($isUnread)
+                                    <span class="text-[10px] bg-red-50 text-red-700 px-1.5 py-0.5 rounded font-bold border border-red-200 animate-pulse">
+                                        <x-heroicon-o-eye-slash class="w-3 h-3 inline-block align-text-top mr-0.5" />
+                                        UNREAD
+                                    </span>
+                                    @endif
+                                    {{-- END UNREAD BADGE --}}
+
+                                </div>
+                                <span class="text-[10px] text-gray-400" title="{{ $comment->created_at->format('d M Y H:i') }}">
+                                    {{ $comment->created_at->diffForHumans() }}
                                 </span>
                             </div>
 
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between gap-2 mb-1">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-sm font-bold text-gray-900">{{ $name }}</span>
-                                        @if($isMine)
-                                        <span class="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium border border-gray-200">You</span>
-                                        @endif
-                                        
-                                        {{-- UNREAD BADGE --}}
-                                        @if($isUnread)
-                                        <span class="text-[10px] bg-red-50 text-red-700 px-1.5 py-0.5 rounded font-bold border border-red-200 animate-pulse">
-                                            <x-heroicon-o-eye-slash class="w-3 h-3 inline-block align-text-top mr-0.5" />
-                                            UNREAD
-                                        </span>
-                                        @endif
-                                        {{-- END UNREAD BADGE --}}
-                                        
-                                    </div>
-                                    <span class="text-[10px] text-gray-400" title="{{ $comment->created_at->format('d M Y H:i') }}">
-                                        {{ $comment->created_at->diffForHumans() }}
-                                    </span>
-                                </div>
-
-                                <div @class([ 'rounded-xl px-4 py-3 text-sm shadow-sm border leading-relaxed' , 'bg-gray-50 border-gray-200 text-gray-800 rounded-tl-none'=> ! $isMine,
-                                    'bg-white border-black text-gray-900 rounded-tl-none ring-1 ring-black/5' => $isMine,
-                                    ])>
-                                    <p class="whitespace-pre-wrap">{{ $comment->comment_text }}</p>
-                                </div>
+                            <div @class([ 'rounded-xl px-4 py-3 text-sm shadow-sm border leading-relaxed' , 'bg-gray-50 border-gray-200 text-gray-800 rounded-tl-none'=> ! $isMine,
+                                'bg-white border-black text-gray-900 rounded-tl-none ring-1 ring-black/5' => $isMine,
+                                ])>
+                                <p class="whitespace-pre-wrap">{{ $comment->comment_text }}</p>
                             </div>
                         </div>
-                        @empty
-                        <div class="relative z-10 bg-white p-6 text-center rounded-xl border-2 border-dashed border-gray-200 mx-4">
-                            <div class="mx-auto h-12 w-12 text-gray-300 mb-2">
-                                <x-heroicon-o-chat-bubble-oval-left-ellipsis class="w-full h-full" />
-                            </div>
-                            <p class="text-sm text-gray-500">No comments yet.</p>
-                            @if($canComment)
-                                <p class="text-xs text-gray-400">Start the conversation by posting a reply above.</p>
-                            @endif
+                    </div>
+                    @empty
+                    <div class="relative z-10 bg-white p-6 text-center rounded-xl border-2 border-dashed border-gray-200 mx-4">
+                        <div class="mx-auto h-12 w-12 text-gray-300 mb-2">
+                            <x-heroicon-o-chat-bubble-oval-left-ellipsis class="w-full h-full" />
                         </div>
-                        @endforelse
+                        <p class="text-sm text-gray-500">No comments yet.</p>
+                        @if($canComment)
+                        <p class="text-xs text-gray-400">Start the conversation by posting a reply above.</p>
+                        @endif
+                    </div>
+                    @endforelse
                     @else
-                        {{-- Agent is neither assigned, nor admin, nor the requester --}}
-                        <div class="relative z-10 bg-yellow-50 p-6 text-center rounded-xl border-2 border-dashed border-yellow-200 mx-4">
-                            <div class="mx-auto h-12 w-12 text-yellow-500 mb-2">
-                                <x-heroicon-o-lock-closed class="w-full h-full" />
-                            </div>
-                            <p class="text-sm font-semibold text-yellow-800">
-                                Access Restricted
-                            </p>
-                            <p class="text-xs text-yellow-700 mt-1">
-                                You must be the ticket creator or an Assigned Agent to view the discussion.
-                            </p>
+                    {{-- Agent is neither assigned, nor admin, nor the requester --}}
+                    <div class="relative z-10 bg-yellow-50 p-6 text-center rounded-xl border-2 border-dashed border-yellow-200 mx-4">
+                        <div class="mx-auto h-12 w-12 text-yellow-500 mb-2">
+                            <x-heroicon-o-lock-closed class="w-full h-full" />
                         </div>
+                        <p class="text-sm font-semibold text-yellow-800">
+                            Access Restricted
+                        </p>
+                        <p class="text-xs text-yellow-700 mt-1">
+                            You must be the ticket creator or an Assigned Agent to view the discussion.
+                        </p>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -436,18 +448,23 @@ $hasAgent = $agents->isNotEmpty();
     </div>
 </div>
 <script>
-// JavaScript for handling Livewire-dispatched events in the browser console.
-document.addEventListener('DOMContentLoaded', function () {
-    // Listener for the console logging event dispatched from Livewire components
-    Livewire.on('consoleLogEvent', ({ message, error, file, line }) => {
-        console.error('--- LIVEWIRE SERVER ERROR ---');
-        console.error('Message:', message);
-        console.error('Error:', error);
-        console.error('File:', file);
-        console.error('Line:', line);
-        console.error('-----------------------------');
-        
-        // IMPORTANT: The line number above should point you to the source of the crash!
+    // JavaScript for handling Livewire-dispatched events in the browser console.
+    document.addEventListener('DOMContentLoaded', function() {
+        // Listener for the console logging event dispatched from Livewire components
+        Livewire.on('consoleLogEvent', ({
+            message,
+            error,
+            file,
+            line
+        }) => {
+            console.error('--- LIVEWIRE SERVER ERROR ---');
+            console.error('Message:', message);
+            console.error('Error:', error);
+            console.error('File:', file);
+            console.error('Line:', line);
+            console.error('-----------------------------');
+
+            // IMPORTANT: The line number above should point you to the source of the crash!
+        });
     });
-});
 </script>

@@ -15,14 +15,20 @@
     "
     class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     {{-- Header --}}
-    <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
+    <div class="bg-[#0a0a0a] rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-900">User Profile</h1>
+            <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
+                User Profile
+            </h1>
 
-            <a href="{{ route('home') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
+            {{-- Back to Home --}}
+            <a href="{{ route('home') }}"
+                class="inline-flex items-center gap-2 px-3 md:px-4 py-2 text-sm font-medium
+                  bg-gray-100 border border-gray-300 text-gray-800 rounded-lg
+                  hover:bg-gray-200 transition-colors">
+
+                {{-- House Icon --}}
+                <x-heroicon-o-home class="w-4 h-4" />
                 Back to Home
             </a>
         </div>

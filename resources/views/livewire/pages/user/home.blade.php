@@ -20,9 +20,9 @@
         }
     </style>
 
-    <div class="max-w-[1400px] mx-auto w-full">
+    <div class="max-w-screen-xl mx-auto w-full px-4 sm:px-6 lg:px-8">
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 auto-rows-[320px]">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 auto-rows-auto lg:auto-rows-[320px]">
 
             {{-- 1. TICKET CENTER (DYNAMIC: AGENT VS USER) --}}
             <div
@@ -33,7 +33,7 @@
 
                     {{-- BAGIAN KIRI: AGENT STATS (HITAM) --}}
                     <div
-                        class="md:w-[40%] bg-[#0a0a0a] text-white p-6 flex flex-col justify-between relative overflow-hidden">
+                        class="w-full md:w-[40%] bg-[#0a0a0a] text-white p-6 flex flex-col justify-between relative overflow-hidden min-h-[260px] md:min-h-0">
                         {{-- Hiasan --}}
                         <div
                             class="absolute top-0 right-0 w-32 h-32 bg-blue-900 rounded-full blur-[50px] opacity-30 -mr-10 -mt-10 pointer-events-none">
@@ -80,7 +80,7 @@
                     </div>
 
                     {{-- BAGIAN KANAN: QUEUE PREVIEW (PUTIH) --}}
-                    <div class="md:w-[60%] bg-white p-6 flex flex-col">
+                    <div class="w-full md:w-[60%] bg-white p-6 flex flex-col">
                         <div class="flex justify-between items-center mb-4">
                             <div>
                                 <h2 class="text-lg font-bold text-black">Incoming Queue</h2>
@@ -494,7 +494,7 @@
             </div>
 
             {{-- 6. WELCOME HEADER --}}
-            <div class="lg:col-span-6 relative overflow-hidden rounded-2xl bg-black border-2 border-black shadow-lg">
+            <div class="lg:col-span-6 relative overflow-hidden rounded-2xl bg-black border-2 border-black shadow-lg order-first lg:order-none">
                 <div
                     class="absolute inset-0 opacity-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
                 </div>
@@ -513,9 +513,9 @@
                     <p class="text-zinc-400 max-w-md leading-relaxed mb-8 font-medium">
                         Akses cepat ke semua layanan operasional. Pastikan selalu cek pengumuman terbaru hari ini.
                     </p>
-                    <div class="flex gap-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
                         <a href="{{ route('profile') }}"
-                            class="px-6 py-3 bg-white text-black rounded-lg text-sm font-bold hover:bg-zinc-200 transition uppercase tracking-wider">
+                            class="px-6 py-3 bg-white text-black rounded-lg text-sm font-bold hover:bg-zinc-200 transition uppercase tracking-wider justify-center flex items-center gap-2">
                             View Profile
                         </a>
                         <button

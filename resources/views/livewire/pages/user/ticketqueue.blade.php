@@ -1,43 +1,55 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     {{-- Header --}}
-    <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-900">Support Ticket Queue</h1>
+    <div class="bg-[#0a0a0a] rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+
+            {{-- Title --}}
+            <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
+                Support Ticket Queue
+            </h1>
 
             {{-- Navigation Tabs --}}
-            <div class="inline-flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 self-start md:self-center">
-                <button
-                    type="button"
-                    wire:click="$set('tab','queue')"
-                    @class([ 'px-3 md:px-4 py-2 text-sm font-medium transition-colors border-r border-gray-200' , 'bg-gray-900 text-white'=> $tab === 'queue',
-                    'text-gray-700 hover:text-gray-900 hover:bg-gray-50' => $tab !== 'queue',
-                    ])>
-                    Ticket Queue
-                </button>
-                
-                {{-- MODIFIED: Wrapper for relative badge positioning --}}
-                <div class="relative">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+
+                <div class="flex rounded-lg overflow-visible bg-gray-100 border border-gray-200 w-full lg:w-auto">
+
+                    {{-- Queue Tab --}}
                     <button
                         type="button"
-                        wire:click="$set('tab','claims')"
-                        @class([ 
-                            'px-3 md:px-4 py-2 text-sm font-medium transition-colors', 
-                            'bg-gray-900 text-white'=> $tab === 'claims',
-                            'text-gray-700 hover:text-gray-900 hover:bg-gray-50' => $tab !== 'claims',
-                        ])>
-                        My Claims
+                        wire:click="$set('tab','queue')"
+                        class="flex-1 lg:flex-none px-3 md:px-4 py-2 text-sm font-medium text-center border-r border-gray-200
+                        {{ $tab === 'queue'
+                            ? 'bg-gray-900 text-white cursor-default'
+                            : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
+                        Ticket Queue
                     </button>
-                    
-                    {{-- Badge Logic - Positioned Absolutely (Removed animate-pulse) --}}
-                    @if ($totalUnreadClaims > 0)
-                    <span 
-                        class="absolute -top-1 right-0 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-red-600 text-white leading-none shadow-lg"
-                        title="{{ $totalUnreadClaims }} unread comments"
-                    >
-                        {{ $totalUnreadClaims }}
-                    </span>
-                    @endif
+
+                    {{-- Claims Tab (wrapped to allow badge positioning) --}}
+                    <div class="relative flex-1 lg:flex-none">
+
+                        <button
+                            type="button"
+                            wire:click="$set('tab','claims')"
+                            class="w-full px-3 md:px-4 py-2 text-sm font-medium text-center
+                            {{ $tab === 'claims'
+                                ? 'bg-gray-900 text-white cursor-default'
+                                : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
+                            My Claims
+                        </button>
+
+                        {{-- FIXED BADGE (no cropping anymore, overflow-visible enabled) --}}
+                        @if ($totalUnreadClaims > 0)
+                        <span
+                            class="absolute -top-1 -right-1 text-[10px] font-bold px-1.5 py-0.5
+                               rounded-full bg-red-600 text-white leading-none shadow-md z-20">
+                            {{ $totalUnreadClaims }}
+                        </span>
+                        @endif
+
+                    </div>
+
                 </div>
+
             </div>
         </div>
     </div>
@@ -47,23 +59,32 @@
         {{-- QUEUE TAB --}}
         @if ($tab === 'queue')
         <div wire:key="queue-tab-container">
-            <div class="flex flex-col md:flex-row md:items-center gap-4 pb-4 mb-4 border-b border-gray-100">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 w-full">
-                    {{-- Search --}}
-                    <div class="md:col-span-2">
-                        <div class="relative">
-                            <input
-                                type="text"
-                                wire:model.debounce.400ms="search"
-                                placeholder="Search subject or description..."
-                                class="w-full pl-9 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                            {{-- ORIGINAL SVG: Magnifying Glass --}}
-                            <x-heroicon-o-magnifying-glass class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                        </div>
-                    </div>
+            {{-- FILTER BAR --}}
+            <div class="flex flex-col gap-3 md:flex-row md:items-center pb-4 mb-4 border-b border-gray-100">
 
-                    {{-- Status Filter --}}
-                    <select wire:model.live="status" class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                {{-- Search — flex-1 so it STRETCHES like your reference --}}
+                <div class="flex-1 min-w-0">
+                    <div class="relative">
+                        <input
+                            type="text"
+                            wire:model.debounce.400ms="search"
+                            placeholder="Search subject or description..."
+                            class="w-full pl-9 px-3 py-2 text-sm border border-gray-300 rounded-md
+                                text-gray-900 placeholder:text-gray-400
+                                focus:outline-none focus:ring-2 focus:ring-gray-900">
+                        <x-heroicon-o-magnifying-glass
+                            class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    </div>
+                </div>
+
+                {{-- Status + Priority Wrapper (mobile 2 columns, desktop horizontal) --}}
+                <div class="grid grid-cols-2 gap-3 md:flex md:flex-row md:items-center">
+
+                    {{-- Status --}}
+                    <select
+                        wire:model.live="status"
+                        class="px-3 py-2 text-sm border border-gray-300 rounded-md
+                            text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
                         <option value="">All Status</option>
                         <option value="OPEN">Open</option>
                         <option value="IN_PROGRESS">In Progress</option>
@@ -71,13 +92,17 @@
                         <option value="CLOSED">Closed</option>
                     </select>
 
-                    {{-- Priority Filter --}}
-                    <select wire:model.live="priority" class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                    {{-- Priority --}}
+                    <select
+                        wire:model.live="priority"
+                        class="px-3 py-2 text-sm border border-gray-300 rounded-md
+                            text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
                         <option value="">All Priority</option>
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
                     </select>
+
                 </div>
             </div>
 
@@ -96,7 +121,7 @@
                 $statusUp = strtoupper($t->status ?? 'OPEN');
                 $statusLabel = ucfirst(strtolower(str_replace('_',' ',$statusUp)));
                 $unreadCount = $t->unread_comments_count ?? 0; // Retrieve the count
-                
+
                 $isHigh = $priority === 'high';
                 $isMedium = $priority === 'medium';
 
@@ -116,10 +141,9 @@
                 @endphp
 
                 {{-- Card is now clickable using window.location.href and ULID --}}
-                <div 
+                <div
                     onclick="window.location.href='{{ route('user.ticket.show', $t->ulid) }}'"
-                    class="group relative bg-white rounded-xl border-2 border-black p-5 hover:shadow-md transition-all duration-200 cursor-pointer"
-                >
+                    class="group relative bg-white rounded-xl border-2 border-black p-5 hover:shadow-md transition-all duration-200 cursor-pointer">
                     {{-- Header --}}
                     <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-3">
                         <div class="flex-1 min-w-0">
@@ -128,7 +152,7 @@
                                 <span class="text-[10px] px-2 py-0.5 rounded-md uppercase font-bold tracking-wide border {{ $priorityBadge }}">
                                     {{ $priority ? ucfirst($priority) : 'Low' }}
                                 </span>
-                                
+
                                 {{-- UNREAD COMMENT COUNT BADGE (Queue Tab) - REMOVED AS REQUESTED --}}
                             </div>
                             <h3 class="text-lg font-bold text-gray-900 truncate">
@@ -254,33 +278,51 @@
             });
             @endphp
 
-            {{-- Layout: 2 Columns --}}
+            {{-- Layout: 2 Columns on Desktop, Accordion on Mobile --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 h-full items-start">
+
                 @foreach ($kanbanColumns as $statusKey => $label)
                 <div
-                    class="flex flex-col rounded-xl border-2 border-gray-200 bg-gray-50 p-3 h-full min-h-[500px]"
+                    class="rounded-xl border-2 border-gray-200 bg-gray-50 overflow-hidden"
+                    x-data="{ open: window.innerWidth >= 1024 }"
+                    x-init="window.addEventListener('resize', () => open = window.innerWidth >= 1024)"
                     x-on:dragover.prevent
                     x-on:drop.prevent="drop('{{ $statusKey }}')">
-                    {{-- Column Header --}}
-                    <div class="flex items-center justify-between mb-3 px-1">
-                        <h3 class="text-xs font-bold tracking-wider uppercase text-gray-600">
-                            {{ $label }}
-                        </h3>
-                        <span class="bg-gray-200 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                            {{ ($groupedClaims[$statusKey] ?? collect())->count() }}
+
+                    {{-- Column Header (Accordion Toggle on Mobile) --}}
+                    <button
+                        class="w-full flex items-center justify-between px-3 py-3 bg-gray-100 md:bg-transparent md:cursor-default"
+                        x-on:click="if (window.innerWidth < 1024) open = !open">
+
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-xs font-bold tracking-wider uppercase text-gray-600">
+                                {{ $label }}
+                            </h3>
+                            <span class="bg-gray-200 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                {{ ($groupedClaims[$statusKey] ?? collect())->count() }}
+                            </span>
+                        </div>
+
+                        {{-- Arrow (mobile only) --}}
+                        <span class="md:hidden transition-transform" :class="{ 'rotate-90': open }">
+                            <x-heroicon-o-chevron-right class="w-4 h-4 text-gray-600" />
                         </span>
-                    </div>
+                    </button>
 
                     {{-- Column Body --}}
-                    <div class="space-y-3 flex-1">
+                    <div class="px-3 pb-3 space-y-3"
+                        x-show="open"
+                        x-collapse
+                        x-transition>
+
                         @forelse ($groupedClaims[$statusKey] ?? [] as $asgn)
                         @php
                         $t = $asgn->ticket;
-                        // The badge should be shown here as the ticket is claimed
-                        $unreadCount = $asgn->unread_count ?? 0; // Retrieve the count from the join
                         if (!$t) continue;
 
                         $prio = strtolower($t->priority ?? '');
+                        $unreadCount = $asgn->unread_count ?? 0;
+
                         $cardBorderClass = match($prio) {
                         'high' => 'border-l-4 border-l-orange-500 border-y border-r border-gray-200',
                         'medium' => 'border-l-4 border-l-yellow-400 border-y border-r border-gray-200',
@@ -293,8 +335,10 @@
                             draggable="true"
                             x-on:dragstart="dragStart({{ $t->ticket_id }}, '{{ strtoupper($t->status ?? 'OPEN') }}')"
                             x-on:dragend="draggingId = null; draggingFrom = null">
+
                             <div class="flex items-start justify-between gap-2 mb-2">
                                 <span class="text-[10px] font-mono text-gray-500">#{{ $t->ticket_id }}</span>
+
                                 <div class="flex items-center gap-2">
                                     @if($prio === 'high')
                                     <span class="text-[9px] font-bold text-orange-700 bg-orange-50 px-1.5 py-0.5 rounded border border-orange-100">HIGH</span>
@@ -302,28 +346,28 @@
                                     <span class="text-[9px] font-bold text-yellow-700 bg-yellow-50 px-1.5 py-0.5 rounded border border-yellow-100">MED</span>
                                     @endif
 
-                                    {{-- UNREAD COMMENT COUNT BADGE (Claims Tab) --}}
                                     @if ($unreadCount > 0)
-                                    <span class="text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded-full font-bold leading-none" title="{{ $unreadCount }} unread comments">
+                                    <span class="text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded-full font-bold leading-none"
+                                        title="{{ $unreadCount }} unread comments">
                                         {{ $unreadCount }}
                                     </span>
                                     @endif
                                 </div>
                             </div>
 
-                            <a href="{{ route('user.ticket.show', $t) }}" class="block text-sm font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 mb-1.5">
+                            <a href="{{ route('user.ticket.show', $t) }}"
+                                class="block text-sm font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 mb-1.5">
                                 {{ $t->subject }}
                             </a>
 
                             <div class="flex items-center justify-between text-[10px] text-gray-500 border-t border-gray-50 pt-2 mt-2">
-                                <div class="flex items-center gap-1" title="Claimed at">
-                                    {{-- ORIGINAL SVG: Clock (Time) --}}
+                                <div class="flex items-center gap-1">
                                     <x-heroicon-o-clock class="w-3 h-3" />
                                     {{ \Carbon\Carbon::parse($asgn->created_at)->diffForHumans(null, true) }}
                                 </div>
+
                                 @if($t->requester)
                                 <div class="flex items-center gap-1 truncate max-w-[80px]" title="{{ $t->requester->full_name }}">
-                                    {{-- ORIGINAL SVG: User Circle (Requester) --}}
                                     <x-heroicon-o-user-circle class="w-3 h-3" />
                                     <span class="truncate">{{ explode(' ', $t->requester->full_name)[0] }}</span>
                                 </div>
@@ -331,6 +375,7 @@
                             </div>
                         </div>
                         @empty
+
                         <div class="flex flex-col items-center justify-center h-24 border-2 border-dashed border-gray-200 rounded-lg text-gray-400">
                             <span class="text-xs italic">Empty</span>
                         </div>

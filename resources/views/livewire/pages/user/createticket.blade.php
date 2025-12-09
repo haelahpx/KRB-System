@@ -1,28 +1,48 @@
 {{-- A simple comment like an actual programmer's simple documentation --}}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   {{-- Header --}}
-  <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <h1 class="text-xl md:text-2xl font-bold text-gray-900">Support Ticket System</h1>
+  <div class="bg-[#0a0a0a] rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+
+      {{-- Title --}}
+      <h1 class="text-xl md:text-2xl font-bold text-white text-center md:text-left">
+        Support Ticket System
+      </h1>
 
       {{-- Navigation Tabs --}}
-      <div class="inline-flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 self-start md:self-center">
-        <span class="px-3 md:px-4 py-2 text-sm font-medium bg-gray-900 text-white cursor-default border-r border-gray-200">
+      <div class="flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-full md:w-auto">
+        <span
+          class="flex-1 md:flex-none px-3 md:px-4 py-2 text-sm font-medium bg-gray-900 text-white cursor-default border-r border-gray-200 text-center">
           Create Ticket
         </span>
+
         <a href="{{ route('ticketstatus') }}"
-          class="px-3 md:px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors">
+          class="flex-1 md:flex-none px-3 md:px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors text-center">
           Ticket Status
         </a>
       </div>
+
     </div>
   </div>
+
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2">
       <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
         <h2 class="text-lg font-semibold text-gray-900 mb-2">Create Support Ticket</h2>
         <p class="text-sm text-gray-600 mb-6">Fill out the form below to submit a new support ticket.</p>
+
+        <div class="bg-blue-50 mb-6 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+          <h4 class="font-semibold mb-2 inline-flex items-center gap-1.5">
+            <x-heroicon-o-information-circle class="w-4 h-4 text-blue-700" />
+            Help Tips
+          </h4>
+          <ul class="list-disc pl-5 space-y-1 text-xs md:text-sm">
+            <li>Berikan deskripsi masalah yang jelas.</li>
+            <li>Gunakan "Take Photo" di HP atau "Webcam" di Laptop untuk bukti visual.</li>
+            <li>Upload screenshot atau log error jika ada.</li>
+          </ul>
+        </div>
 
         <form class="space-y-5" wire:submit.prevent="save" onsubmit="return beforeSubmitAttachSync()">
           @csrf
@@ -165,23 +185,7 @@
 
     {{-- Sidebar --}}
     <div class="space-y-6">
-
-      {{-- Card 1: Help Tips (Existing) (Blade Icon: Information Circle Outline) --}}
-      <div class="bg-blue-50 rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
-        <div class="flex items-center gap-2 mb-3">
-          <div class="p-1.5 bg-yellow-100 rounded-lg border border-yellow-200">
-            <x-heroicon-o-information-circle class="w-4 h-4 text-yellow-700" />
-          </div>
-          <h3 class="text-lg font-bold text-gray-900">Help Tips</h3>
-        </div>
-        <ul class="text-xs md:text-sm text-gray-700 list-disc pl-5 space-y-2">
-          <li>Berikan deskripsi masalah yang jelas.</li>
-          <li>Gunakan "Take Photo" di HP atau "Webcam" di Laptop untuk bukti visual.</li>
-          <li>Upload screenshot atau log error jika ada.</li>
-        </ul>
-      </div>
-
-      {{-- Card 2: Contact Support (New) (Blade Icons: Phone, Envelope Outline) --}}
+      {{-- Card 1: Contact Support (New) (Blade Icons: Phone, Envelope Outline) --}}
       <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
         <h3 class="text-lg font-bold text-gray-900 mb-3">Need Immediate Help?</h3>
         <p class="text-xs text-gray-600 mb-4">For critical issues preventing business operations, please contact us directly:</p>
@@ -267,9 +271,9 @@
   // would be used in the client-side JavaScript for dynamic rendering.
   // In a real application, you might use AJAX to fetch this string or define it globally.
   function getFileIconBlade() {
-      // NOTE: This string represents the server-rendered HTML output of a Blade component.
-      // We are using the 'Document Text Outline' icon as it matches the original file icon's intent.
-      return '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-gray-400 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.812A2.25 2.25 0 0017.25 9H9.75A2.25 2.25 0 007.5 11.25V14.25m12 0H7.5m12 0A2.25 2.25 0 0117.25 16.5H9.75A2.25 2.25 0 017.5 14.25m12 0a2.25 2.25 0 000-4.5m-4.5-5.25v1.5a2.25 2.25 0 01-2.25 2.25h-1.5a2.25 2.25 0 01-2.25-2.25v-1.5m4.5 5.25h-4.5" /></svg>';
+    // NOTE: This string represents the server-rendered HTML output of a Blade component.
+    // We are using the 'Document Text Outline' icon as it matches the original file icon's intent.
+    return '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-gray-400 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.812A2.25 2.25 0 0017.25 9H9.75A2.25 2.25 0 007.5 11.25V14.25m12 0H7.5m12 0A2.25 2.25 0 0117.25 16.5H9.75A2.25 2.25 0 017.5 14.25m12 0a2.25 2.25 0 000-4.5m-4.5-5.25v1.5a2.25 2.25 0 01-2.25 2.25h-1.5a2.25 2.25 0 01-2.25-2.25v-1.5m4.5 5.25h-4.5" /></svg>';
   }
 
   (function() {
@@ -342,7 +346,7 @@
                 <button type="button" class="text-red-600 hover:text-red-800 text-[10px] font-semibold uppercase px-2">Remove</button>
               `;
         li.querySelector('button').addEventListener('click', async () => {
-          try { 
+          try {
             const csrf = document.querySelector('meta[name="csrf-token"]').content;
             await fetch('/attachments/temp', {
               method: 'DELETE',
