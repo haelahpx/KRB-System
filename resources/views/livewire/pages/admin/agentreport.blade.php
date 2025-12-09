@@ -76,7 +76,7 @@
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Avg Resolution Time</p>
                         <p class="text-2xl font-bold text-gray-900">
-                            {{ is_null($sum['overall_avg'] ?? null) ? '—' : number_format($sum['overall_avg'], 2) }} jam
+                            ~ {{ is_null($sum['overall_avg'] ?? null) ? '—' : number_format($sum['overall_avg'], 0) }} jam
                         </p>
                         <p class="text-xs text-gray-500 mt-1">Based on {{ $sum['overall_count'] ?? 0 }} resolved tickets</p>
                     </div>
@@ -90,12 +90,14 @@
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-600 mb-1">Fastest Agent</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ $sum['fastest']['full_name'] ?? '—' }}</p>
-                        <p class="text-2xl font-bold text-gray-900 mt-1">
-                            {{ is_null($sum['fastest']['avg_hours'] ?? null) ? '—' : number_format($sum['fastest']['avg_hours'], 2) }} jam
+                        <p class="text-sm text-gray-600 mb-1">Fastest Agent: 
+                            <span class="text-sm font-semibold text-gray-900">{{ $sum['fastest']['full_name'] ?? '—' }}</span>
                         </p>
-                        <p class="text-xs text-gray-500 mt-1">Handled: {{ $sum['fastest']['count'] ?? 0 }}</p>
+                        
+                        <p class="text-2xl font-bold text-gray-900 mt-1">
+                            ~ {{ is_null($sum['fastest']['avg_hours'] ?? null) ? '—' : number_format($sum['fastest']['avg_hours'], 0) }} jam
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">Handled: {{ $sum['fastest']['count'] ?? 0 }} tickets</p>
                     </div>
                     <div class="p-3 bg-emerald-100 rounded-lg">
                         <x-heroicon-o-arrow-trending-up class="w-6 h-6 text-emerald-700" />
@@ -107,12 +109,14 @@
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-600 mb-1">Slowest Agent</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ $sum['slowest']['full_name'] ?? '—' }}</p>
-                        <p class="text-2xl font-bold text-gray-900 mt-1">
-                            {{ is_null($sum['slowest']['avg_hours'] ?? null) ? '—' : number_format($sum['slowest']['avg_hours'], 2) }} jam
+                        <p class="text-sm text-gray-600 mb-1">Slowest Agent
+                            <span class="text-sm font-semibold text-gray-900">{{ $sum['slowest']['full_name'] ?? '—' }}</span>
                         </p>
-                        <p class="text-xs text-gray-500 mt-1">Handled: {{ $sum['slowest']['count'] ?? 0 }}</p>
+                        
+                        <p class="text-2xl font-bold text-gray-900 mt-1">
+                            ~ {{ is_null($sum['slowest']['avg_hours'] ?? null) ? '—' : number_format($sum['slowest']['avg_hours'], 0) }} jam
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">Handled: {{ $sum['slowest']['count'] ?? 0 }} tickets</p>
                     </div>
                     <div class="p-3 bg-rose-100 rounded-lg">
                         <x-heroicon-o-exclamation-triangle class="w-6 h-6 text-rose-700" />
