@@ -1,5 +1,4 @@
 <div class="min-h-screen bg-gray-50">
-    <!-- Download overlay -->
     <div id="downloadOverlay" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
         <div class="relative h-full w-full flex items-center justify-center p-4">
@@ -14,7 +13,6 @@
 
     <main class="px-4 sm:px-6 py-6 space-y-8">
 
-        {{-- Header with company --}}
         <div class="rounded-2xl bg-gradient-to-r from-gray-900 to-black text-white p-6 sm:p-8 shadow-2xl">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div class="flex items-center gap-3">

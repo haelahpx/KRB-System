@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Collection; // Use for type hinting
+use Illuminate\Database\Eloquent\Collection;
 
 #[Layout('layouts.superadmin')]
 #[Title('Ticket Support')]
@@ -20,23 +20,16 @@ class Ticketsupport extends Component
 {
     use WithPagination;
 
-    // --- List Filters ---
     public $search = '';
     public $departmentFilter = '';
     public $priorityFilter = '';
-    public $perPage = 10;
+    public $perPage = 20;
     public bool $showDeleted = false;
     public bool $showFilterModal = false;
 
-    // --- Edit Modal Props ---
     public $modal = false;
     public $editingTicketId = null;
     public $subject, $description, $priority, $department_id, $status;
-
-    // --- Detail Modal Props ---
-    public bool $detailModal = false;
-    // Store only the essential ticket data as an array to avoid Livewire serialization issues with complex relations
-    public ?array $selectedTicketData = null; 
 
     public $deptLookup = [];
 
@@ -44,8 +37,8 @@ class Ticketsupport extends Component
         'search' => ['except' => ''],
         'departmentFilter' => ['except' => ''],
         'priorityFilter' => ['except' => ''],
-        'perPage' => ['except' => 10],
-        'showDeleted' => ['except' => false], 
+        'perPage' => ['except' => 20],
+        'showDeleted' => ['except' => false],
     ];
 
     protected $rules = [
@@ -70,57 +63,30 @@ class Ticketsupport extends Component
         }
     }
 
-    // --- Pagination / Filter Updates ---
-    public function updatingSearch() { $this->resetPage(); }
-    public function updatingDepartmentFilter() { $this->resetPage(); $this->closeFilterModal(); }
-    public function updatingPriorityFilter() { $this->resetPage(); $this->closeFilterModal(); }
-    public function updatingPerPage() { $this->resetPage(); }
-    public function updatedShowDeleted() { $this->resetPage(); }
-
-    // --- Detail Modal Actions ---
-
-    public function openTicketDetails(int $id): void
+    public function updatingSearch()
     {
-        $companyId = Auth::user()->company_id;
-        
-        // Load ticket with all required relations
-        $ticket = Ticket::withTrashed()
-            ->with([
-                'user', 
-                'department', 
-                'attachments', 
-                'requesterDepartment', 
-                'comments.user', 
-                'assignments.user' // Added assignments relation for agent info
-            ])
-            ->where('company_id', $companyId)
-            ->findOrFail($id);
-            
-        // Convert the model and its relations to a safe array for Livewire state
-        // This prevents Livewire from trying to synthesize complex collections (like comments)
-        $this->selectedTicketData = $ticket->toArray();
-        $this->selectedTicketData['user'] = $ticket->user->toArray();
-        $this->selectedTicketData['department'] = $ticket->department?->toArray();
-        $this->selectedTicketData['requester_department'] = $ticket->requesterDepartment?->toArray();
-        $this->selectedTicketData['attachments'] = $ticket->attachments->toArray();
-        $this->selectedTicketData['comments'] = $ticket->comments->map(function ($comment) {
-            return array_merge($comment->toArray(), ['user' => $comment->user->toArray()]);
-        })->toArray();
-        $this->selectedTicketData['assignments'] = $ticket->assignments->map(function ($assignment) {
-            return array_merge($assignment->toArray(), ['user' => $assignment->user->toArray()]);
-        })->toArray();
-
-
-        $this->detailModal = true;
+        $this->resetPage();
+    }
+    public function updatingDepartmentFilter()
+    {
+        $this->resetPage();
+        $this->closeFilterModal();
+    }
+    public function updatingPriorityFilter()
+    {
+        $this->resetPage();
+        $this->closeFilterModal();
+    }
+    public function updatedShowDeleted()
+    {
+        $this->resetPage();
     }
 
-    public function closeTicketDetails(): void
+    public function redirectToTicketDetails(string|int $id): \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
     {
-        $this->detailModal = false;
-        $this->selectedTicketData = null;
+        return redirect()->route('superadmin.ticketdetail', ['ticketId' => $id]);
     }
-    
-    // --- Mobile Modal Actions ---
+
     public function openFilterModal(): void
     {
         $this->showFilterModal = true;
@@ -130,12 +96,11 @@ class Ticketsupport extends Component
     {
         $this->showFilterModal = false;
     }
-    
-    // --- CRUD Actions ---
+
     public function openEdit($id)
     {
         $t = Ticket::withTrashed()->findOrFail($id);
-        
+
         if ($t->company_id !== Auth::user()->company_id) {
             abort(403);
         }
@@ -180,6 +145,13 @@ class Ticketsupport extends Component
         $t = Ticket::findOrFail($id);
         $t->delete();
         session()->flash('success', 'Ticket moved to trash (soft deleted).');
+        $this->resetPage();
+    }
+
+    public function clearFilters()
+    {
+        $this->departmentFilter = '';
+        $this->priorityFilter = '';
         $this->resetPage();
     }
 

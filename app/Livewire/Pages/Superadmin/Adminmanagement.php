@@ -29,6 +29,7 @@ class Adminmanagement extends Component
     public int    $perPage = 10;
     public ?int   $editingId = null;
     public bool   $showEditModal = false;
+    public bool   $showCreateModal = false; // <-- Variabel baru untuk modal buat di mobile/tablet
 
     // ===== Scope =====
     public int    $company_id;
@@ -52,7 +53,7 @@ class Adminmanagement extends Component
     public array $departments = [];
 
     // ===== Fixed role (Admin) =====
-    protected int $adminRoleId = 0; // initialized
+    protected int $adminRoleId = 0;
 
     /* ------------------------------------------------------------------------
      | Lifecycle
@@ -105,16 +106,27 @@ class Adminmanagement extends Component
     }
 
     /* ------------------------------------------------------------------------
-     | CRUD
+     | Modal Handlers
      * --------------------------------------------------------------------- */
+
+    public function openCreateModal(): void
+    {
+        $this->resetCreateForm();
+        $this->showCreateModal = true;
+    }
+
+    public function closeCreateModal(): void
+    {
+        $this->showCreateModal = false;
+        $this->resetCreateForm();
+    }
 
     public function create(): void
     {
-        $this->resetCreateForm();
-        $this->mode = 'create';
+        $this->openCreateModal();
     }
 
-    public function edit(int $userId): void
+    public function openEditModal(int $userId): void
     {
         $user = User::with(['departments', 'department'])
             ->where('company_id', $this->company_id)
@@ -143,10 +155,20 @@ class Adminmanagement extends Component
         $this->showEditModal = true;
     }
 
+    public function edit(int $userId): void
+    {
+        $this->openEditModal($userId);
+    }
+
     public function closeEditModal(): void
     {
         $this->showEditModal = false;
+        $this->resetCreateForm();
     }
+
+    /* ------------------------------------------------------------------------
+     | CRUD
+     * --------------------------------------------------------------------- */
 
     public function store(): void
     {
@@ -176,6 +198,7 @@ class Adminmanagement extends Component
 
             $this->dispatch('toast', type: 'success', title: 'Dibuat', message: 'Admin berhasil dibuat.', duration: 3000);
             $this->resetCreateForm();
+            $this->showCreateModal = false;
             $this->mode = 'index';
         } catch (Throwable $e) {
             $this->dispatch('toast', type: 'error', title: 'Create failed', message: $e->getMessage(), duration: 5000);
@@ -239,7 +262,7 @@ class Adminmanagement extends Component
     }
 
     /* ------------------------------------------------------------------------
-     | Validation
+     | Validation / Reset
      * --------------------------------------------------------------------- */
 
     protected function rules(bool $editing = false): array
@@ -279,7 +302,7 @@ class Adminmanagement extends Component
     }
 
     /* ------------------------------------------------------------------------
-     | Search / List
+     | Search / List / Render
      * --------------------------------------------------------------------- */
 
     public function updatingSearch(): void
@@ -313,6 +336,8 @@ class Adminmanagement extends Component
     {
         return view('livewire.pages.superadmin.adminmanagement', [
             'rows' => $this->admins,
+            'company_name' => $this->company_name,
+            'departments' => $this->departments, // Diteruskan eksplisit untuk form dan stabilitas
         ]);
     }
 }

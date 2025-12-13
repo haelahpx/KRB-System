@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class VehicleBookingPhoto extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'vehicle_booking_photos';
     public $timestamps = true; // Migrasi baru menambahkan timestamps

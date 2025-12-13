@@ -1,16 +1,17 @@
-<div class="bg-gray-50">
-    {{-- Style Variables (from announcement page) --}}
+<div class="bg-gray-50 min-h-screen">
+    {{-- Style Variables (Adjusted for compact card design) --}}
     @php
         use Carbon\Carbon;
-        $card = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden';
+        $card = 'bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden';
         $label = 'block text-sm font-medium text-gray-700 mb-2';
-        $input = 'w-full h-10 px-3 rounded-lg border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
-        $btnBlk = 'px-3 py-2 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition';
-        $btnRed = 'px-3 py-2 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition';
-        $btnLite = 'px-3 py-2 text-xs font-medium rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-900/10 disabled:opacity-60 transition';
-        $chip = 'inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-gray-100 text-xs';
-        $mono = 'text-[10px] font-mono text-gray-500 bg-gray-100 px-2.5 py-1 rounded-md';
-        $ico = 'w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-semibold text-sm shrink-0';
+        $input = 'w-full h-10 px-3 rounded-xl border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
+        $btnBlk = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+        $btnRed = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+        $btnLite = 'px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-900/10 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+        $chip = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-[10px] text-gray-600 font-medium'; // Chip lebih kecil
+        $mono = 'text-[10px] font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md w-fit'; // Mono lebih kecil
+        $ico = 'w-9 h-9 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-semibold text-xs shrink-0 border border-gray-200'; // Ikon lebih kecil
+        $reqCard = 'bg-white rounded-xl border border-gray-100 shadow-sm p-4 space-y-3 hover:shadow-lg transition-shadow duration-300';
 
         $company = Auth::user()->company->company_name ?? 'Unknown Company';
     @endphp
@@ -34,17 +35,17 @@
                                 class="font-semibold">{{ optional(Auth::user()->company)->company_name ?? '-' }}</span>
                         </p>
                     </div>
-                    <a href="{{ route('superadmin.manageroom') }}" class="{{ $btnLite }}">Go to Rooms</a>
+                    <a href="{{ route('superadmin.manageroom') }}" class="px-4 h-10 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition">Go to Rooms</a>
                 </div>
             </div>
         </div>
 
-        {{-- Main Card --}}
+        {{-- Main Card Container (Form + List) --}}
         <section class="{{ $card }}">
-            <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between gap-3">
-                <h3 class="text-base font-semibold text-gray-900">Add New Requirement</h3>
+            <div class="px-5 py-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <h3 class="text-base font-semibold text-gray-900 shrink-0">Add New Requirement</h3>
                 <div class="w-full sm:w-72 relative">
-                    <input type="text" wire:model.live.debounce.400ms="req_search" class="{{ $input }} pl-10" placeholder="Search requirement…">
+                    <input type="text" wire:model.live.debounce.400ms="req_search" class="{{ $input }} pl-10 shadow-sm" placeholder="Search requirement…">
                     <x-heroicon-o-magnifying-glass class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
             </div>
@@ -65,7 +66,7 @@
                     </div>
                 </div>
                 <div class="pt-5">
-                    <button type="submit" wire:loading.attr="disabled" wire:target="reqStore" class="{{ $btnBlk }} inline-flex items-center gap-2">
+                    <button type="submit" wire:loading.attr="disabled" wire:target="reqStore" class="{{ $btnBlk }} inline-flex items-center gap-2 h-10 px-5 rounded-xl text-sm font-medium">
                         <span wire:loading.remove wire:target="reqStore">Save Requirement</span>
                         <span class="inline-flex items-center gap-2" wire:loading wire:target="reqStore">
                             <x-heroicon-o-arrow-path class="animate-spin h-4 w-4" />
@@ -75,59 +76,79 @@
                 </div>
             </form>
 
-            {{-- List --}}
-            <div class="divide-y divide-gray-200">
-                @forelse ($requirements as $req)
-                    @php $rowNo = (($requirements->firstItem() ?? 1) + $loop->index); @endphp
-                    <div class="px-5 py-5 hover:bg-gray-50 transition-colors" wire:key="req-{{ $req->requirement_id }}">
-                        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                            <div class="flex items-start gap-3 flex-1">
-                                <div class="{{ $ico }}">
-                                    {{ substr($company ?? 'R', 0, 1) }}
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <h4 class="font-semibold text-gray-900 text-sm sm:text-base">{{ $req->name }}</h4>
-                                    <div class="flex flex-wrap items-center gap-2 mt-2">
-                                        <span class="{{ $chip }}"><span class="text-gray-500">Company:</span>
-                                            <span class="font-medium text-gray-700">{{ $company }}</span></span>
-                                        <span class="{{ $chip }}"><span class="text-gray-500">Created:</span>
-                                            <span class="font-medium text-gray-700">{{ $req->created_at?->format('d M Y, H:i') }}</span></span>
-                                        <span class="{{ $chip }}"><span class="text-gray-500">Updated:</span>
-                                            <span class="font-medium text-gray-700">{{ $req->updated_at?->format('d M Y, H:i') }}</span></span>
+            {{-- List (Card Grid) --}}
+            <div class="p-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    @forelse ($requirements as $req)
+                        @php $rowNo = (($requirements->firstItem() ?? 1) + $loop->index); @endphp
+                        
+                        <div class="{{ $reqCard }}" wire:key="req-{{ $req->requirement_id }}">
+                            
+                            {{-- Header: Name, No --}}
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-start gap-3 flex-1 min-w-0">
+                                    <div class="{{ $ico }}">
+                                        <x-heroicon-o-tag class="w-4 h-4 text-gray-900" />
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <h4 class="font-semibold text-gray-900 text-sm leading-snug truncate">{{ $req->name }}</h4>
+                                        <div class="flex items-center gap-2 mt-0.5">
+                                            <p class="{{ $mono }}">No. {{ $rowNo }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="text-right shrink-0 space-y-2">
-                                <div class="{{ $mono }}">No. {{ $rowNo }}</div>
-                                <div class="flex flex-wrap gap-2 justify-end pt-1">
-                                    <button wire:click="reqOpenEdit({{ $req->requirement_id }})" class="{{ $btnBlk }}"
-                                        wire:loading.attr="disabled" wire:target="reqOpenEdit({{ $req->requirement_id }})"
-                                        wire:key="btn-edit-req-{{ $req->requirement_id }}">
-                                        <span wire:loading.remove wire:target="reqOpenEdit({{ $req->requirement_id }})">Edit</span>
-                                        <span wire:loading wire:target="reqOpenEdit({{ $req->requirement_id }})">Loading…</span>
-                                    </button>
 
-                                    <button wire:click="reqDelete({{ $req->requirement_id }})"
-                                        onclick="return confirm('Soft delete requirement ini?')" class="{{ $btnRed }}"
-                                        wire:loading.attr="disabled" wire:target="reqDelete({{ $req->requirement_id }})"
-                                        wire:key="btn-del-req-{{ $req->requirement_id }}">
-                                        <span wire:loading.remove wire:target="reqDelete({{ $req->requirement_id }})">Delete</span>
-                                        <span wire:loading wire:target="reqDelete({{ $req->requirement_id }})">Deleting…</span>
-                                    </button>
+                            {{-- Details: Dates --}}
+                            <div class="flex flex-col space-y-1 text-xs pt-3 border-t border-gray-100">
+                                
+                                <div class="flex items-center justify-between text-gray-500">
+                                    <span class="font-medium">Company:</span>
+                                    <span class="{{ $chip }} bg-white text-gray-700 border border-gray-200 truncate max-w-[60%]">{{ $company }}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-gray-500">
+                                    <span class="font-medium">Created:</span>
+                                    <span class="{{ $chip }} bg-white text-gray-700 border border-gray-200">
+                                        {{ $req->created_at?->format('d M Y, H:i') }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center justify-between text-gray-500">
+                                    <span class="font-medium">Updated:</span>
+                                    <span class="{{ $chip }} bg-white text-gray-700 border border-gray-200">
+                                        {{ $req->updated_at?->format('d M Y, H:i') }}
+                                    </span>
                                 </div>
                             </div>
+                            
+                            {{-- Action Buttons --}}
+                            <div class="flex gap-2 justify-end pt-3 border-t border-gray-100">
+                                <button wire:click="reqOpenEdit({{ $req->requirement_id }})" class="{{ $btnBlk }}"
+                                    wire:loading.attr="disabled" wire:target="reqOpenEdit({{ $req->requirement_id }})"
+                                    wire:key="btn-edit-req-{{ $req->requirement_id }}">
+                                    <span wire:loading.remove wire:target="reqOpenEdit({{ $req->requirement_id }})">Edit</span>
+                                    <span wire:loading wire:target="reqOpenEdit({{ $req->requirement_id }})">Loading…</span>
+                                </button>
+
+                                <button wire:click="reqDelete({{ $req->requirement_id }})"
+                                    onclick="return confirm('Soft delete requirement ini?')" class="{{ $btnRed }}"
+                                    wire:loading.attr="disabled" wire:target="reqDelete({{ $req->requirement_id }})"
+                                    wire:key="btn-del-req-{{ $req->requirement_id }}">
+                                    <span wire:loading.remove wire:target="reqDelete({{ $req->requirement_id }})">Delete</span>
+                                    <span wire:loading wire:target="reqDelete({{ $req->requirement_id }})">Deleting…</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                @empty
-                    <div class="px-5 py-14 text-center text-gray-500 text-sm">
-                        No requirements found for {{ $company }}.
-                    </div>
-                @endforelse
+                    @empty
+                        <div class="col-span-full px-5 py-14 text-center text-gray-500 text-sm bg-white rounded-xl border border-gray-200 shadow-sm">
+                            No requirements found for {{ $company }}.
+                        </div>
+                    @endforelse
+                </div>
             </div>
 
             {{-- Pagination --}}
             @if($requirements->hasPages())
-                <div class="px-5 py-4 bg-gray-50 border-t border-gray-200">
+                <div class="px-5 py-4 bg-gray-50 border-t border-gray-200 rounded-b-xl">
                     <div class="flex justify-center">
                         {{ $requirements->links() }}
                     </div>
@@ -158,8 +179,8 @@
                             </div>
                         </div>
                         <div class="mt-6 flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
-                            <button type="button" class="{{ $btnLite }}" wire:click="reqCloseEdit">Cancel</button>
-                            <button type="submit" wire:loading.attr="disabled" wire:target="reqUpdate" class="{{ $btnBlk }} inline-flex items-center gap-2">
+                            <button type="button" class="{{ $btnLite }} h-10 px-4" wire:click="reqCloseEdit">Cancel</button>
+                            <button type="submit" wire:loading.attr="disabled" wire:target="reqUpdate" class="{{ $btnBlk }} inline-flex items-center gap-2 h-10 px-4">
                                 <span wire:loading.remove wire:target="reqUpdate">Save Changes</span>
                                 <span class="inline-flex items-center gap-2" wire:loading wire:target="reqUpdate">
                                     <x-heroicon-o-arrow-path class="animate-spin h-4 w-4" />

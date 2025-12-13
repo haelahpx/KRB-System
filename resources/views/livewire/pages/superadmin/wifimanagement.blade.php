@@ -1,13 +1,14 @@
 <div class="bg-gray-50 min-h-screen">
     @php
-    $card = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden';
+    $card = 'bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden'; // Diperbarui
     $label = 'block text-sm font-medium text-gray-700 mb-2';
-    $input = 'w-full h-10 px-3 rounded-lg border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
-    $btnBlk = 'px-3 py-2 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition';
-    $btnRed = 'px-3 py-2 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition';
-    $chip = 'inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-gray-100 text-xs text-black';
-    $mono = 'text-[10px] font-mono text-gray-500 bg-gray-100 px-2.5 py-1 rounded-md';
-    $ico = 'w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-semibold text-sm shrink-0';
+    $input = 'w-full h-10 px-3 rounded-xl border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition'; // Diperbarui
+    $btnBlk = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+    $btnRed = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+    $chip = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] text-gray-600 font-medium'; // Diperbarui untuk chip
+    $mono = 'text-[10px] font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md w-fit'; // Diperbarui
+    $ico = 'w-9 h-9 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-semibold text-xs shrink-0 border border-gray-200'; // Ikon lebih kecil
+    $wifiCard = 'bg-white rounded-xl border border-gray-100 shadow-sm p-4 space-y-3 hover:shadow-lg transition-shadow duration-300';
     @endphp
 
     <main class="px-4 sm:px-6 py-6 space-y-8">
@@ -90,101 +91,106 @@
             </form>
         </section>
 
-        {{-- LIST WIFI --}}
-        <div class="{{ $card }}">
-            <div class="px-5 py-4 border-b border-gray-200 bg-gray-50/50">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-semibold text-gray-900">Daftar WiFi</h3>
-                    <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded border border-gray-200">
-                        Total: {{ $wifis->total() }}
-                    </span>
-                </div>
+        {{-- LIST WIFI (CARD GRID) --}}
+        <div class="space-y-5">
+            <div class="flex items-center justify-between px-2">
+                <h3 class="text-sm font-semibold text-gray-900">Daftar WiFi</h3>
+                <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded border border-gray-200 shadow-sm">
+                    Total: {{ $wifis->total() }}
+                </span>
             </div>
 
-            <div class="divide-y divide-gray-200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 @forelse ($wifis as $wifi)
                 @php
                 $rowNo = (($wifis->currentPage() - 1) * $wifis->perPage()) + $loop->iteration;
+                // Custom classes for password display
+                $passDisplay = 'flex items-center gap-1.5 px-2 py-1 rounded border text-xs font-mono select-all cursor-text';
                 @endphp
 
-                <div class="px-5 py-5 hover:bg-gray-50 transition-colors group" wire:key="wifi-{{ $wifi->wifi_id }}">
-                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                        <div class="flex items-start gap-4 flex-1">
-                            <div class="{{ $ico }} bg-gray-900 group-hover:scale-105 transition-transform duration-300">
-                                <x-heroicon-o-signal class="w-5 h-5 text-white" />
+                <div class="{{ $wifiCard }}" wire:key="wifi-{{ $wifi->wifi_id }}">
+                    
+                    {{-- Header: Icon, SSID, No --}}
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="{{ $ico }}">
+                                <x-heroicon-o-signal class="w-4 h-4 text-gray-900" />
                             </div>
+                            <h4 class="font-semibold text-gray-900 text-sm truncate min-w-0">
+                                {{ $wifi->ssid }}
+                            </h4>
+                        </div>
+                        <p class="{{ $mono }}">No. {{ $rowNo }}</p>
+                    </div>
 
-                            <div class="min-w-0 flex-1">
-                                <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                    <h4 class="font-semibold text-gray-900 text-sm sm:text-base truncate">
-                                        {{ $wifi->ssid }}
-                                    </h4>
-
-                                    {{-- Status Badge --}}
-                                    @if($wifi->is_active)
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-medium border border-emerald-100">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                        Active
-                                    </span>
-                                    @else
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-[10px] font-medium border border-gray-200">
-                                        Inactive
-                                    </span>
-                                    @endif
-
-                                    {{-- Location Badge --}}
-                                    @if($wifi->location)
-                                    <span class="{{ $chip }} bg-blue-50 text-blue-700 border border-blue-100">
-                                        <x-heroicon-o-map-pin class="w-3 h-3" />
-                                        {{ $wifi->location }}
-                                    </span>
-                                    @endif
-                                </div>
-
-                                {{-- Password Section --}}
-                                <div class="flex items-center gap-2">
-                                    <div class="flex items-center gap-2 px-2 py-1 rounded bg-gray-100 border border-gray-200 max-w-fit group/pass">
-                                        <x-heroicon-o-key class="w-3.5 h-3.5 text-gray-400" />
-                                        <span class="text-xs font-mono text-gray-600 select-all cursor-text">{{ $wifi->password }}</span>
-                                    </div>
-                                </div>
-                            </div>
+                    {{-- Details: Location & Status --}}
+                    <div class="flex flex-col space-y-1 pt-3 border-t border-gray-100 text-xs">
+                        <div class="flex items-center justify-between text-gray-500">
+                            <span class="font-medium">Lokasi:</span>
+                            @if($wifi->location)
+                            <span class="{{ $chip }} bg-blue-50 text-blue-700 border border-blue-100 w-fit">
+                                <x-heroicon-o-map-pin class="w-3 h-3" />
+                                {{ $wifi->location }}
+                            </span>
+                            @else
+                            <span class="{{ $chip }} bg-gray-100 text-gray-500 w-fit">N/A</span>
+                            @endif
                         </div>
 
-                        <div class="text-right shrink-0 space-y-3">
-                            <div class="{{ $mono }} inline-block">No. {{ $rowNo }}</div>
-                            <div class="flex flex-wrap gap-2 justify-end">
-                                <button class="{{ $btnBlk }}" wire:click="openEdit({{ $wifi->wifi_id }})"
-                                    wire:loading.attr="disabled" wire:target="openEdit({{ $wifi->wifi_id }})">
-                                    <span class="inline-flex items-center gap-1.5" wire:loading.remove wire:target="openEdit({{ $wifi->wifi_id }})">
-                                        <x-heroicon-o-pencil-square class="w-3.5 h-3.5" />
-                                        Edit
-                                    </span>
-                                    <span class="inline-flex items-center gap-1.5" wire:loading wire:target="openEdit({{ $wifi->wifi_id }})">
-                                        <x-heroicon-o-arrow-path class="w-3.5 h-3.5 animate-spin" />
-                                        Loading
-                                    </span>
-                                </button>
-
-                                <button class="{{ $btnRed }}" wire:click="delete({{ $wifi->wifi_id }})"
-                                    onclick="confirm('Apakah Anda yakin ingin menghapus WiFi {{ $wifi->ssid }}?') || event.stopImmediatePropagation()"
-                                    wire:loading.attr="disabled" wire:target="delete({{ $wifi->wifi_id }})">
-                                    <span class="flex items-center gap-1.5">
-                                        <x-heroicon-o-trash class="w-3.5 h-3.5" />
-                                        Hapus
-                                    </span>
-                                </button>
-                            </div>
+                        <div class="flex items-center justify-between text-gray-500">
+                            <span class="font-medium">Status:</span>
+                            @if($wifi->is_active)
+                            <span class="{{ $chip }} bg-emerald-50 text-emerald-700 border border-emerald-100 w-fit">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                Active
+                            </span>
+                            @else
+                            <span class="{{ $chip }} bg-gray-100 text-gray-600 border border-gray-200 w-fit">
+                                Inactive
+                            </span>
+                            @endif
                         </div>
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="pt-3 border-t border-gray-100">
+                        <span class="text-gray-500 font-medium block text-xs mb-1">Password:</span>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-2 max-w-full overflow-x-auto">
+                             <span class="text-xs font-mono text-gray-600 select-all cursor-text whitespace-nowrap">{{ $wifi->password }}</span>
+                        </div>
+                    </div>
+
+                    {{-- Action Buttons --}}
+                    <div class="flex gap-2 justify-end pt-3 border-t border-gray-100">
+                        <button class="{{ $btnBlk }}" wire:click="openEdit({{ $wifi->wifi_id }})"
+                            wire:loading.attr="disabled" wire:target="openEdit({{ $wifi->wifi_id }})">
+                            <span class="inline-flex items-center gap-1.5" wire:loading.remove wire:target="openEdit({{ $wifi->wifi_id }})">
+                                <x-heroicon-o-pencil-square class="w-3 h-3" />
+                                Edit
+                            </span>
+                            <span class="inline-flex items-center gap-1.5" wire:loading wire:target="openEdit({{ $wifi->wifi_id }})">
+                                <x-heroicon-o-arrow-path class="w-3 h-3 animate-spin" />
+                                Loading
+                            </span>
+                        </button>
+
+                        <button class="{{ $btnRed }}" wire:click="delete({{ $wifi->wifi_id }})"
+                            onclick="confirm('Apakah Anda yakin ingin menghapus WiFi {{ $wifi->ssid }}?') || event.stopImmediatePropagation()"
+                            wire:loading.attr="disabled" wire:target="delete({{ $wifi->wifi_id }})">
+                            <span class="flex items-center gap-1.5">
+                                <x-heroicon-o-trash class="w-3 h-3" />
+                                Hapus
+                            </span>
+                        </button>
                     </div>
                 </div>
                 @empty
-                <div class="px-5 py-16 text-center">
-                    <div class="mx-auto h-16 w-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                        <x-heroicon-o-wifi class="w-8 h-8 text-gray-300" />
+                <div class="col-span-full py-10 text-center bg-white rounded-xl border border-gray-200 shadow-sm">
+                    <div class="mx-auto h-12 w-12 bg-gray-50 rounded-full flex items-center justify-center mb-3">
+                        <x-heroicon-o-wifi class="w-6 h-6 text-gray-300" />
                     </div>
                     <h3 class="text-sm font-medium text-gray-900">Belum ada data WiFi</h3>
-                    <p class="mt-1 text-sm text-gray-500 max-w-sm mx-auto">
+                    <p class="mt-1 text-xs text-gray-500 max-w-sm mx-auto">
                         Mulai tambahkan data WiFi untuk perusahaan ini.
                     </p>
                 </div>
@@ -192,7 +198,7 @@
             </div>
 
             @if($wifis->hasPages())
-            <div class="px-5 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="px-5 py-4 bg-gray-50 border-t border-gray-200 rounded-b-xl shadow-sm">
                 <div class="flex justify-center">
                     {{ $wifis->links() }}
                 </div>

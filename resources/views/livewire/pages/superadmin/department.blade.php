@@ -1,14 +1,15 @@
 {{-- resources/views/livewire/pages/superadmin/department.blade.php --}}
-<div class="bg-gray-50">
+<div class="bg-gray-50 min-h-screen">
     @php
-    $card = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden';
+    $card = 'bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden';
     $label = 'block text-sm font-medium text-gray-700 mb-2';
-    $input = 'w-full h-10 px-3 rounded-lg border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
-    $btnBlk = 'px-3 py-2 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition';
-    $btnRed = 'px-3 py-2 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition';
-    $chip = 'inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-gray-100 text-xs';
-    $mono = 'text-[10px] font-mono text-gray-500 bg-gray-100 px-2.5 py-1 rounded-md';
-    $ico = 'w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-semibold text-sm shrink-0';
+    $input = 'w-full h-10 px-3 rounded-xl border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
+    $btnBlk = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+    $btnRed = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+    $chip = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-[10px] text-gray-600 font-medium';
+    $mono = 'text-[10px] font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md w-fit';
+    $ico = 'w-9 h-9 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-semibold text-xs shrink-0 border border-gray-200'; // Ukuran Ikon lebih kecil (w-9 h-9)
+    $deptCard = 'bg-white rounded-xl border border-gray-100 shadow-sm p-4 space-y-3 hover:shadow-lg transition-shadow duration-300'; // Padding lebih kecil (p-4) dan space-y-3
     @endphp
 
     <main class="px-4 sm:px-6 py-6 space-y-8">
@@ -37,6 +38,7 @@
             </div>
         </div>
 
+        {{-- Tambah Department --}}
         <section class="{{ $card }}">
             <div class="px-5 py-4 border-b border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900">Tambah Department</h3>
@@ -74,84 +76,80 @@
             </form>
         </section>
 
-        <div class="{{ $card }}">
-            {{-- Header --}}
-            <div class="px-5 py-4 border-b border-gray-200">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
-                    <div class="relative flex-1">
-                        <input type="text" wire:model.live="search" placeholder="Cari department…"
-                            class="{{ $input }} pl-10 w-full placeholder:text-gray-400">
-                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
-                        </svg>
-                    </div>
-                </div>
+        {{-- Daftar Department (Card Grid) --}}
+        <div class="space-y-5">
+            {{-- Search Bar --}}
+            <div class="relative">
+                <input type="text" wire:model.live="search" placeholder="Cari department…"
+                    class="{{ $input }} pl-10 w-full placeholder:text-gray-400 shadow-sm">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
+                </svg>
             </div>
-
-            <div class="divide-y divide-gray-200">
+        
+            {{-- Department Cards Grid --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 @forelse ($rows as $r)
                 @php
                 $rowNo = (($rows->firstItem() ?? 1) + $loop->index);
                 @endphp
-                <div class="px-5 py-5 hover:bg-gray-50 transition-colors" wire:key="dept-{{ $r->department_id }}">
-                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-
-                        {{-- Left --}}
-                        <div class="flex items-start gap-4 flex-1">
-                            <div class="{{ $ico }}">{{ strtoupper(substr($r->department_name, 0, 1)) }}</div>
-                            <div class="min-w-0 flex-1 space-y-2">
-                                <h4 class="font-semibold text-gray-900 text-sm sm:text-base truncate">
-                                    {{ $r->department_name }}
-                                </h4>
-
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="{{ $chip }}">
-                                        <span class="text-gray-500">Created:</span>
-                                        <span class="font-medium text-gray-700">{{ $r->created_at?->format('Y-m-d H:i') }}</span>
-                                    </span>
-                                    <span class="{{ $chip }}">
-                                        <span class="text-gray-500">Updated:</span>
-                                        <span class="font-medium text-gray-700">{{ $r->updated_at?->format('Y-m-d H:i') }}</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-right shrink-0 space-y-2">
+                
+                <div class="{{ $deptCard }}" wire:key="dept-{{ $r->department_id }}">
+                    
+                    {{-- Header Card: Icon and Title --}}
+                    <div class="flex items-start gap-3">
+                        <div class="{{ $ico }}">{{ strtoupper(substr($r->department_name, 0, 1)) }}</div>
+                        <div class="min-w-0 flex-1 space-y-0.5">
+                            <h4 class="font-semibold text-gray-900 text-sm leading-tight truncate">
+                                {{ $r->department_name }}
+                            </h4>
                             <p class="{{ $mono }}">No. {{ $rowNo }}</p>
-                            <div class="flex flex-wrap gap-2 justify-end">
-                                <button
-                                    class="{{ $btnBlk }}"
-                                    wire:click="openEdit({{ $r->department_id }})"
-                                    wire:loading.attr="disabled"
-                                    wire:target="openEdit({{ $r->department_id }})">
-                                    <span wire:loading.remove wire:target="openEdit({{ $r->department_id }})">Edit</span>
-                                    <span wire:loading wire:target="openEdit({{ $r->department_id }})">Loading…</span>
-                                </button>
-
-                                <button
-                                    class="{{ $btnRed }}"
-                                    wire:click="delete({{ $r->department_id }})"
-                                    onclick="return confirm('Hapus department ini?')"
-                                    wire:loading.attr="disabled"
-                                    wire:target="delete({{ $r->department_id }})">
-                                    <span wire:loading.remove wire:target="delete({{ $r->department_id }})">Hapus</span>
-                                    <span wire:loading wire:target="delete({{ $r->department_id }})">Menghapus…</span>
-                                </button>
-
-                            </div>
                         </div>
+                    </div>
+
+                    {{-- Detail (Dates) --}}
+                    <div class="flex flex-col space-y-1 text-xs pt-3 border-t border-gray-100">
+                        <div class="flex items-center justify-between text-gray-500">
+                            <span class="font-medium">Created:</span>
+                            <span class="{{ $chip }}">{{ $r->created_at?->format('Y-m-d H:i') }}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-gray-500">
+                            <span class="font-medium">Updated:</span>
+                            <span class="{{ $chip }}">{{ $r->updated_at?->format('Y-m-d H:i') }}</span>
+                        </div>
+                    </div>
+
+                    {{-- Action Buttons --}}
+                    <div class="flex gap-2 justify-end pt-3 border-t border-gray-100">
+                        <button
+                            class="{{ $btnBlk }}"
+                            wire:click="openEdit({{ $r->department_id }})"
+                            wire:loading.attr="disabled"
+                            wire:target="openEdit({{ $r->department_id }})">
+                            <span wire:loading.remove wire:target="openEdit({{ $r->department_id }})">Edit</span>
+                            <span wire:loading wire:target="openEdit({{ $r->department_id }})">Loading…</span>
+                        </button>
+
+                        <button
+                            class="{{ $btnRed }}"
+                            wire:click="delete({{ $r->department_id }})"
+                            onclick="return confirm('Hapus department ini?')"
+                            wire:loading.attr="disabled"
+                            wire:target="delete({{ $r->department_id }})">
+                            <span wire:loading.remove wire:target="delete({{ $r->department_id }})">Hapus</span>
+                            <span wire:loading wire:target="delete({{ $r->department_id }})">Menghapus…</span>
+                        </button>
                     </div>
                 </div>
                 @empty
-                <div class="px-5 py-14 text-center text-gray-500 text-sm">Tidak ada data.</div>
+                <div class="sm:col-span-2 lg:col-span-3 xl:col-span-4 py-10 text-center text-gray-500 text-sm bg-white rounded-xl border border-gray-200 shadow-sm">Tidak ada data.</div>
                 @endforelse
             </div>
-
+        
             {{-- Pagination --}}
             @if($rows->hasPages())
-            <div class="px-5 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="pt-4">
                 <div class="flex justify-center">
                     {{ $rows->links() }}
                 </div>

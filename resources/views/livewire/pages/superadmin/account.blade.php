@@ -1,16 +1,18 @@
-<div class="bg-gray-50">
+<div class="bg-gray-50 min-h-screen">
     @php
-        $card = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden';
+        $card = 'bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden';
         $label = 'block text-sm font-medium text-gray-700 mb-2';
-        $input = 'w-full h-10 px-3 rounded-lg border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
-        $btnBlk = 'px-3 py-2 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition';
-        $btnRed = 'px-3 py-2 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition';
-        $chip = 'inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-gray-100 text-xs';
-        $mono = 'text-[10px] font-mono text-gray-500 bg-gray-100 px-2.5 py-1 rounded-md';
-        $ico = 'w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-semibold text-sm shrink-0';
+        $input = 'w-full h-10 px-3 rounded-xl border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
+        $btnBlk = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+        $btnRed = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition h-7'; // Tombol lebih pendek (h-7)
+        $chip = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-[10px] text-gray-600 font-medium';
+        $mono = 'text-[10px] font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md w-fit';
+        $ico = 'w-9 h-9 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-semibold text-xs shrink-0 border border-gray-200'; // Ukuran Ikon lebih kecil (w-9 h-9)
+        $userCard = 'bg-white rounded-xl border border-gray-100 shadow-sm p-4 space-y-3 hover:shadow-lg transition-shadow duration-300'; // Padding lebih kecil (p-4) dan space-y-3
     @endphp
 
     <main class="px-4 sm:px-6 py-6 space-y-8">
+
         {{-- HERO --}}
         <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-900 to-black text-white shadow-2xl">
             <div class="pointer-events-none absolute inset-0 opacity-10">
@@ -135,93 +137,112 @@
             </form>
         </section>
 
-        {{-- LIST USERS --}}
-        <div class="{{ $card }}">
-            <div class="px-5 py-4 border-b border-gray-200">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
-                    <div class="relative flex-1">
-                        <input type="text" wire:model.live="search" placeholder="Cari nama atau email..."
-                            class="{{ $input }} pl-10 w-full placeholder:text-gray-400">
-                        <x-heroicon-o-magnifying-glass class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    </div>
+        {{-- LIST USERS (CARD GRID) --}}
+        <div class="space-y-5">
+            {{-- Filter and Search Section --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <div class="relative sm:col-span-2 md:col-span-2 lg:col-span-2">
+                    <input type="text" wire:model.live="search" placeholder="Cari nama atau email..."
+                        class="{{ $input }} pl-10 w-full placeholder:text-gray-400 shadow-sm">
+                    <x-heroicon-o-magnifying-glass class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </div>
 
-                    <div class="relative">
-                        <select wire:model.live="roleFilter" class="{{ $input }} pl-10 w-full lg:w-60">
-                            <option value="">Semua Role</option>
-                            @foreach ($roles as $r)
-                                <option value="{{ $r['id'] }}">{{ $r['name'] }}</option>
-                            @endforeach
-                        </select>
-                        <x-heroicon-o-users class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    </div>
+                <div class="relative">
+                    <select wire:model.live="roleFilter" class="{{ $input }} pl-10 w-full shadow-sm">
+                        <option value="">Semua Role</option>
+                        @foreach ($roles as $r)
+                            <option value="{{ $r['id'] }}">{{ $r['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <x-heroicon-o-users class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </div>
 
-                    {{-- DEPARTMENT FILTER (NEWLY ADDED) --}}
-                    <div class="relative">
-                        <select wire:model.live="departmentFilter" class="{{ $input }} pl-10 w-full lg:w-60">
-                            <option value="">Semua Department</option>
-                            @foreach ($departments as $d)
-                                <option value="{{ $d->department_id }}">{{ $d->department_name }}</option>
-                            @endforeach
-                        </select>
-                        <x-heroicon-o-bars-4 class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    </div>
-
+                <div class="relative">
+                    <select wire:model.live="departmentFilter" class="{{ $input }} pl-10 w-full shadow-sm">
+                        <option value="">Semua Department</option>
+                        @foreach ($departments as $d)
+                            <option value="{{ $d->department_id }}">{{ $d->department_name }}</option>
+                        @endforeach
+                    </select>
+                    <x-heroicon-o-bars-4 class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
             </div>
 
-            <div class="divide-y divide-gray-200">
+            {{-- User Cards Grid --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 @forelse ($users as $u)
                     @php $rowNo = (($users->firstItem() ?? 1) - 0) + $loop->index; @endphp
-                    <div class="px-5 py-5 hover:bg-gray-50 transition-colors" wire:key="user-{{ $u->user_id }}">
-                        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                            <div class="flex items-start gap-3 flex-1">
-                                <div class="{{ $ico }}">{{ strtoupper(substr($u->full_name, 0, 1)) }}</div>
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center gap-2">
-                                        <h4 class="font-semibold text-gray-900 text-sm sm:text-base truncate">
-                                            {{ $u->full_name }}
-                                        </h4>
-                                        <span class="{{ $chip }}">
-                                            <span class="font-medium text-gray-700">{{ $u->role->name ?? 'No Role' }}</span>
-                                        </span>
-                                        <span class="{{ $chip }}">
-                                            <span class="text-gray-500">Dept:</span>
-                                            <span class="font-medium text-gray-700">{{ $u->department->department_name ?? 'N/A' }}</span>
-                                        </span>
-                                    </div>
-                                    <p class="text-[12px] text-gray-500 truncate">{{ $u->email }}</p>
-                                    @if($u->phone_number)
-                                        <p class="text-[12px] text-gray-500 mt-0.5">{{ $u->phone_number }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="text-right shrink-0 space-y-2">
-                                <div class="{{ $mono }}">No. {{ $rowNo }}</div>
-                                <div class="flex flex-wrap gap-2 justify-end pt-1">
-                                    <button class="{{ $btnBlk }}" wire:click="openEdit({{ $u->user_id }})">
-                                        Edit
-                                    </button>
-                                    <button class="{{ $btnRed }}" wire:click="delete({{ $u->user_id }})"
-                                        onclick="return confirm('Hapus user ini?')">
-                                        Hapus
-                                    </button>
+                    
+                    <div class="{{ $userCard }}" wire:key="user-{{ $u->user_id }}">
+                        
+                        {{-- Header Card: Icon, Name, and Role/Number --}}
+                        <div class="flex items-start gap-3">
+                            <div class="{{ $ico }}">{{ strtoupper(substr($u->full_name, 0, 1)) }}</div>
+                            <div class="min-w-0 flex-1 space-y-0.5">
+                                <h4 class="font-semibold text-gray-900 text-sm leading-tight truncate">
+                                    {{ $u->full_name }}
+                                </h4>
+                                <div class="flex items-center gap-2">
+                                    <span class="{{ $chip }} bg-gray-900 text-white">{{ $u->role->name ?? 'No Role' }}</span>
+                                    <p class="{{ $mono }}">No. {{ $rowNo }}</p>
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Details (Email, Phone, Department) --}}
+                        <div class="flex flex-col space-y-1 text-xs pt-3 border-t border-gray-100">
+                            <div class="flex flex-col">
+                                <span class="text-gray-500 font-medium">Email:</span>
+                                <span class="text-gray-700 truncate">{{ $u->email }}</span>
+                            </div>
+                            @if($u->phone_number)
+                            <div class="flex flex-col">
+                                <span class="text-gray-500 font-medium">Phone:</span>
+                                <span class="text-gray-700">{{ $u->phone_number }}</span>
+                            </div>
+                            @endif
+                            <div class="flex flex-col">
+                                <span class="text-gray-500 font-medium">Department:</span>
+                                <span class="text-gray-700 font-semibold truncate">{{ $u->department->department_name ?? 'N/A' }}</span>
+                            </div>
+                        </div>
+
+                        {{-- Action Buttons --}}
+                        <div class="flex gap-2 justify-end pt-3 border-t border-gray-100">
+                            <button
+                                class="{{ $btnBlk }}"
+                                wire:click="openEdit({{ $u->user_id }})"
+                                wire:loading.attr="disabled"
+                                wire:target="openEdit({{ $u->user_id }})">
+                                <span wire:loading.remove wire:target="openEdit({{ $u->user_id }})">Edit</span>
+                                <span wire:loading wire:target="openEdit({{ $u->user_id }})">Loading…</span>
+                            </button>
+                            <button
+                                class="{{ $btnRed }}"
+                                wire:click="delete({{ $u->user_id }})"
+                                onclick="return confirm('Hapus user ini?')"
+                                wire:loading.attr="disabled"
+                                wire:target="delete({{ $u->user_id }})">
+                                <span wire:loading.remove wire:target="delete({{ $u->user_id }})">Hapus</span>
+                                <span wire:loading wire:target="delete({{ $u->user_id }})">Menghapus…</span>
+                            </button>
+                        </div>
                     </div>
                 @empty
-                    <div class="px-5 py-14 text-center text-gray-500 text-sm">Tidak ada user yang cocok.</div>
+                    <div class="sm:col-span-2 lg:col-span-3 xl:col-span-4 py-10 text-center text-gray-500 text-sm bg-white rounded-xl border border-gray-200 shadow-sm">Tidak ada user yang cocok.</div>
                 @endforelse
             </div>
 
+            {{-- Pagination --}}
             @if($users->hasPages())
-                <div class="px-5 py-4 bg-gray-50 border-t border-gray-200">
+                <div class="pt-4">
                     <div class="flex justify-center">
                         {{ $users->links() }}
                     </div>
                 </div>
             @endif
         </div>
+
 
         {{-- MODAL EDIT --}}
         @if($modalEdit)

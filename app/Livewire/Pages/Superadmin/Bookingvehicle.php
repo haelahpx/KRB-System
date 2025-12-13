@@ -12,6 +12,7 @@ use App\Models\VehicleBooking;
 use App\Models\Vehicle;
 use App\Models\VehicleBookingPhoto;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 #[Layout('layouts.superadmin')]
 #[Title('Vehicle History')]
@@ -30,6 +31,20 @@ class Bookingvehicle extends Component
     public string $sortFilter = 'recent';
     public int $perPage = 5;
 
+    public bool $showFilterModal = false;
+    public ?string $previewUrl = null;
+    public bool $showPreviewModal = false;
+
+    public bool $showEditModal = false;
+    public ?int $editingBookingId = null;
+    public ?int $editVehicleId = null;
+    public ?string $editBorrowerName = '';
+    public ?string $editPurpose = '';
+    public ?string $editDestination = '';
+    public ?string $editStartAt = null;
+    public ?string $editEndAt = null;
+    public ?string $editNotes = '';
+
     public array $photosByBooking = [];
 
     protected $queryString = [
@@ -42,31 +57,106 @@ class Bookingvehicle extends Component
         'page'           => ['except' => 1],
     ];
 
-    public function updatingQ()              { $this->resetPage(); }
-    public function updatingVehicleFilter()  { $this->resetPage(); }
-    public function updatingStatusTab()      { $this->resetPage(); }
-    public function updatingIncludeDeleted() { $this->resetPage(); }
-    public function updatingSelectedDate()   { $this->resetPage(); }
-    public function updatingSortFilter()     { $this->resetPage(); }
+    protected function rules(): array
+    {
+        return [
+            'editVehicleId'      => ['required', 'integer', Rule::exists('vehicles', 'vehicle_id')->where('company_id', Auth::user()->company_id)],
+            'editBorrowerName'   => 'required|string|max:255',
+            'editPurpose'        => 'required|string|max:255',
+            'editDestination'    => 'nullable|string|max:255',
+            'editStartAt'        => 'required|date|before:editEndAt',
+            'editEndAt'          => 'required|date|after:editStartAt',
+            'editNotes'          => 'nullable|string|max:1000',
+        ];
+    }
+
+    public function updatingQ()
+    {
+        $this->resetPage();
+    }
+    public function updatingVehicleFilter()
+    {
+        $this->resetPage();
+    }
+    public function updatingStatusTab()
+    {
+        $this->resetPage();
+    }
+    public function updatingIncludeDeleted()
+    {
+        $this->resetPage();
+    }
+    public function updatingSelectedDate()
+    {
+        $this->resetPage();
+    }
+    public function updatingSortFilter()
+    {
+        $this->resetPage();
+    }
 
     public function mount(): void
     {
-        if (!in_array($this->statusTab, ['done','rejected'], true))  $this->statusTab = 'done';
-        if (!in_array($this->sortFilter, ['recent','oldest','nearest'], true)) $this->sortFilter = 'recent';
+        if (!in_array($this->statusTab, ['done', 'rejected'], true))  $this->statusTab = 'done';
+        if (!in_array($this->sortFilter, ['recent', 'oldest', 'nearest'], true)) $this->sortFilter = 'recent';
+    }
+
+    public function clearFilters(): void
+    {
+        $this->reset(['q', 'selectedDate', 'vehicleFilter']);
+        $this->resetPage();
+        $this->dispatch('toast', type: 'info', title: 'Filters Cleared', message: 'Search and specific filters have been reset.', duration: 2500);
+    }
+
+    public function clearAllFilters(): void
+    {
+        $this->reset([
+            'q',
+            'selectedDate',
+            'vehicleFilter',
+            'sortFilter',
+        ]);
+        $this->sortFilter = 'recent';
+        $this->statusTab = 'done';
+        $this->resetPage();
+        $this->dispatch('toast', type: 'info', title: 'All Filters Cleared', message: 'All filters have been reset.', duration: 2500);
+    }
+
+    public function openFilterModal(): void
+    {
+        $this->showFilterModal = true;
+    }
+    public function closeFilterModal(): void
+    {
+        $this->showFilterModal = false;
+        $this->resetPage();
+    }
+
+    public function openPhotoPreview(string $url): void
+    {
+        $this->previewUrl = $url;
+        $this->showPreviewModal = true;
+    }
+
+    public function closePhotoPreview(): void
+    {
+        $this->previewUrl = null;
+        $this->showPreviewModal = false;
     }
 
     public function deletePhoto(int $photoId): void
     {
         VehicleBookingPhoto::findOrFail($photoId)->delete();
-        $this->dispatch('toast', type:'success', title:'Deleted', message:'Photo soft-deleted.', duration:2500);
+        $this->dispatch('toast', type: 'success', title: 'Deleted', message: 'Photo soft-deleted.', duration: 2500);
         $this->refreshPhotosForCurrentPage();
     }
     public function restorePhoto(int $photoId): void
     {
         VehicleBookingPhoto::withTrashed()->findOrFail($photoId)->restore();
-        $this->dispatch('toast', type:'success', title:'Restored', message:'Photo restored.', duration:2500);
+        $this->dispatch('toast', type: 'success', title: 'Restored', message: 'Photo restored.', duration: 2500);
         $this->refreshPhotosForCurrentPage();
     }
+
     public function forceDeletePhoto(int $photoId): void
     {
         $row = VehicleBookingPhoto::withTrashed()->findOrFail($photoId);
@@ -74,34 +164,86 @@ class Bookingvehicle extends Component
             Storage::disk('public')->delete($row->photo_path);
         }
         $row->forceDelete();
-        $this->dispatch('toast', type:'success', title:'Removed', message:'Photo permanently deleted.', duration:2500);
+        $this->dispatch('toast', type: 'success', title: 'Removed', message: 'Photo permanently deleted.', duration: 2500);
         $this->refreshPhotosForCurrentPage();
     }
-    private function refreshPhotosForCurrentPage(): void { $this->q = $this->q; }
+    private function refreshPhotosForCurrentPage(): void
+    {
+        $this->q = $this->q;
+    }
 
     public function editBooking(int $bookingId): void
     {
-        $this->dispatch('toast', type:'info', title:'Edit Action', message:"Ready to edit Booking #{$bookingId}.", duration:3000);
+        $booking = VehicleBooking::withTrashed()->findOrFail($bookingId);
+
+        $this->editingBookingId = $booking->vehiclebooking_id;
+        $this->editVehicleId = $booking->vehicle_id;
+        $this->editBorrowerName = $booking->borrower_name;
+        $this->editPurpose = $booking->purpose;
+        $this->editDestination = $booking->destination;
+
+        $this->editStartAt = Carbon::parse($booking->start_at)->format('Y-m-d\TH:i');
+        $this->editEndAt = Carbon::parse($booking->end_at)->format('Y-m-d\TH:i');
+
+        $this->editNotes = $booking->notes;
+        $this->showEditModal = true;
+
+        $this->dispatch('toast', type: 'info', title: 'Edit Action', message: "Loading data for Booking #{$bookingId}.", duration: 3000);
     }
-    
+
+    public function closeEditModal(): void
+    {
+        $this->reset(['showEditModal', 'editingBookingId', 'editVehicleId', 'editBorrowerName', 'editPurpose', 'editDestination', 'editStartAt', 'editEndAt', 'editNotes']);
+        $this->resetValidation();
+    }
+
+    public function saveBooking(): void
+    {
+        $this->validate();
+
+        $booking = VehicleBooking::withTrashed()->findOrFail($this->editingBookingId);
+
+        $booking->vehicle_id    = $this->editVehicleId;
+        $booking->borrower_name = $this->editBorrowerName;
+        $booking->purpose       = $this->editPurpose;
+        $booking->destination   = $this->editDestination;
+        $booking->start_at      = Carbon::parse($this->editStartAt);
+        $booking->end_at        = Carbon::parse($this->editEndAt);
+        $booking->notes         = $this->editNotes;
+
+        $booking->save();
+
+        $this->closeEditModal();
+        $this->dispatch('toast', type: 'success', title: 'Updated', message: "Booking #{$this->editingBookingId} has been updated.", duration: 3000);
+        $this->resetPage();
+    }
+
+    public function openDetails(int $bookingId): void
+    {
+        // PERUBAHAN DI SINI:
+        // Tambahkan 'navigate: false' untuk memaksa Livewire melakukan
+        // redirect HTTP penuh (standard) daripada menggunakan Alpine.js navigation.
+        $this->redirect(route('superadmin.bookingdetails', ['bookingId' => $bookingId]), navigate: false);
+    }
+
     public function deleteBooking(int $bookingId): void
     {
         VehicleBooking::findOrFail($bookingId)->delete();
-        $this->dispatch('toast', type:'success', title:'Deleted', message:"Booking #{$bookingId} soft-deleted.", duration:2500);
+        $this->dispatch('toast', type: 'success', title: 'Deleted', message: "Booking #{$bookingId} soft-deleted.", duration: 2500);
         $this->resetPage();
     }
 
     public function restoreBooking(int $bookingId): void
     {
         VehicleBooking::withTrashed()->findOrFail($bookingId)->restore();
-        $this->dispatch('toast', type:'success', title:'Restored', message:"Booking #{$bookingId} restored.", duration:2500);
+        $this->dispatch('toast', type: 'success', title: 'Restored', message: "Booking #{$bookingId} restored.", duration: 2500);
         $this->resetPage();
     }
 
     public function forceDeleteBooking(int $bookingId): void
     {
         $booking = VehicleBooking::withTrashed()->findOrFail($bookingId);
-        
+
         $photos = VehicleBookingPhoto::withTrashed()->where('vehiclebooking_id', $bookingId)->get();
         foreach ($photos as $photo) {
             if ($photo->photo_path && !preg_match('#^https?://#', $photo->photo_path)) {
@@ -109,10 +251,10 @@ class Bookingvehicle extends Component
             }
             $photo->forceDelete();
         }
-        
+
         $booking->forceDelete();
-        
-        $this->dispatch('toast', type:'success', title:'Removed', message:"Booking #{$bookingId} permanently deleted.", duration:2500);
+
+        $this->dispatch('toast', type: 'success', title: 'Removed', message: "Booking #{$bookingId} permanently deleted.", duration: 2500);
         $this->resetPage();
     }
 
@@ -131,8 +273,8 @@ class Bookingvehicle extends Component
             $q = trim($this->q);
             $query->where(function ($qq) use ($q) {
                 $qq->where('purpose', 'like', "%{$q}%")
-                   ->orWhere('destination', 'like', "%{$q}%")
-                   ->orWhere('borrower_name', 'like', "%{$q}%");
+                    ->orWhere('destination', 'like', "%{$q}%")
+                    ->orWhere('borrower_name', 'like', "%{$q}%");
             });
         }
 
@@ -148,51 +290,19 @@ class Bookingvehicle extends Component
 
         $bookings = $query->paginate($this->perPage);
 
-        $vehicles = Vehicle::where('company_id', $companyId)->get(['vehicle_id','name','plate_number']);
+        $vehicles = Vehicle::where('company_id', $companyId)->get(['vehicle_id', 'name', 'plate_number']);
         $vehicleMap = $vehicles->mapWithKeys(fn($v) => [
-            $v->vehicle_id => ($v->name ?? $v->plate_number ?? ('#'.$v->vehicle_id))
+            $v->vehicle_id => ($v->name ?? $v->plate_number ?? ('#' . $v->vehicle_id))
         ])->toArray();
 
         $ids = method_exists($bookings, 'pluck')
             ? $bookings->pluck('vehiclebooking_id')->filter()->values()->all()
             : [];
 
-        $this->photosByBooking = [];
-        $photoCounts = [];
-        foreach ($ids as $bid) {
-            $this->photosByBooking[$bid] = ['before' => collect(), 'after' => collect()];
-            $photoCounts[$bid] = ['before' => 0, 'after' => 0];
-        }
-
-        if (!empty($ids)) {
-            $photoQuery = VehicleBookingPhoto::select(['id','vehiclebooking_id','photo_type','photo_path','deleted_at'])
-                ->whereIn('vehiclebooking_id', $ids);
-
-            if ($this->includeDeleted) $photoQuery->withTrashed();
-
-            $allPhotos = $photoQuery->orderBy('photo_type')->latest('id')->get();
-
-            foreach ($allPhotos as $p) {
-                $type = $p->photo_type === 'after' ? 'after' : 'before';
-
-                if (!array_key_exists($p->vehiclebooking_id, $this->photosByBooking)) {
-                    $this->photosByBooking[$p->vehiclebooking_id] = ['before' => collect(), 'after' => collect()];
-                    $photoCounts[$p->vehiclebooking_id] = ['before' => 0, 'after' => 0];
-                }
-
-                $this->photosByBooking[$p->vehiclebooking_id][$type]->push($p);
-
-                if ($this->includeDeleted || is_null($p->deleted_at)) {
-                    $photoCounts[$p->vehiclebooking_id][$type]++;
-                }
-            }
-        }
-
         return view('livewire.pages.superadmin.bookingvehicle', [
             'bookings'       => $bookings,
             'vehicleMap'     => $vehicleMap,
             'vehicles'       => $vehicles,
-            'photoCounts'    => $photoCounts,
             'statusTab'      => $this->statusTab,
             'includeDeleted' => $this->includeDeleted,
             'selectedDate'   => $this->selectedDate,

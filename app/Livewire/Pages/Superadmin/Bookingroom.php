@@ -19,28 +19,28 @@ use App\Models\Department as DP;
 use App\Models\Requirement;
 
 #[Layout('layouts.superadmin')]
-#[Title('Booking Room Management')] 
+#[Title('Booking Room Management')]
 class Bookingroom extends Component
 {
     use WithPagination;
 
     // UI state
     public string $search = '';
-    public ?int $departmentFilterId = null; 
-    public ?int $roomFilterId = null; 
+    public ?int $departmentFilterId = null;
+    public ?int $roomFilterId = null;
     public int $perPage = 10;
     public string $sortBy = 'start_time';
     public string $sortDir = 'desc';
     public bool $withTrashed = false;
-    
+
     // Filters for new design
-    public ?string $selectedDate = null; 
-    public string $dateMode = 'semua'; 
+    public ?string $selectedDate = null;
+    public string $dateMode = 'semua';
 
     // For Receptionist look and feel
     public string $activeTab = 'all'; // all | done | rejected
     public string $typeScope = 'all'; // all | offline | online
-    
+
     // Mobile UI state
     public bool $showFilterModal = false;
 
@@ -74,13 +74,13 @@ class Bookingroom extends Component
 
     // Requirement checklist in modal
     public array $selectedRequirements = [];
-    public $allRequirements = []; 
+    public $allRequirements = [];
 
     // Lookups for list cards and filters
     public array $roomLookup = [];
-    public array $roomsOptions = []; 
+    public array $roomsOptions = [];
     public array $deptLookup = [];
-    public array $deptOptions = []; 
+    public array $deptOptions = [];
 
     private array $sortable = ['meeting_title', 'date', 'start_time', 'end_time', 'number_of_attendees'];
 
@@ -92,7 +92,7 @@ class Bookingroom extends Component
             'meeting_title' => ['required', 'string', 'max:255'],
             'date' => ['required', 'date'],
             'number_of_attendees' => ['required', 'integer', 'min:1'],
-            'start_time' => ['required', 'date'], 
+            'start_time' => ['required', 'date'],
             'end_time' => ['required', 'date', 'after:start_time'],
             'special_notes' => ['nullable', 'string'],
             'selectedRequirements' => ['array'],
@@ -114,10 +114,10 @@ class Bookingroom extends Component
         $rooms = RM::where('company_id', $companyId)
             ->orderBy($roomNameCol)
             ->get(['room_id', "$roomNameCol as name"]);
-            
+
         $this->roomLookup = $rooms->pluck('name', 'room_id')->toArray();
         $this->roomsOptions = $rooms->map(fn($r) => [
-            'id' => $r->room_id, 
+            'id' => $r->room_id,
             'label' => $r->name
         ])->values()->all();
 
@@ -131,10 +131,10 @@ class Bookingroom extends Component
         $departments = DP::where('company_id', $companyId)
             ->orderBy($deptNameCol)
             ->get(['department_id', "$deptNameCol as name"]);
-        
+
         $this->deptLookup = $departments->pluck('name', 'department_id')->toArray();
         $this->deptOptions = $departments->map(fn($d) => [
-            'id' => $d->department_id, 
+            'id' => $d->department_id,
             'label' => $d->name
         ])->values()->all();
 
@@ -149,15 +149,42 @@ class Bookingroom extends Component
     }
 
     // Pagination refreshers for all filters
-    public function updatingSearch() {$this->resetPage();}
-    public function updatingDepartmentFilterId() {$this->resetPage();}
-    public function updatingRoomFilterId() {$this->resetPage();} 
-    public function updatingPerPage() {$this->resetPage();}
-    public function updatingWithTrashed() {$this->resetPage();}
-    public function updatingSelectedDate() {$this->resetPage();}
-    public function updatingDateMode() {$this->resetPage();}
-    public function updatingTypeScope() {$this->resetPage();}
-    public function updatingActiveTab() {$this->resetPage();}
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingDepartmentFilterId()
+    {
+        $this->resetPage();
+    }
+    public function updatingRoomFilterId()
+    {
+        $this->resetPage();
+    }
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+    public function updatingWithTrashed()
+    {
+        $this->resetPage();
+    }
+    public function updatingSelectedDate()
+    {
+        $this->resetPage();
+    }
+    public function updatingDateMode()
+    {
+        $this->resetPage();
+    }
+    public function updatingTypeScope()
+    {
+        $this->resetPage();
+    }
+    public function updatingActiveTab()
+    {
+        $this->resetPage();
+    }
 
     public function sort(string $field): void
     {
@@ -179,6 +206,27 @@ class Bookingroom extends Component
             $this->activeTab = $tab;
             $this->resetPage();
         }
+    }
+
+    public function clearAllFilters()
+    {
+        // Reset properti filter ke nilai default
+        $this->reset([
+            'search',
+            'selectedDate',
+            'roomFilterId',
+            'departmentFilterId',
+            'typeScope'
+        ]);
+
+        // Opsional: Jika Anda juga ingin mereset pagination
+        $this->resetPage();
+
+        // Opsional: Atur ulang tab ke 'all' jika diperlukan
+        $this->activeTab = 'all';
+
+        // Opsional: Tambahkan notifikasi jika Anda menggunakan notifikasi Livewire
+        // session()->flash('message', 'Semua filter telah dihapus!');
     }
 
     public function setTypeScope(string $scope): void
@@ -204,21 +252,21 @@ class Bookingroom extends Component
         $this->resetPage();
         $this->closeFilterModal();
     }
-    
-    public function selectRoom(int $roomId): void 
+
+    public function selectRoom(int $roomId): void
     {
         $this->roomFilterId = $roomId;
         $this->resetPage();
         $this->closeFilterModal();
     }
 
-    public function clearRoomFilter(): void 
+    public function clearRoomFilter(): void
     {
         $this->roomFilterId = null;
         $this->resetPage();
         $this->closeFilterModal();
     }
-    
+
     /* ---------- Mobile Modal Methods ---------- */
     public function openFilterModal(): void
     {
@@ -235,7 +283,7 @@ class Bookingroom extends Component
     public function openEdit(int $id): void
     {
         $companyId = Auth::user()->company_id;
-        $data = BR::where('company_id', $companyId)->withTrashed()->findOrFail($id); 
+        $data = BR::where('company_id', $companyId)->withTrashed()->findOrFail($id);
 
         $this->editingId = $data->bookingroom_id;
 
@@ -244,7 +292,7 @@ class Bookingroom extends Component
         $this->meeting_title = $data->meeting_title;
         $this->date = $data->date;
         $this->number_of_attendees = $data->number_of_attendees;
-        $this->start_time = Carbon::parse($data->start_time)->format('Y-m-d\TH:i'); 
+        $this->start_time = Carbon::parse($data->start_time)->format('Y-m-d\TH:i');
         $this->end_time = Carbon::parse($data->end_time)->format('Y-m-d\TH:i');
         $this->special_notes = $data->special_notes;
 
@@ -270,7 +318,7 @@ class Bookingroom extends Component
         $this->validate();
 
         $companyId = Auth::user()->company_id;
-        $row = BR::where('company_id', $companyId)->withTrashed()->findOrFail($this->editingId); 
+        $row = BR::where('company_id', $companyId)->withTrashed()->findOrFail($this->editingId);
 
         // Update booking data
         $row->update([
@@ -279,7 +327,7 @@ class Bookingroom extends Component
             'meeting_title' => $this->meeting_title,
             'date' => $this->date,
             'number_of_attendees' => $this->number_of_attendees,
-            'start_time' => Carbon::parse($this->start_time)->toDateTimeString(), 
+            'start_time' => Carbon::parse($this->start_time)->toDateTimeString(),
             'end_time' => Carbon::parse($this->end_time)->toDateTimeString(),
             'special_notes' => $this->special_notes,
         ]);
@@ -290,7 +338,7 @@ class Bookingroom extends Component
             ->delete();
 
         $now = now();
-        if(!empty($this->selectedRequirements)){
+        if (!empty($this->selectedRequirements)) {
             $inserts = [];
             foreach ($this->selectedRequirements as $reqId) {
                 $inserts[] = [
@@ -311,7 +359,7 @@ class Bookingroom extends Component
     {
         $companyId = Auth::user()->company_id;
         $row = BR::where('company_id', $companyId)->findOrFail($id);
-        $row->delete(); 
+        $row->delete();
         session()->flash('success', 'Booking moved to trash (soft deleted).');
         $this->resetPage();
     }
@@ -320,16 +368,29 @@ class Bookingroom extends Component
     {
         $companyId = Auth::user()->company_id;
         $row = BR::where('company_id', $companyId)->onlyTrashed()->findOrFail($id);
-        $row->restore(); 
+        $row->restore();
         session()->flash('success', 'Booking restored from trash.');
         $this->resetPage();
+    }
+
+    public function redirectToBookingDetails(int $id): \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+    {
+        // Mengubah ini agar mengarah ke halaman detail baru
+        return redirect()->route('superadmin.bookroomdetails', ['id' => $id]);
     }
 
     private function resetForm(): void
     {
         $this->reset([
-            'editingId', 'room_id', 'department_id', 'meeting_title', 'date', 
-            'number_of_attendees', 'start_time', 'end_time', 'special_notes', 
+            'editingId',
+            'room_id',
+            'department_id',
+            'meeting_title',
+            'date',
+            'number_of_attendees',
+            'start_time',
+            'end_time',
+            'special_notes',
             'selectedRequirements',
         ]);
     }
@@ -346,7 +407,7 @@ class Bookingroom extends Component
             ])
             ->leftJoin('users as u', 'u.user_id', '=', 'booking_rooms.user_id')
             ->where('booking_rooms.company_id', $companyId)
-            
+
             // Apply trash scope
             ->when($this->withTrashed, fn($q) => $q->onlyTrashed())
             ->when(!$this->withTrashed, fn($q) => $q->whereNull('booking_rooms.deleted_at'))
@@ -354,21 +415,21 @@ class Bookingroom extends Component
             // FIXED: Apply active tab filter based on status
             ->when($this->activeTab === 'rejected', fn($q) => $q->where('booking_rooms.status', 'rejected'))
             ->when($this->activeTab === 'done', fn($q) => $q->where('booking_rooms.status', 'completed'))
-            
+
             // Apply department filter
             ->when($this->departmentFilterId, fn($q) => $q->where('booking_rooms.department_id', $this->departmentFilterId))
-            
+
             // ADDED: Apply room filter (only targets room bookings/offline type)
             ->when($this->roomFilterId, function ($q) {
                 $q->where('booking_rooms.room_id', $this->roomFilterId)
-                  ->where(function ($qq) {
-                      // Logic to ensure it's an 'offline' type booking
-                      $qq->whereNull('booking_type')
-                         ->orWhereIn('booking_type', ['bookingroom', 'meeting'])
-                         ->orWhereNotIn('booking_type', ['online_meeting', 'onlinemeeting']); 
-                  });
+                    ->where(function ($qq) {
+                        // Logic to ensure it's an 'offline' type booking
+                        $qq->whereNull('booking_type')
+                            ->orWhereIn('booking_type', ['bookingroom', 'meeting'])
+                            ->orWhereNotIn('booking_type', ['online_meeting', 'onlinemeeting']);
+                    });
             })
-            
+
             // Apply type scope filter: online / offline / all
             ->when($this->typeScope === 'online', function ($q) {
                 $q->whereIn('booking_type', ['online_meeting', 'onlinemeeting']);
@@ -376,8 +437,8 @@ class Bookingroom extends Component
             ->when($this->typeScope === 'offline', function ($q) {
                 $q->where(function ($qq) {
                     $qq->whereNull('booking_type')
-                       ->orWhereIn('booking_type', ['bookingroom', 'meeting'])
-                       ->orWhereNotIn('booking_type', ['online_meeting', 'onlinemeeting']);
+                        ->orWhereIn('booking_type', ['bookingroom', 'meeting'])
+                        ->orWhereNotIn('booking_type', ['online_meeting', 'onlinemeeting']);
                 });
             })
 
@@ -391,12 +452,12 @@ class Bookingroom extends Component
             })
 
             // Apply date filter
-            ->when($this->selectedDate, fn ($q) => $q->whereDate('booking_rooms.date', $this->selectedDate))
+            ->when($this->selectedDate, fn($q) => $q->whereDate('booking_rooms.date', $this->selectedDate))
 
             // Apply sort mode
-            ->when($this->dateMode === 'terbaru', fn ($q) => $q->orderByDesc('booking_rooms.date')->orderByDesc('booking_rooms.start_time'))
-            ->when($this->dateMode === 'terlama', fn ($q) => $q->orderBy('booking_rooms.date')->orderBy('booking_rooms.start_time'))
-            ->when($this->dateMode === 'semua', fn ($q) => $q->orderBy($this->sortBy, $this->sortDir))
+            ->when($this->dateMode === 'terbaru', fn($q) => $q->orderByDesc('booking_rooms.date')->orderByDesc('booking_rooms.start_time'))
+            ->when($this->dateMode === 'terlama', fn($q) => $q->orderBy('booking_rooms.date')->orderBy('booking_rooms.start_time'))
+            ->when($this->dateMode === 'semua', fn($q) => $q->orderBy($this->sortBy, $this->sortDir))
 
             ->paginate($this->perPage);
 
@@ -419,11 +480,11 @@ class Bookingroom extends Component
         return view('livewire.pages.superadmin.bookingroom', [
             'bookings' => $bookings,
             'roomLookup' => $this->roomLookup,
-            'roomsOptions' => $this->roomsOptions, 
+            'roomsOptions' => $this->roomsOptions,
             'deptLookup' => $this->deptLookup,
-            'deptOptions' => $this->deptOptions, 
-            'requirementsMap' => $requirementsMap, 
-            'allRequirements' => $this->allRequirements, 
+            'deptOptions' => $this->deptOptions,
+            'requirementsMap' => $requirementsMap,
+            'allRequirements' => $this->allRequirements,
         ]);
     }
 }
