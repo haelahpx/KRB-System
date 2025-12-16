@@ -54,7 +54,7 @@ class CreateTicket extends Component
             'subject' => ['required', 'string', 'max:255'],
             'priority' => ['required', 'in:low,medium,high'],
             'assigned_department_id' => ['required', 'exists:departments,department_id'],
-            'description' => ['nullable', 'string', 'max:10000'],
+            'description' => ['required', 'string', 'max:10000'],
             'temp_items_json' => ['nullable', 'string'],
         ];
     }

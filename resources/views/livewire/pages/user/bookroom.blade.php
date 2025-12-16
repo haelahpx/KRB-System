@@ -152,11 +152,6 @@
                     </div>
 
                     <div class="flex space-x-4 pt-4 border-t border-gray-100">
-                        <button type="button" wire:click="$refresh"
-                            class="px-4 py-2 text-sm font-medium border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors inline-flex items-center gap-1.5">
-                            <x-heroicon-o-arrow-path class="w-4 h-4" />
-                            Clear Form
-                        </button>
                         <button type="submit"
                             class="px-4 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors inline-flex items-center gap-1.5">
                             <x-heroicon-o-check-circle class="w-4 h-4" />

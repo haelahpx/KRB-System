@@ -50,15 +50,19 @@
           {{-- Inputs: Subject & Priority --}}
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-medium text-gray-900 mb-1.5">Subject</label>
-              <input type="text" wire:model.defer="subject" placeholder="Enter ticket subject"
+              {{-- ADDED: Red Asterisk & Required Attribute --}}
+              <label class="block text-xs font-medium text-gray-900 mb-1.5">Subject <span
+                  class="text-red-500">*</span></label>
+              <input type="text" wire:model.defer="subject" placeholder="Enter ticket subject" required
                 class="w-full px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent" />
               @error('subject') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div>
-              <label class="block text-xs font-medium text-gray-900 mb-1.5">Priority</label>
-              <select wire:model="priority"
+              {{-- ADDED: Red Asterisk & Required Attribute --}}
+              <label class="block text-xs font-medium text-gray-900 mb-1.5">Priority <span
+                  class="text-red-500">*</span></label>
+              <select wire:model="priority" required
                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -77,12 +81,14 @@
             </div>
 
             <div>
-              <label class="block text-xs font-medium text-gray-900 mb-1.5">Assigned To</label>
-              <select wire:model="assigned_department_id"
+              {{-- ADDED: Red Asterisk & Required Attribute --}}
+              <label class="block text-xs font-medium text-gray-900 mb-1.5">Assigned To <span
+                  class="text-red-500">*</span></label>
+              <select wire:model="assigned_department_id" required
                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                 <option value="" selected>Select department</option>
                 @foreach($this->departments as $dept)
-                <option value="{{ $dept['department_id'] }}">{{ $dept['department_name'] }}</option>
+                  <option value="{{ $dept['department_id'] }}">{{ $dept['department_name'] }}</option>
                 @endforeach
               </select>
               @error('assigned_department_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
@@ -90,8 +96,10 @@
           </div>
 
           <div>
-            <label class="block text-xs font-medium text-gray-900 mb-1.5">Description</label>
-            <textarea wire:model.defer="description" rows="6" placeholder="Describe your issue in detail..."
+            {{-- ADDED: Red Asterisk & Required Attribute --}}
+            <label class="block text-xs font-medium text-gray-900 mb-1.5">Description <span
+                class="text-red-500">*</span></label>
+            <textarea wire:model.defer="description" rows="6" placeholder="Describe your issue in detail..." required
               class="w-full px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent resize-none"></textarea>
             @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
           </div>
@@ -104,35 +112,42 @@
 
           <div>
             <label class="block text-xs font-medium text-gray-900 mb-1.5">Attachments</label>
-            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 transition-colors">
+            <div
+              class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 transition-colors">
 
               {{-- Hidden Inputs --}}
-              <input type="file" id="file-upload" class="hidden" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xlsx,.zip">
+              <input type="file" id="file-upload" class="hidden" multiple
+                accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xlsx,.zip">
               <input type="file" id="mobile-camera-upload" class="hidden" accept="image/*" capture="environment">
 
               {{-- ACTION BUTTONS --}}
               <div class="flex flex-col md:flex-row justify-center items-center gap-4 py-4">
 
-                {{-- 1. Upload Files (Blade Icon: Cloud Arrow Up Outline) --}}
-                <label for="file-upload" class="cursor-pointer group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-32">
-                  <div class="p-3 bg-gray-100 rounded-full group-hover:bg-white border border-gray-200 shadow-sm transition">
+                {{-- 1. Upload Files --}}
+                <label for="file-upload"
+                  class="cursor-pointer group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-32">
+                  <div
+                    class="p-3 bg-gray-100 rounded-full group-hover:bg-white border border-gray-200 shadow-sm transition">
                     <x-heroicon-o-cloud-arrow-up class="w-6 h-6 text-gray-600" />
                   </div>
                   <span class="text-xs font-bold text-gray-900">Upload Files</span>
                 </label>
 
-                {{-- 2. Mobile Camera (Hidden on Desktop, Visible on Mobile) (Blade Icon: Camera Outline) --}}
-                <label for="mobile-camera-upload" class="md:hidden cursor-pointer group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-32">
-                  <div class="p-3 bg-gray-100 rounded-full group-hover:bg-white border border-gray-200 shadow-sm transition">
+                {{-- 2. Mobile Camera --}}
+                <label for="mobile-camera-upload"
+                  class="md:hidden cursor-pointer group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-32">
+                  <div
+                    class="p-3 bg-gray-100 rounded-full group-hover:bg-white border border-gray-200 shadow-sm transition">
                     <x-heroicon-o-camera class="w-6 h-6 text-gray-600" />
                   </div>
                   <span class="text-xs font-bold text-gray-900">Take Photo</span>
                 </label>
 
-                {{-- 3. Desktop Webcam (Hidden on Mobile, Visible on Desktop) (Blade Icon: Video Camera Outline) --}}
-                <button type="button" id="btn-webcam-open" class="hidden md:flex cursor-pointer group flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-32">
-                  <div class="p-3 bg-gray-100 rounded-full group-hover:bg-white border border-gray-200 shadow-sm transition">
-                    {{-- Webcam Icon --}}
+                {{-- 3. Desktop Webcam --}}
+                <button type="button" id="btn-webcam-open"
+                  class="hidden md:flex cursor-pointer group flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-32">
+                  <div
+                    class="p-3 bg-gray-100 rounded-full group-hover:bg-white border border-gray-200 shadow-sm transition">
                     <x-heroicon-o-video-camera class="w-6 h-6 text-gray-600" />
                   </div>
                   <span class="text-xs font-bold text-gray-900">Webcam (PC)</span>
@@ -163,18 +178,14 @@
             </div>
             @error('temp_items_json') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             @if($errors->has('attachments'))
-            <p class="text-red-500 text-xs mt-1">{{ $errors->first('attachments') }}</p>
+              <p class="text-red-500 text-xs mt-1">{{ $errors->first('attachments') }}</p>
             @endif
           </div>
 
           <div class="flex gap-4 pt-4 border-t border-gray-100">
-            <a href="{{ route('home') }}"
-              class="px-4 py-2 text-sm font-medium border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-              Cancel
-            </a>
             <button type="submit"
-              class="px-4 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-              wire:loading.attr="disabled">
+              class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 inline-flex items-center gap-1.5">
+                            <x-heroicon-o-check-circle class="w-4 h-4" />
               <span wire:loading.remove>Submit Ticket</span>
               <span wire:loading>Submitting...</span>
             </button>
@@ -185,10 +196,11 @@
 
     {{-- Sidebar --}}
     <div class="space-y-6">
-      {{-- Card 1: Contact Support (New) (Blade Icons: Phone, Envelope Outline) --}}
+      {{-- Card 1: Contact Support --}}
       <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
         <h3 class="text-lg font-bold text-gray-900 mb-3">Need Immediate Help?</h3>
-        <p class="text-xs text-gray-600 mb-4">For critical issues preventing business operations, please contact us directly:</p>
+        <p class="text-xs text-gray-600 mb-4">For critical issues preventing business operations, please contact us
+          directly:</p>
 
         <div class="space-y-3">
           <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
@@ -209,7 +221,7 @@
         </div>
       </div>
 
-      {{-- Card 3: Operational Hours (New) --}}
+      {{-- Card 2: Operational Hours --}}
       <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
         <h3 class="text-lg font-bold mb-2">Operational Hours</h3>
         <p class="text-xs text-gray-400 mb-4">Our standard response time is within 24 hours during working days.</p>
@@ -250,11 +262,13 @@
       {{-- Video Area --}}
       <div class="p-4 space-y-4">
         <div class="bg-black rounded-lg overflow-hidden flex items-center justify-center relative aspect-video">
-          <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover transform scale-x-[-1]"></video>
+          <video id="webcam-video" autoplay playsinline
+            class="w-full h-full object-cover transform scale-x-[-1]"></video>
         </div>
         <div class="flex items-center justify-between">
           <span class="text-xs text-gray-500">Pastikan izin kamera aktif.</span>
-          <button type="button" id="btn-webcam-capture" class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-black flex items-center gap-2">
+          <button type="button" id="btn-webcam-capture"
+            class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-black flex items-center gap-2">
             <x-heroicon-o-camera class="w-4 h-4" />
             Capture
           </button>
@@ -266,17 +280,11 @@
 
 {{-- ===== CLIENT JS: Upload + Webcam Logic ===== --}}
 <script>
-  // A simple comment like an actual programmer's simple documentation
-  // This function simulates how a Blade icon component (pre-rendered on the server) 
-  // would be used in the client-side JavaScript for dynamic rendering.
-  // In a real application, you might use AJAX to fetch this string or define it globally.
   function getFileIconBlade() {
-    // NOTE: This string represents the server-rendered HTML output of a Blade component.
-    // We are using the 'Document Text Outline' icon as it matches the original file icon's intent.
     return '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-gray-400 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.812A2.25 2.25 0 0017.25 9H9.75A2.25 2.25 0 007.5 11.25V14.25m12 0H7.5m12 0A2.25 2.25 0 0117.25 16.5H9.75A2.25 2.25 0 017.5 14.25m12 0a2.25 2.25 0 000-4.5m-4.5-5.25v1.5a2.25 2.25 0 01-2.25 2.25h-1.5a2.25 2.25 0 01-2.25-2.25v-1.5m4.5 5.25h-4.5" /></svg>';
   }
 
-  (function() {
+  (function () {
     const ALLOWED = ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'doc', 'docx', 'xlsx', 'zip'];
     const MAX10 = 10 * 1024 * 1024;
     const tmpKey = document.getElementById('tmp_key').value;
@@ -384,7 +392,7 @@
         xhr.open('POST', '/attachments/temp');
         try {
           xhr.setRequestHeader('X-CSRF-TOKEN', csrf);
-        } catch (e) {}
+        } catch (e) { }
 
         xhr.upload.onprogress = (evt) => {
           if (evt.lengthComputable) setProgress((evt.loaded / evt.total) * 100, `Uploading ${file.name}…`);
@@ -413,9 +421,8 @@
       closeWebcamModal();
 
       for (const f of files) {
-        // Simple Validation
         const ext = (f.name.split('.').pop() || 'jpg').toLowerCase();
-        if (!ALLOWED.includes(ext) && f.type !== 'image/jpeg') { // quick fix for blob
+        if (!ALLOWED.includes(ext) && f.type !== 'image/jpeg') {
           alert('Format not allowed: ' + f.name);
           continue;
         }
@@ -490,17 +497,13 @@
       canvas.height = videoEl.videoHeight;
       const ctx = canvas.getContext('2d');
 
-      // Flip context horizontally if you want mirrored capture, or keep standard
-      // ctx.scale(-1, 1); ctx.drawImage(videoEl, -canvas.width, 0); // Mirror
       ctx.drawImage(videoEl, 0, 0); // Standard
 
       canvas.toBlob(blob => {
         if (blob) {
-          // Create a File object from the blob
           const file = new File([blob], "webcam_" + Date.now() + ".jpg", {
             type: "image/jpeg"
           });
-          // Send to existing upload logic
           processFiles([file]);
         }
       }, 'image/jpeg', 0.85);
@@ -510,12 +513,11 @@
     if (fileInput) fileInput.addEventListener('change', handleInputChange);
     if (mobileCamInput) mobileCamInput.addEventListener('change', handleInputChange);
 
-    // Webcam Button Triggers
     if (btnOpenCam) btnOpenCam.addEventListener('click', openWebcamModal);
     if (btnCloseCam) btnCloseCam.addEventListener('click', closeWebcamModal);
     if (btnCapture) btnCapture.addEventListener('click', captureFromWebcam);
 
-    window.beforeSubmitAttachSync = function() {
+    window.beforeSubmitAttachSync = function () {
       syncHidden();
       return true;
     };

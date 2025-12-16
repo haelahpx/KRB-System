@@ -299,10 +299,6 @@
                         <label class="flex items-center gap-2 cursor-pointer mt-2"><input wire:model="agree_terms" type="checkbox" class="rounded border-gray-300 text-gray-900 focus:ring-gray-900"><span class="text-sm text-gray-700">Saya Menyetujui Syarat & Ketentuan</span></label>
                     </div>
                     <div class="flex items-center gap-3 pt-2">
-                        <button type="button" wire:click="resetForm" class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 inline-flex items-center gap-1.5">
-                            <x-heroicon-o-arrow-path class="w-4 h-4" />
-                            Clear
-                        </button>
                         <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 inline-flex items-center gap-1.5">
                             <x-heroicon-o-check-circle class="w-4 h-4" />
                             Submit Request
