@@ -21,31 +21,30 @@
             <div class="relative z-10 p-6 sm:p-8">
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
 
-                    <!-- LEFT SECTION -->
-                    <div class="flex items-start gap-4 sm:gap-6">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20">
+                    <div class="flex items-start gap-4 sm:gap-6 flex-1 min-w-0">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20 shrink-0">
                             <x-heroicon-o-users class="w-6 h-6 text-white" />
                         </div>
 
-                        <div class="space-y-1.5">
-                            <h2 class="text-xl sm:text-2xl font-semibold leading-tight">
+                        <div class="space-y-1.5 min-w-0">
+                            <h2 class="text-xl sm:text-2xl font-semibold leading-tight truncate">
                                 User Management
                             </h2>
 
-                            <p class="text-sm text-white/80">
+                            <p class="text-sm text-white/80 truncate">
                                 Cabang: <span class="font-semibold">{{ $company_name }}</span>
                                 <span class="mx-2">•</span>
                                 Departemen: <span class="font-semibold">{{ $department_name }}</span>
                             </p>
 
-                            <p class="text-xs text-white/60">
+                            <p class="text-xs text-white/60 truncate">
                                 Menampilkan user untuk departemen:
                                 <span class="font-medium">{{ $department_name }}</span>.
                             </p>
                         </div>
                     </div>
 
-                    <!-- RIGHT SECTION -->
+                    {{-- Ensured w-full on mobile, then constrained on large screens --}}
                     @if ($showSwitcher)
                     <div class="w-full lg:w-[32rem] lg:ml-6">
                         <label class="block text-xs font-medium text-white/80 mb-2">
@@ -53,7 +52,6 @@
                         </label>
 
                         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                            <!-- DARK SELECT FIX -->
                             <select
                                 wire:model.live="selected_department_id"
                                 class="w-full h-11 sm:h-12 px-3 sm:px-4 rounded-lg border border-white/20 bg-white/10 text-white text-sm placeholder:text-white/60 focus:border-white focus:ring-2 focus:ring-white/30 focus:outline-none transition">
@@ -69,7 +67,6 @@
                         </div>
                     </div>
                     @else
-                    <!-- SEARCH VERSION -->
                     <div class="w-full lg:w-80 lg:ml-auto">
                         <input
                             type="text"
@@ -94,6 +91,7 @@
             </div>
 
             <form class="p-5" wire:submit.prevent="store">
+                {{-- Already responsive with grid-cols-1 md:grid-cols-2 --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label class="{{ $label }}">Full Name</label>
@@ -152,18 +150,19 @@
 
         {{-- LIST USERS --}}
         <div class="{{ $card }}">
+            {{-- Filters (Made to stack on mobile, use full width) --}}
             <div class="px-5 py-4 border-b border-gray-200">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
+                <div class="flex flex-col lg:flex-row lg:items-center gap-3">
                     {{-- Search --}}
-                    <div class="relative flex-1">
+                    <div class="relative flex-1 w-full">
                         <input type="text" wire:model.live="search" placeholder="Cari nama atau email..." class="{{ $input }} pl-10 w-full placeholder:text-gray-400">
                         <x-heroicon-o-magnifying-glass
                             class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     </div>
 
                     {{-- Role filter --}}
-                    <div class="relative">
-                        <select wire:model.live="roleFilter" class="{{ $input }} pl-10 w-full lg:w-60">
+                    <div class="relative w-full lg:w-60">
+                        <select wire:model.live="roleFilter" class="{{ $input }} pl-10 w-full">
                             <option value="">Semua Role</option>
                             @foreach ($roles as $r)
                             <option value="{{ $r['id'] }}">{{ $r['name'] }}</option>
@@ -174,8 +173,8 @@
                     </div>
 
                     {{-- Agent filter --}}
-                    <div class="relative">
-                        <select wire:model.live="agentFilter" class="{{ $input }} pl-10 w-full lg:w-48">
+                    <div class="relative w-full lg:w-48">
+                        <select wire:model.live="agentFilter" class="{{ $input }} pl-10 w-full">
                             <option value="">Semua User</option>
                             <option value="yes">Hanya Agent</option>
                             <option value="no">Non Agent</option>
@@ -198,34 +197,36 @@
                 @endphp
 
                 <div class="px-5 py-5 hover:bg-gray-50 transition-colors" wire:key="user-{{ $u->user_id }}">
-                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                        <div class="flex items-start gap-3 flex-1">
-                            <div class="{{ $ico }}">{{ strtoupper(substr($u->full_name, 0, 1)) }}</div>
+                    {{-- Changed lg:flex-row to sm:flex-row to stack content/actions on mobile --}}
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                        <div class="flex items-start gap-3 flex-1 min-w-0">
+                            <div class="{{ $ico }} shrink-0">{{ strtoupper(substr($u->full_name, 0, 1)) }}</div>
                             <div class="min-w-0 flex-1">
-                                <div class="flex items-center gap-2">
-                                    <h4 class="font-semibold text-gray-900 text-sm sm:text-base truncate">{{ $u->full_name }}</h4>
+                                {{-- Badges wrapper: Added flex-wrap --}}
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h4 class="font-semibold text-gray-900 text-sm sm:text-base truncate max-w-full sm:max-w-none">{{ $u->full_name }}</h4>
 
                                     {{-- Role badge --}}
-                                    <span class="{{ $chip }}">
+                                    <span class="{{ $chip }} shrink-0">
                                         <span class="font-medium text-gray-700">{{ $u->role->name ?? 'No Role' }}</span>
                                     </span>
 
                                     {{-- Agent badge + icon --}}
                                     @if($u->is_agent == 'yes' || $u->is_agent == 1)
-                                    <span class="{{ $chip }}">
+                                    <span class="{{ $chip }} shrink-0">
                                         <x-heroicon-o-user class="w-3.5 h-3.5 text-gray-600" />
                                         <span class="font-medium text-gray-700">Agent</span>
                                     </span>
                                     @endif
 
                                     {{-- Dept badge --}}
-                                    <span class="{{ $chip }}">
+                                    <span class="{{ $chip }} shrink-0">
                                         <span class="text-gray-500">Dept:</span>
                                         <span class="font-medium text-gray-700">{{ $u->department->department_name ?? 'N/A' }}</span>
                                     </span>
 
                                     @if($isSelf)
-                                    <span class="{{ $chip }}">You</span>
+                                    <span class="{{ $chip }} shrink-0">You</span>
                                     @endif
                                 </div>
                                 <p class="text-[12px] text-gray-500 truncate">{{ $u->email }}</p>
@@ -235,9 +236,10 @@
                             </div>
                         </div>
 
-                        <div class="text-right shrink-0 space-y-2">
-                            <div class="{{ $mono }}">No. {{ $rowNo }}</div>
-                            <div class="flex flex-wrap gap-2 justify-end pt-1">
+                        {{-- Actions: Added flex-wrap and adjusted alignment for mobile --}}
+                        <div class="text-left sm:text-right shrink-0 space-y-2 pt-2 sm:pt-0">
+                            <div class="{{ $mono }} inline-block">No. {{ $rowNo }}</div>
+                            <div class="flex flex-wrap gap-2 justify-start sm:justify-end">
                                 @if($canEdit)
                                 <button class="{{ $btnBlk }}" wire:click="openEdit({{ $u->user_id }})"
                                     wire:loading.attr="disabled" wire:target="openEdit({{ $u->user_id }})"
@@ -284,11 +286,12 @@
 
         {{-- MODAL EDIT --}}
         @if($modalEdit)
-        <div class="fixed inset-0 z-[60] flex items-center justify-center" role="dialog" aria-modal="true"
+        <div class="fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true" {{-- Added padding p-4 --}}
             wire:key="modal-edit" wire:keydown.escape.window="closeEdit">
             <button type="button" class="absolute inset-0 bg-black/50" aria-label="Close overlay" wire:click="closeEdit"></button>
 
-            <div class="relative w-full max-w-2xl mx-4 {{ $card }} focus:outline-none" tabindex="-1">
+            {{-- Adjusted max-w for responsiveness --}}
+            <div class="relative w-full max-w-md md:max-w-2xl mx-auto {{ $card }} focus:outline-none" tabindex="-1">
                 <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
                     <h3 class="text-base font-semibold text-gray-900">Edit User</h3>
                     <button class="text-gray-500 hover:text-gray-700" type="button" wire:click="closeEdit" aria-label="Close">

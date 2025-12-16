@@ -1,6 +1,5 @@
 <div class="bg-gray-50">
 
-    <!-- Download overlay (shown during PDF preparation) -->
     <div id="agentDownloadOverlay" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
         <div class="relative h-full w-full flex items-center justify-center p-4">
@@ -67,6 +66,7 @@
         </header>
 
         {{-- AHT Summary: Avg resolution time, Fastest agent, Slowest agent --}}
+        {{-- Already responsive with grid-cols-1 md:grid-cols-3 --}}
         <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @php $sum = $ahtSummary ?? null; @endphp
 
@@ -190,8 +190,8 @@
                                     </div>
                                 </div>
 
-                                {{-- Status counts + SLA pills --}}
-                                <div class="flex flex-wrap gap-4 text-xs text-gray-600 mt-2">
+                                {{-- Status counts + SLA pills (Added flex-wrap) --}}
+                                <div class="flex flex-wrap gap-2 text-xs text-gray-600 mt-2">
 
                                     {{-- OPEN --}}
                                     <div class="p-1 bg-white shadow rounded-lg border border-gray-200 flex items-center gap-1">
@@ -283,17 +283,17 @@
         {{-- Main Agent Card (GRID) --}}
         <section class="{{ $card }}">
 
-            {{-- Header --}}
-            <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+            {{-- Header (Adjusted for mobile stacking) --}}
+            <div class="px-5 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
                 <h3 class="text-base font-semibold text-gray-900">Agent List</h3>
 
                 {{-- Right side: search + download --}}
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
 
-                    {{-- Search --}}
+                    {{-- Search (Made full width on mobile) --}}
                     <input type="text" wire:model.live.debounce.100ms="search"
-                        placeholder="Search agent by name or ID..." class="w-64 rounded-lg bg-white/50 border border-gray-200 px-3 py-2 text-gray-500 text-sm
+                        placeholder="Search agent by name or ID..." class="w-full sm:w-64 rounded-lg bg-white/50 border border-gray-200 px-3 py-2 text-gray-500 text-sm
                                 focus:ring-2 focus:ring-gray-900/10 focus:outline-none">
 
                     {{-- Download Button --}}
@@ -324,8 +324,8 @@
                 </div>
             @endif
 
-            {{-- Agent Grid List --}}
-            <div class="grid grid-rows-3 grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-5 py-4">
+            {{-- Agent Grid List (Adjusted to grid-cols-1 sm:grid-cols-2 lg:grid-cols-3) --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-5 py-4">
                 @forelse ($agents as $agent)
                     <div wire:key="agent-{{ $agent->user_id }}"
                         class="cursor-pointer rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition p-4"
@@ -335,7 +335,7 @@
                         <div class="flex items-center gap-3">
                             {{-- Agent Avatar Icon --}}
                             <div
-                                class="w-12 h-12 rounded-full bg-gray-900 text-white flex items-center justify-center font-semibold text-lg">
+                                class="w-12 h-12 rounded-full bg-gray-900 text-white flex items-center justify-center font-semibold text-lg shrink-0">
                                 {{ strtoupper(substr($agent->full_name, 0, 1)) }}
                             </div>
 
@@ -363,7 +363,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="px-5 py-4 text-gray-500 text-sm">
+                    <div class="col-span-full px-5 py-4 text-gray-500 text-sm">
                         No agents found.
                     </div>
                 @endforelse
@@ -387,12 +387,12 @@
             @endphp
 
             @if($selectedAgent)
-                <div class="fixed inset-0 z-[999] flex items-center justify-center" aria-modal="true" role="dialog">
+                <div class="fixed inset-0 z-[999] flex items-center justify-center p-2 sm:p-4" aria-modal="true" role="dialog"> {{-- Added p-2 sm:p-4 for padding on small screens --}}
                     {{-- Overlay --}}
                     <div class="absolute inset-0 bg-black/50" wire:click="closeToast" aria-hidden="true"></div>
 
                     {{-- Modal container --}}
-                    <div class="relative w-[95%] max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+                    <div class="relative w-full max-w-lg md:max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden"> {{-- Adjusted max-w to be more flexible --}}
 
                         {{-- Modal header --}}
                         <div class="px-4 py-3 bg-gray-900 text-white flex items-center justify-between">
@@ -412,7 +412,7 @@
                         </div>
 
                         {{-- Modal body: tickets --}}
-                        <div class="max-h-[60vh] overflow-auto p-4 space-y-3 bg-gray-50">
+                        <div class="max-h-[80vh] sm:max-h-[60vh] overflow-auto p-4 space-y-3 bg-gray-50"> {{-- Adjusted max-h for mobile --}}
 
                             @if(!empty($selectedAgent->tickets) && $selectedAgent->tickets->isNotEmpty())
                                 @foreach($selectedAgent->tickets as $ticket)
@@ -430,14 +430,14 @@
                                         <div class="p-3 bg-white rounded-lg border hover:shadow transition">
                                             <div class="flex items-start justify-between gap-3">
                                                 <div class="min-w-0">
-                                                    <div class="flex items-center gap-2">
+                                                    <div class="flex flex-col sm:flex-row sm:items-center gap-2"> {{-- Stacked ID and Subject on mobile --}}
                                                         <div
                                                             class="flex-shrink-0 px-3 py-1 bg-white rounded shadow text-gray-700 text-sm font-mono font-semibold">
                                                             #{{ $ticket->ticket_id }}
                                                         </div>
 
                                                         <div class="truncate">
-                                                            <div class="font-semibold text-sm text-gray-900 truncate max-w-[40ch]">
+                                                            <div class="font-semibold text-sm text-gray-900 truncate max-w-full sm:max-w-[40ch]">
                                                                 {{ $ticket->subject ?? 'No Subject' }}</div>
                                                             <div class="mt-2 flex flex-wrap gap-2 text-[10px]">
                                                                 @if(!empty($ticket->status))
@@ -501,6 +501,7 @@
         const dlBtn = document.getElementById('downloadReportBtn');
         const dlOverlay = document.getElementById('agentDownloadOverlay');
         const btnSpinner = document.getElementById('agentBtnSpinner');
+        const btnIcon = document.getElementById('agentBtnIcon'); // Added icon element
         const btnLabel = document.getElementById('agentBtnLabel');
 
         function setDownloading(state) {
@@ -508,11 +509,13 @@
             if (state) {
                 dlBtn.disabled = true;
                 btnSpinner?.classList.remove('hidden');
+                btnIcon?.classList.add('hidden'); // Hide icon
                 btnLabel && (btnLabel.textContent = 'Menyiapkan…');
                 dlOverlay?.classList.remove('hidden');
             } else {
                 dlBtn.disabled = false;
                 btnSpinner?.classList.add('hidden');
+                btnIcon?.classList.remove('hidden'); // Show icon
                 btnLabel && (btnLabel.textContent = 'Download Report');
                 dlOverlay?.classList.add('hidden');
             }

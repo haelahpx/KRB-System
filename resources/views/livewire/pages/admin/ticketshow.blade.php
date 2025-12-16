@@ -28,25 +28,25 @@
             <div class="relative z-10 p-6 sm:p-8">
                 <div class="flex items-center gap-4">
                     <div
-                        class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20">
+                        class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20 shrink-0">
                         <x-heroicon-o-calendar-days class="w-6 h-6 text-white" />
                     </div>
-                    <div class="flex-1">
-                        <h2 class="text-lg sm:text-xl font-semibold">Ticket Details</h2>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-lg sm:text-xl font-semibold truncate">Ticket Details</h2>
 
-                        {{-- NEW: owner & department --}}
+                        {{-- NEW: owner & department (flex-wrap ensures they stack/wrap) --}}
                         @php
                             $ownerName = $t->user->full_name ?? 'Unknown User';
                             $deptName =
                                 $t->department->department_name ??
                                 ($t->user->department->department_name ??
-                                    null ?? // fallback via user kalau ada
+                                    null ??
                                     '-');
                             $ownerInit = $initials($ownerName);
                         @endphp
                         <div class="mt-2 flex flex-wrap items-center gap-2 text-sm">
                             <span
-                                class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-white/10 border border-white/20">
+                                class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-white/10 border border-white/20 shrink-0">
                                 <span
                                     class="inline-flex h-6 w-6 rounded-full bg-white/20 text-white items-center justify-center text-[11px] font-bold">
                                     {{ $ownerInit }}
@@ -54,7 +54,7 @@
                                 <span class="font-medium">{{ $ownerName }}</span>
                             </span>
                             <span
-                                class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-white/10 border border-white/20">
+                                class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-white/10 border border-white/20 shrink-0">
                                 <span class="opacity-80">Dept:</span>
                                 <span class="font-medium">{{ $deptName }}</span>
                             </span>
@@ -65,26 +65,27 @@
             </div>
         </div>
 
+        {{-- Main Content Grid: Stacks vertically on mobile, uses grid layout on large screens --}}
         <div class="grid lg:grid-cols-3 gap-6">
             {{-- Main info --}}
-            <section class="lg:col-span-2 {{ $card }}">
+            <section class="lg:col-span-2 w-full {{ $card }}">
                 <div class="px-5 py-4 border-b border-gray-200">
                     <h2 class="text-base font-semibold text-gray-900">Ticket Info</h2>
                 </div>
                 <div class="p-5 space-y-4">
-                    {{-- Subject (readonly) --}}
+                    {{-- Subject (readonly) - ADDED break-words --}}
                     <div>
                         <label class="{{ $label }}">Subject</label>
                         <div
-                            class="w-full h-10 flex items-center px-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-800">
+                            class="w-full min-h-10 flex items-center px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 break-words">
                             {{ $t->subject }}
                         </div>
                     </div>
 
-                    {{-- Description (readonly) --}}
+                    {{-- Description (readonly) - ADDED break-words --}}
                     <div>
                         <label class="{{ $label }}">Description</label>
-                        <div class="p-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 whitespace-pre-line">
+                        <div class="p-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 whitespace-pre-line break-words">
                             {{ $t->description }}
                         </div>
                     </div>
@@ -97,8 +98,8 @@
                         </div>
                     </div>
 
-                    {{-- Editable fields --}}
-                    <div class="grid sm:grid-cols-2 gap-4">
+                    {{-- Editable fields (sm:grid-cols-2 ensures stacking on mobile) --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="{{ $label }}">Status</label>
                             <select wire:model.defer="status" class="{{ $input }}">
@@ -142,7 +143,7 @@
             </section>
 
             {{-- Attachments --}}
-            <aside class="{{ $card }}">
+            <aside class="w-full {{ $card }}">
                 <div class="px-5 py-4 border-b border-gray-200">
                     <h3 class="text-base font-semibold text-gray-900">Attachments</h3>
                 </div>
@@ -199,6 +200,7 @@
                                             <div class="truncate text-sm font-medium text-gray-900"
                                                 title="{{ $f->name }}">{{ $f->name }}</div>
                                         </div>
+                                        {{-- Buttons kept small and flexible --}}
                                         <div class="shrink-0 flex items-center gap-2">
                                             <a href="{{ $f->url }}" target="_blank"
                                                 class="px-2.5 py-1.5 text-xs rounded-lg border border-gray-300 hover:bg-gray-100 transition">Open</a>
@@ -227,7 +229,7 @@
                         <div class="flex-shrink-0">
                             @php $meInitials = $initials(auth()->user()->full_name ?? auth()->user()->name ?? 'User'); @endphp
                             <span
-                                class="inline-flex h-10 w-10 rounded-full bg-gray-900 text-white items-center justify-center text-xs font-bold">
+                                class="inline-flex h-10 w-10 rounded-full bg-gray-900 text-white items-center justify-center text-xs font-bold shrink-0">
                                 {{ $meInitials }}
                             </span>
                         </div>
@@ -266,12 +268,12 @@
                                 </span>
                             </div>
 
-                            {{-- Bubble --}}
-                            <div class="max-w-[80%]">
+                            {{-- Bubble: max-w-[75%] to limit chat bubble width on small screens --}}
+                            <div class="max-w-[75%]">
                                 <div
                                     class="flex items-center {{ $isMine ? 'justify-between' : 'flex-row-reverse justify-between' }} gap-3">
                                     <p class="text-xs font-semibold text-gray-700 truncate">{{ $name }}</p>
-                                    <p class="text-[11px] text-gray-500"
+                                    <p class="text-[11px] text-gray-500 shrink-0"
                                         title="{{ $comment->created_at->format('Y-m-d H:i') }}">
                                         {{ $comment->created_at->diffForHumans() }}
                                     </p>
@@ -281,7 +283,7 @@
                                     class="mt-1 rounded-xl
                                             {{ $isMine ? 'bg-gray-900 text-white border border-gray-900' : 'bg-gray-50 text-gray-900 border border-gray-200' }}
                                             px-4 py-3 shadow-sm">
-                                    <p class="text-sm whitespace-pre-wrap leading-relaxed">
+                                    <p class="text-sm whitespace-pre-wrap leading-relaxed break-words"> {{-- ADDED break-words to chat bubble text --}}
                                         {{ $comment->comment_text }}
                                     </p>
                                 </div>
@@ -296,9 +298,9 @@
             </div>
         </section>
 
-        {{-- Modal for image preview --}}
+        {{-- Modal for image preview (fixed inset with padding) --}}
         @if ($previewUrl)
-            <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+            <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
                 <div class="relative">
                     <img src="{{ $previewUrl }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-lg" />
                     <button wire:click="closePreview"

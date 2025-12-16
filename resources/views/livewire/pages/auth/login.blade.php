@@ -77,12 +77,6 @@
                     <span wire:loading> Processing... </span>
                 </button>
 
-                <div class="flex justify-between items-center mt-10 pt-8 border-t border-gray-100">
-                    <a href="{{ route('register') }}"
-                        class="text-gray-500 hover:text-gray-800 transition-colors duration-200 text-sm font-medium">
-                        Haven't login? register
-                    </a>
-                </div>
             </form>
         </div>
     </div>

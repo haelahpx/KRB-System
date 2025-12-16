@@ -22,31 +22,30 @@
             <div class="relative z-10 p-6 sm:p-8">
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
 
-                    <!-- LEFT SECTION -->
-                    <div class="flex items-start gap-4 sm:gap-6">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20">
+                    <div class="flex items-start gap-4 sm:gap-6 flex-1 min-w-0">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20 shrink-0">
                             <x-heroicon-o-wifi class="w-7 h-7 text-white" />
                         </div>
 
-                        <div class="space-y-1.5">
-                            <h2 class="text-xl sm:text-2xl font-semibold leading-tight">
+                        <div class="space-y-1.5 min-w-0">
+                            <h2 class="text-xl sm:text-2xl font-semibold leading-tight truncate">
                                 WiFi Management
                             </h2>
 
-                            <p class="text-sm text-white/80">
+                            <p class="text-sm text-white/80 truncate">
                                 Perusahaan: <span class="font-semibold">{{ $company_name }}</span>
                                 <span class="mx-2">•</span>
                                 Departemen: <span class="font-semibold">{{ $department_name }}</span>
                             </p>
 
-                            <p class="text-xs text-white/60">
+                            <p class="text-xs text-white/60 truncate">
                                 Kelola akses internet (SSID & Password) untuk area operasional.
                             </p>
                         </div>
                     </div>
 
-                    <!-- RIGHT SECTION (Search) -->
-                    <div class="w-full lg:w-80 lg:ml-auto">
+                    {{-- Changed from w-full lg:w-80 lg:ml-auto to w-full sm:w-80 sm:ml-auto for better tablet sizing --}}
+                    <div class="w-full sm:w-80 sm:ml-auto">
                         <input
                             type="text"
                             wire:model.live.debounce.400ms="search"
@@ -130,35 +129,35 @@
                     $rowNo = (($wifis->currentPage() - 1) * $wifis->perPage()) + $loop->iteration;
                 @endphp
 
+                {{-- Changed lg:flex-row to sm:flex-row for better tablet/mobile breakpoint --}}
                 <div class="px-5 py-5 hover:bg-gray-50 transition-colors group" wire:key="wifi-{{ $wifi->wifi_id }}">
-                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                        <!-- Icon & Content -->
-                        <div class="flex items-start gap-4 flex-1">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                        <div class="flex items-start gap-4 flex-1 min-w-0">
                             <div class="{{ $ico }} bg-gray-900 group-hover:scale-105 transition-transform duration-300">
                                 <x-heroicon-o-signal class="w-5 h-5 text-white" />
                             </div>
                             
                             <div class="min-w-0 flex-1">
-                                <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                    <h4 class="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                                <div class="flex flex-wrap items-center gap-2 mb-1.5"> {{-- Added flex-wrap for badges --}}
+                                    <h4 class="font-semibold text-gray-900 text-sm sm:text-base truncate max-w-[calc(100%-8rem)] sm:max-w-none">
                                         {{ $wifi->ssid }}
                                     </h4>
                                     
                                     {{-- Status Badge --}}
                                     @if($wifi->is_active)
-                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-medium border border-emerald-100">
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-medium border border-emerald-100 shrink-0">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                             Active
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-[10px] font-medium border border-gray-200">
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-[10px] font-medium border border-gray-200 shrink-0">
                                             Inactive
                                         </span>
                                     @endif
 
                                     {{-- Location Badge --}}
                                     @if($wifi->location)
-                                        <span class="{{ $chip }} bg-blue-50 text-blue-700 border border-blue-100">
+                                        <span class="{{ $chip }} bg-blue-50 text-blue-700 border border-blue-100 shrink-0">
                                             <x-heroicon-o-map-pin class="w-3 h-3" />
                                             {{ $wifi->location }}
                                         </span>
@@ -167,18 +166,17 @@
 
                                 {{-- Password Section --}}
                                 <div class="flex items-center gap-2">
-                                    <div class="flex items-center gap-2 px-2 py-1 rounded bg-gray-100 border border-gray-200 max-w-fit group/pass">
-                                        <x-heroicon-o-key class="w-3.5 h-3.5 text-gray-400" />
-                                        <span class="text-xs font-mono text-gray-600 select-all cursor-text">{{ $wifi->password }}</span>
+                                    <div class="flex items-center gap-2 px-2 py-1 rounded bg-gray-100 border border-gray-200 max-w-full sm:max-w-fit group/pass">
+                                        <x-heroicon-o-key class="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                                        <span class="text-xs font-mono text-gray-600 select-all cursor-text truncate">{{ $wifi->password }}</span> {{-- Added truncate --}}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Actions -->
-                        <div class="text-right shrink-0 space-y-3">
+                        <div class="text-left sm:text-right shrink-0 space-y-3 pt-2 sm:pt-0">
                             <div class="{{ $mono }} inline-block">No. {{ $rowNo }}</div>
-                            <div class="flex flex-wrap gap-2 justify-end">
+                            <div class="flex flex-wrap gap-2 justify-start sm:justify-end"> {{-- Changed justify-end to handle mobile alignment --}}
                                 <button class="{{ $btnBlk }}" wire:click="openEdit({{ $wifi->wifi_id }})"
                                     wire:loading.attr="disabled" wire:target="openEdit({{ $wifi->wifi_id }})">
                                     <span class="inline-flex items-center gap-1.5" wire:loading.remove wire:target="openEdit({{ $wifi->wifi_id }})">
@@ -227,14 +225,12 @@
 
         {{-- MODAL EDIT --}}
         @if($modalEdit)
-        <div class="fixed inset-0 z-[60] flex items-center justify-center" role="dialog" aria-modal="true"
+        <div class="fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true" {{-- Added padding p-4 --}}
             wire:key="modal-edit" wire:keydown.escape.window="closeEdit">
             
-            <!-- Overlay Backdrop -->
             <button type="button" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" aria-label="Close overlay" wire:click="closeEdit"></button>
 
-            <!-- Modal Panel -->
-            <div class="relative w-full max-w-2xl mx-4 {{ $card }} shadow-2xl transform transition-all focus:outline-none z-10" tabindex="-1">
+            <div class="relative w-full max-w-md md:max-w-2xl mx-auto {{ $card }} shadow-2xl transform transition-all focus:outline-none z-10" tabindex="-1">
                 <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50/50">
                     <div>
                         <h3 class="text-base font-semibold text-gray-900">Edit WiFi</h3>
@@ -275,6 +271,7 @@
                         </div>
                     </div>
 
+                    {{-- Adjusted padding and margin for the sticky footer --}}
                     <div class="mt-8 flex items-center justify-end gap-3 border-t border-gray-100 pt-5 -mx-6 -mb-6 bg-gray-50/50 px-6 pb-6 rounded-b-2xl">
                         <button type="button"
                             class="px-4 h-10 rounded-xl border border-gray-300 text-gray-700 text-sm font-medium hover:bg-white hover:border-gray-400 focus:ring-2 focus:ring-gray-200 transition shadow-sm bg-white"

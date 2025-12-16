@@ -73,7 +73,6 @@ use App\Livewire\Pages\Receptionist\Vehiclestatus as ReceptionistVehiclestatus;
 
 // ========== Auth Pages ==========
 use App\Livewire\Pages\Auth\Login as LoginPage;
-use App\Livewire\Pages\Auth\Register as RegisterPage;
 
 // ========== Error ==========
 use App\Livewire\Pages\Errors\error404 as Error404;
@@ -138,7 +137,6 @@ Route::get('/google/oauth/callback', fn() => redirect('/google/oauth/init'));
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login', LoginPage::class)->name('login');
-    Route::get('/register', RegisterPage::class)->name('register');
 });
 
 /*

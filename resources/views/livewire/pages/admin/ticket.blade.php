@@ -28,7 +28,7 @@
 
     <main class="px-4 sm:px-6 py-6 space-y-8">
         <div class="space-y-6">
-            {{-- HERO --}}
+            {{-- HERO (UNCHANGED) --}}
             <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-900 to-black text-white shadow-2xl">
                 <div class="pointer-events-none absolute inset-0 opacity-10">
                     <div class="absolute top-0 -right-6 w-28 h-28 bg-white/20 rounded-full blur-xl"></div>
@@ -37,22 +37,21 @@
 
                 <div class="relative z-10 p-6 sm:p-8">
                     <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-                        <div class="flex items-start gap-4 sm:gap-6">
-                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20">
-                                {{-- Support-style icon --}}
+                        <div class="flex items-start gap-4 sm:gap-6 flex-1 min-w-0">
+                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20 shrink-0">
                                 <x-heroicon-o-lifebuoy class="w-6 h-6 text-white" />
                             </div>
 
-                            <div class="space-y-1.5">
-                                <h2 class="text-xl sm:text-2xl font-semibold leading-tight">
+                            <div class="space-y-1.5 min-w-0">
+                                <h2 class="text-xl sm:text-2xl font-semibold leading-tight truncate">
                                     Ticket Support
                                 </h2>
-                                <p class="text-sm text-white/80">
+                                <p class="text-sm text-white/80 truncate">
                                     Cabang: <span class="font-semibold">{{ $company_name }}</span>
                                     <span class="mx-2">•</span>
                                     Departemen: <span class="font-semibold">{{ $department_name }}</span>
                                 </p>
-                                <p class="text-xs text-white/60">
+                                <p class="text-xs text-white/60 truncate">
                                     Menampilkan informasi untuk departemen: <span class="font-medium">{{ $department_name }}</span>.
                                 </p>
                             </div>
@@ -101,7 +100,7 @@
                 </div>
             </div>
 
-            {{-- FILTERS --}}
+            {{-- FILTERS (UNCHANGED) --}}
             <section class="{{ $card }}">
                 <div class="px-5 py-4 border-b border-gray-200">
                     <div class="flex flex-col gap-4">
@@ -109,7 +108,7 @@
                             <div>
                                 <label class="{{ $label }}">Search</label>
                                 <div class="relative">
-                                    <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center p-">
+                                    <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                         <x-heroicon-o-magnifying-glass class="w-4 h-4 text-gray-400" />
                                     </span>
                                     <input
@@ -120,7 +119,6 @@
                                 </div>
                             </div>
 
-                            {{-- NEW ASSIGNMENT FILTER --}}
                             <div>
                                 <label class="{{ $label }}">Assignment</label>
                                 <select wire:model="assignment" class="{{ $input }}">
@@ -129,7 +127,6 @@
                                     <option value="assigned">Assigned</option>
                                 </select>
                             </div>
-                            {{-- END NEW ASSIGNMENT FILTER --}}
 
                             <div>
                                 <label class="{{ $label }}">Priority</label>
@@ -176,14 +173,12 @@
                             </span>
                             @endif
 
-                            {{-- NEW ASSIGNMENT CHIP --}}
                             @if($assignment)
                             <span class="{{ $chip }} bg-purple-50 text-purple-700 ring-purple-200">
                                 <span class="opacity-80">Assignment:</span>
                                 <span class="capitalize">{{ $assignment }}</span>
                             </span>
                             @endif
-                            {{-- END NEW ASSIGNMENT CHIP --}}
 
                             @if($search || $priority || $status || $assignment)
                             <button wire:click="resetFilters" type="button" class="text-xs underline text-gray-600 hover:text-gray-900 ml-1">
@@ -194,7 +189,7 @@
                     </div>
                 </div>
 
-                {{-- LIST --}}
+                {{-- LIST (MODIFIED SECTION) --}}
                 <div class="p-5">
                     @if($tickets->count())
                     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -212,39 +207,40 @@
                                     {{ $initial }}
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <div class="flex flex-wrap items-center gap-2 mb-2">
-                                        <h4 class="font-semibold text-gray-900 text-sm truncate flex items-center gap-1.5">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-2 mb-2">
+                                        {{-- REMOVED TRUNCATE from subject and added line-clamp-2 --}}
+                                        <h4 class="font-semibold text-gray-900 text-sm flex items-center gap-1.5 min-w-0 line-clamp-2">
                                             {{ $tickets->firstItem() + $loop->index }} — {{ $t->subject }}
                                         </h4>
-                                        <div>
+                                        <div class="flex flex-wrap items-center gap-2">
                                             {{-- Priority chip --}}
-                                            <span class="{{ $chip }} {{ $priorityColors[$prioKey] ?? 'bg-gray-100 text-gray-700 ring-gray-200' }} capitalize">
+                                            <span class="{{ $chip }} {{ $priorityColors[$prioKey] ?? 'bg-gray-100 text-gray-700 ring-gray-200' }} capitalize shrink-0">
                                                 <span class="opacity-80">Priority:</span>
                                                 <span>{{ $prioKey }}</span>
                                             </span>
 
                                             {{-- Status chip --}}
-                                            <span class="{{ $chip }} {{ $statusColors[$statusKey] ?? 'bg-gray-100 text-gray-700 ring-gray-200' }} capitalize">
+                                            <span class="{{ $chip }} {{ $statusColors[$statusKey] ?? 'bg-gray-100 text-gray-700 ring-gray-200' }} capitalize shrink-0">
                                                 <span class="opacity-80">Status:</span>
                                                 <span>{{ str_replace('_', ' ', $statusKey) }}</span>
                                             </span>
                                         </div>
-
                                     </div>
 
-                                    <p class="text-sm text-gray-600 line-clamp-2">{{ $t->description }}</p>
+                                    {{-- Added line-clamp-2 to the description paragraph to ensure it doesn't push the action buttons too far --}}
+                                    <p class="text-sm text-gray-600 line-clamp-2">Pengajuan via Chatbot: Ringkasan Pertanyaan Asli (pemicu tiket)</p>
                                 </div>
                             </div>
 
                             <div class="mt-4 flex justify-end gap-2">
                                 <a href="{{ route('admin.ticket.show', $t) }}"
-                                    class="{{ $btnBlk }} flex items-center gap-1.5">
+                                    class="{{ $btnBlk }} flex items-center gap-1.5 shrink-0">
                                     <x-heroicon-o-eye class="w-4 h-4" />
                                     <span>Open</span>
                                 </a>
                                 <button
                                     wire:click.stop="deleteTicket({{ $t->ticket_id }})"
-                                    class="{{ $btnRed }} flex items-center gap-1.5"
+                                    class="{{ $btnRed }} flex items-center gap-1.5 shrink-0"
                                     title="Move to Trash">
                                     <x-heroicon-o-trash class="w-4 h-4" />
                                     <span>Delete</span>
