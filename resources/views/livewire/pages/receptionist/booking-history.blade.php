@@ -52,9 +52,9 @@
                             <x-heroicon-o-clock class="w-6 h-6 text-white"/>
                         </div>
                         <div>
-                            <h2 class="text-lg sm:text-xl font-semibold">Booking History</h2>
+                            <h2 class="text-lg sm:text-xl font-semibold">Riwayat Pinjam Ruangan</h2>
                             <p class="text-sm text-white/80">
-                                Lihat dan kelola riwayat booking yang sudah selesai atau ditolak.
+                                Lihat dan kelola riwayat yang sudah selesai atau ditolak.
                             </p>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                             <input type="checkbox"
                                    wire:model.live="withTrashed"
                                    class="rounded border-white/30 bg-white/10 focus:ring-white/40">
-                            <span>Show deleted records</span>
+                            <span>Tampilkan yang sudah di hapus</span>
                         </label>
 
                         {{-- MOBILE FILTER BUTTON --}}
@@ -88,9 +88,9 @@
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200 space-y-3">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div>
-                            <h3 class="text-base font-semibold text-gray-900">History</h3>
+                            <h3 class="text-base font-semibold text-gray-900">Riwayat</h3>
                             <p class="text-xs text-gray-500">
-                                Riwayat booking berdasarkan status.
+                                Riwayat pinjam ruangan berdasarkan status.
                             </p>
                         </div>
 
@@ -128,7 +128,7 @@
                             @else
                                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-dashed border-gray-300">
                                     <x-heroicon-o-funnel class="w-3.5 h-3.5"/>
-                                    <span>No room filter</span>
+                                    <span>tidak ada filter</span>
                                 </span>
                             @endif
                         </div>
@@ -166,7 +166,7 @@
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="{{ $label }}">Search</label>
+                            <label class="{{ $label }}">Pencarian</label>
                             <div class="relative">
                                 <input type="text"
                                        class="{{ $input }} pl-9"
@@ -187,7 +187,7 @@
                         </div>
 
                         <div>
-                            <label class="{{ $label }}">Urutkan</label>
+                            <label class="{{ $label }}">Urutan</label>
                             <select wire:model.live="dateMode" class="{{ $input }}">
                                 <option value="semua">Default (terbaru)</option>
                                 <option value="terbaru">Tanggal terbaru</option>
@@ -255,11 +255,11 @@
                                                         </span>
                                                         {{-- Status (Done) --}}
                                                         <span class="text-[11px] px-2 py-0.5 rounded-full bg-green-100 text-green-800 flex-shrink-0">
-                                                            DONE
+                                                            SELESAI
                                                         </span>
                                                         @if($row->deleted_at)
                                                             <span class="text-[11px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 flex-shrink-0">
-                                                                DELETED
+                                                                TERHAPUS
                                                             </span>
                                                         @endif
                                                     </div>
@@ -331,7 +331,7 @@
                                                     @endif
                                                     @if($row->notes)
                                                         <div class="mt-2 text-xs text-gray-600 bg-gray-50 border border-gray-100 rounded-lg p-2">
-                                                            <span class="font-medium">Notes:</span> {{ $row->notes }}
+                                                            <span class="font-medium">Catatan:</span> {{ $row->notes }}
                                                         </div>
                                                     @endif
                                                 </div>
@@ -574,7 +574,7 @@
             <aside class="hidden md:flex md:flex-col md:col-span-1 gap-4">
                 <section class="{{ $card }}">
                     <div class="px-4 py-4 border-b border-gray-200">
-                        <h3 class="text-sm font-semibold text-gray-900">Filter by Room</h3>
+                        <h3 class="text-sm font-semibold text-gray-900">Filter dari ruangan</h3>
                         <p class="text-xs text-gray-500 mt-1">Klik salah satu ruangan untuk mem-filter daftar history.</p>
                     </div>
 
@@ -588,7 +588,7 @@
                                 <span class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-gray-300 text-[11px]">
                                     All
                                 </span>
-                                <span>All Rooms</span>
+                                <span>Semua Ruangan</span>
                             </span>
                             @if(is_null($roomFilterId))
                                 <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
@@ -610,7 +610,7 @@
                                         <span class="truncate">{{ $r['label'] }}</span>
                                     </span>
                                     @if($active)
-                                        <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
+                                        <span class="text-[10px] uppercase tracking-wide opacity-80">Aktif</span>
                                     @endif
                                 </button>
                             @empty
@@ -630,7 +630,7 @@
                     <div class="w-full max-w-2xl bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
                         <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
                             <h3 class="font-semibold text-black">
-                                {{ $modalMode === 'create' ? 'Create' : 'Edit' }} History Item
+                                {{ $modalMode === 'create' ? 'Create' : 'Edit' }} Riwayat item
                             </h3>
                             <button type="button"
                                     class="text-gray-500 hover:text-gray-700"
@@ -640,24 +640,24 @@
                         <div class="p-5 space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="{{ $label }}">Type</label>
+                                    <label class="{{ $label }}">Tipe</label>
                                     <select class="{{ $input }}" wire:model.live="form.booking_type">
-                                        <option value="bookingroom">Booking Room</option>
-                                        <option value="meeting">Meeting</option>
-                                        <option value="onlinemeeting">Online Meeting</option>
+                                        <option value="bookingroom">Pinjam Ruangan</option>
+                                        <option value="meeting">Rapat</option>
+                                        <option value="onlinemeeting">Rapat Online</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="{{ $label }}">Status</label>
                                     <select class="{{ $input }}" wire:model.live="form.status">
-                                        <option value="completed">Done</option>
-                                        <option value="rejected">Rejected</option>
+                                        <option value="completed">Selesai</option>
+                                        <option value="rejected">Ditolak</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div>
-                                <label class="{{ $label }}">Meeting Title</label>
+                                <label class="{{ $label }}">Judul Rapat</label>
                                 <input type="text" class="{{ $input }}" wire:model.live="form.meeting_title">
                                 @error('form.meeting_title')
                                     <p class="text-sm text-rose-600 mt-1">{{ $message }}</p>
@@ -666,24 +666,24 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label class="{{ $label }}">Date</label>
+                                    <label class="{{ $label }}">Tanggal</label>
                                     <input type="date" class="{{ $input }}" wire:model.live="form.date">
                                 </div>
                                 <div>
-                                    <label class="{{ $label }}">Start Time</label>
+                                    <label class="{{ $label }}">Waktu Mulai</label>
                                     <input type="time" class="{{ $input }}" wire:model.live="form.start_time">
                                 </div>
                                 <div>
-                                    <label class="{{ $label }}">End Time</label>
+                                    <label class="{{ $label }}">Waktu Selesai</label>
                                     <input type="time" class="{{ $input }}" wire:model.live="form.end_time">
                                 </div>
                             </div>
 
                             @if(in_array($form['booking_type'] ?? null, ['bookingroom','meeting']))
                                 <div>
-                                    <label class="{{ $label }}">Room</label>
+                                    <label class="{{ $label }}">Ruangan</label>
                                     <select class="{{ $input }}" wire:model.live="form.room_id">
-                                        <option value="">— Select room —</option>
+                                        <option value="">— Pilih Ruangan —</option>
                                         @foreach(($rooms ?? []) as $r)
                                             <option value="{{ $r['id'] }}">{{ $r['name'] }}</option>
                                         @endforeach
@@ -694,10 +694,9 @@
                                 </div>
                             @else
                                 <div>
-                                    <label class="{{ $label }}">Online Provider</label>
+                                    <label class="{{ $label }}">Online Tools</label>
                                     <select class="{{ $input }}" wire:model.live="form.online_provider">
                                         <option value="zoom">Zoom</option>
-                                        <option value="google_meet">Google Meet</option>
                                     </select>
                                     @error('form.online_provider')
                                         <p class="text-sm text-rose-600 mt-1">{{ $message }}</p>
@@ -707,7 +706,7 @@
 
                             @if(($form['status'] ?? null) === 'rejected')
                                 <div>
-                                    <label class="{{ $label }}">Reject Reason <span class="text-rose-600">*</span></label>
+                                    <label class="{{ $label }}">Alasan Penolakan <span class="text-rose-600">*</span></label>
                                     <textarea
                                         class="{{ $input }} !h-auto resize-none"
                                         rows="3"
@@ -720,7 +719,7 @@
                             @endif
 
                             <div>
-                                <label class="{{ $label }}">Notes</label>
+                                <label class="{{ $label }}">Catatan</label>
                                 <textarea class="{{ $input }} !h-auto resize-none"
                                           rows="3"
                                           wire:model.live="form.notes"></textarea>
@@ -732,7 +731,7 @@
                                     wire:click="$set('showModal', false)"
                                     wire:loading.attr="disabled"
                                     class="h-10 px-4 rounded-xl bg-gray-200 text-gray-900 text-sm font-medium hover:bg-gray-300 focus:outline-none">
-                                Cancel
+                                Batalkan
                             </button>
                             <button type="button"
                                     wire:click="save"
@@ -753,14 +752,14 @@
                 <div class="absolute inset-x-0 bottom-0 bg-white rounded-t-2xl shadow-xl max-h-[80vh] overflow-hidden">
                     <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-900">Filter & Recent</h3>
+                            <h3 class="text-sm font-semibold text-gray-900">Filter & Terbaru</h3>
                             <p class="text-[11px] text-gray-500">Filter berdasarkan ruangan & lihat aktivitas terbaru.</p>
                         </div>
                     </div>
 
                     <div class="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
                         <div>
-                            <h4 class="text-xs font-semibold text-gray-800 mb-2">Filter by Room</h4>
+                            <h4 class="text-xs font-semibold text-gray-800 mb-2">Filter dari ruangan</h4>
 
                             <button type="button"
                                     wire:click="clearRoomFilter"
@@ -773,7 +772,7 @@
                                     <span>All Rooms</span>
                                 </span>
                                 @if(is_null($roomFilterId))
-                                    <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
+                                    <span class="text-[10px] uppercase tracking-wide opacity-80">Aktif</span>
                                 @endif
                             </button>
 
@@ -791,7 +790,7 @@
                                             <span class="truncate">{{ $r['label'] }}</span>
                                         </span>
                                         @if($active)
-                                            <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
+                                            <span class="text-[10px] uppercase tracking-wide opacity-80">Aktif</span>
                                         @endif
                                     </button>
                                 @empty
@@ -805,7 +804,7 @@
                         <button type="button"
                                 class="w-full h-10 rounded-xl bg-gray-900 text-white text-xs font-medium"
                                 wire:click="closeFilterModal">
-                            Apply & Close
+                            Simpan & Tutup
                         </button>
                     </div>
                 </div>

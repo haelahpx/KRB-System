@@ -30,7 +30,7 @@
                         </svg>
                     </div>
                     <div>
-                        <h2 class="text-lg sm:text-xl font-semibold">Packages</h2>
+                        <h2 class="text-lg sm:text-xl font-semibold">Paket</h2>
                         <p class="text-sm text-white/80">Kelola paket masuk (stored) & pengambilan (taken)</p>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                 <div class="flex items-center gap-3">
                     <div class="w-2 h-2 bg-gray-900 rounded-full"></div>
                     <div>
-                        <h3 class="text-base font-semibold text-gray-900">Tambah Package</h3>
+                        <h3 class="text-base font-semibold text-gray-900">Tambah Paket</h3>
                         <p class="text-sm text-gray-500">Lengkapi data paket baru</p>
                     </div>
                 </div>
@@ -72,12 +72,12 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="{{ $label }}">Expedition / Sender</label>
+                        <label class="{{ $label }}">Ekspedisi / Pengirim</label>
                         <input type="text" wire:model.defer="form.nama_pengirim" class="{{ $input }}" placeholder="Kurir / Pengirim">
                         @error('form.nama_pengirim') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="{{ $label }}">Owner (Penerima)</label>
+                        <label class="{{ $label }}">Pemilik (Penerima)</label>
                         <input type="text" wire:model.defer="form.nama_penerima" class="{{ $input }}" placeholder="Nama penerima">
                         @error('form.nama_penerima') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                     </div>
@@ -110,8 +110,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-2 h-2 bg-amber-500 rounded-full"></div>
                     <div>
-                        <h3 class="text-base font-semibold text-gray-900">On-going Packages</h3>
-                        <p class="text-sm text-gray-500">Menampilkan semua paket berstatus <b>stored</b></p>
+                        <h3 class="text-base font-semibold text-gray-900">Paket Tersimpan</h3>
+                        <p class="text-sm text-gray-500">Menampilkan semua paket berstatus <b>tersimpan</b></p>
                     </div>
                 </div>
             </div>
@@ -127,18 +127,18 @@
                             <div class="leading-tight min-w-0">
                                 <div class="font-medium text-gray-800 text-sm truncate">{{ $r->package_name }}</div>
                                 <div class="text-[11px] text-gray-500">
-                                    Stored {{ optional($r->created_at)->format('d M Y H:i') ?? '—' }}
-                                    • Container {{ $r->penyimpanan ?? '—' }}
-                                    • Recep. {{ $r->receptionist->full_name ?? '—' }}
-                                    • Sender {{ $r->nama_pengirim ?? '—' }}
-                                    • Owner {{ $r->nama_penerima ?? '—' }}
+                                    Tersimpan {{ optional($r->created_at)->format('d M Y H:i') ?? '—' }}
+                                    • Rak {{ $r->penyimpanan ?? '—' }}
+                                    • Resepsionis {{ $r->receptionist->full_name ?? '—' }}
+                                    • Pengirim {{ $r->nama_pengirim ?? '—' }}
+                                    • Penerima {{ $r->nama_penerima ?? '—' }}
                                 </div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
-                            <button wire:click="openEdit({{ $r->delivery_id }})" wire:loading.attr="disabled"
+                                <button wire:click="openEdit({{ $r->delivery_id }})" wire:loading.attr="disabled"
                                     wire:target="openEdit({{ $r->delivery_id }})" class="{{ $btnBlk }}">
-                                <span wire:loading.remove wire:target="openEdit({{ $r->delivery_id }})">Edit</span>
+                                <span wire:loading.remove wire:target="openEdit({{ $r->delivery_id }})">Ubah</span>
                                 <span wire:loading wire:target="openEdit({{ $r->delivery_id }})">Memuat…</span>
                             </button>
 
@@ -149,7 +149,7 @@
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0A12 12 0 000 12h4z" />
                                     </svg>
-                                    <span>Done</span>
+                                    <span>Selesai</span>
                                 </span>
                             </button>
 
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="text-center py-8 text-gray-500 text-sm">Tidak ada paket on-going.</div>
+                    <div class="text-center py-8 text-gray-500 text-sm">Tidak ada paket tersimpan.</div>
                 @endforelse
             </div>
 
@@ -178,8 +178,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-2 h-2 bg-emerald-600 rounded-full"></div>
                     <div>
-                        <h3 class="text-base font-semibold text-gray-900">Completed Packages</h3>
-                        <p class="text-sm text-gray-500">Paket berstatus <b>taken</b></p>
+                        <h3 class="text-base font-semibold text-gray-900">Paket Selesai</h3>
+                        <p class="text-sm text-gray-500">Paket berstatus <b>diambil</b></p>
                     </div>
                 </div>
             </div>
@@ -223,13 +223,13 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
-                                            Stored: {{ optional($e->created_at)->format('d M Y H:i') ?? '—' }}
+                                            Tersimpan: {{ optional($e->created_at)->format('d M Y H:i') ?? '—' }}
                                         </span>
                                         <span class="flex items-center gap-1.5">
                                             <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                                             </svg>
-                                            Taken: {{ optional($e->pengambilan)->format('d M Y H:i') ?? '—' }}
+                                            Diambil: {{ optional($e->pengambilan)->format('d M Y H:i') ?? '—' }}
                                         </span>
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@
                                 <div class="flex flex-wrap gap-2 justify-end pt-1.5">
                                     <button wire:click="openEdit({{ $e->delivery_id }})" wire:loading.attr="disabled"
                                             wire:target="openEdit({{ $e->delivery_id }})" class="{{ $btnBlk }}">
-                                        <span wire:loading.remove wire:target="openEdit({{ $e->delivery_id }})">Edit</span>
+                                        <span wire:loading.remove wire:target="openEdit({{ $e->delivery_id }})">Ubah</span>
                                         <span wire:loading wire:target="openEdit({{ $e->delivery_id }})">Memuat…</span>
                                     </button>
 
@@ -252,7 +252,7 @@
                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0A12 12 0 000 12h4z" />
                                             </svg>
-                                            <span>Move to On-going</span>
+                                            <span>Pindahkan ke Tersimpan</span>
                                         </span>
                                     </button>
 

@@ -16,12 +16,12 @@
                 <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600 mb-1">Room Bookings (7 hari)</p>
+                            <p class="text-sm text-gray-600 mb-1">Pinjam Ruangan (7 hari)</p>
                             <p class="text-2xl font-bold text-gray-900">{{ $weeklyRoomBookingsCount }}</p>
 
                             @php $pct = (int) $roomWowPct; @endphp
                             <p class="text-xs mt-1 {{ $pct >= 0 ? 'text-green-600' : 'text-rose-600' }}">
-                                {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% vs last week
+                                {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% vs Minggu kemarin
                             </p>
                         </div>
                         <div class="p-3 bg-gray-100 rounded-lg">
@@ -34,12 +34,12 @@
                 <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600 mb-1">Vehicle Bookings (7 hari)</p>
+                            <p class="text-sm text-gray-600 mb-1">Pinjam Kendaraan (7 hari)</p>
                             <p class="text-2xl font-bold text-gray-900">{{ $weeklyVehicleBookingsCount }}</p>
 
                             @php $pct = (int) $vehicleWowPct; @endphp
                             <p class="text-xs mt-1 {{ $pct >= 0 ? 'text-green-600' : 'text-rose-600' }}">
-                                {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% vs last week
+                                {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% vs minggu kemarin
                             </p>
                         </div>
                         <div class="p-3 bg-gray-100 rounded-lg">
@@ -52,12 +52,12 @@
                 <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600 mb-1">Guest Visits (7 hari)</p>
+                            <p class="text-sm text-gray-600 mb-1">Tamu datang (7 hari)</p>
                             <p class="text-2xl font-bold text-gray-900">{{ $weeklyGuestsCount }}</p>
 
                             @php $pct = (int) $guestWowPct; @endphp
                             <p class="text-xs mt-1 {{ $pct >= 0 ? 'text-green-600' : 'text-rose-600' }}">
-                                {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% vs last week
+                                {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% vs Minggu kemarin
                             </p>
                         </div>
                         <div class="p-3 bg-gray-100 rounded-lg">
@@ -70,12 +70,12 @@
                 <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600 mb-1">Documents/Packages (7 hari)</p>
+                            <p class="text-sm text-gray-600 mb-1">Dokumen/Paket (7 hari)</p>
                             <p class="text-2xl font-bold text-gray-900">{{ $weeklyDocsCount }}</p>
 
                             @php $pct = (int) $docWowPct; @endphp
                             <p class="text-xs mt-1 {{ $pct >= 0 ? 'text-green-600' : 'text-rose-600' }}">
-                                {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% vs last week
+                                {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% vs Minggu kemarin
                             </p>
                         </div>
                         <div class="p-3 bg-gray-100 rounded-lg">
@@ -92,8 +92,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-base font-semibold text-gray-900 flex items-center gap-2">
                             <x-heroicon-o-chart-bar class="h-5 w-5 text-gray-900" />
-                            Weekly Activity – Room / Vehicle / DocPac / Guestbook
-                        </h3>
+                            Aktifitas Mingguan - Ruangan /  Kendaraan / DokPak / Buku Tamu
                         <p class="text-xs text-gray-500">
                             7 hari terakhir
                         </p>
@@ -109,13 +108,13 @@
 
                 {{-- Status Distribution (REAL) --}}
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-                    <h3 class="text-base font-semibold text-gray-900 mb-4">Status Distribution (This Month)</h3>
+                    <h3 class="text-base font-semibold text-gray-900 mb-4">Status Distribusi(Bulan Ini)</h3>
 
                     <div class="space-y-4">
                         {{-- Approved --}}
                         <div>
                             <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-medium text-gray-700">Approved</span>
+                                <span class="text-sm font-medium text-gray-700">Disetujui</span>
                                 <span class="text-sm font-bold text-gray-900">{{ $statusApprovedPct }}%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
@@ -126,7 +125,7 @@
                         {{-- Pending --}}
                         <div>
                             <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-medium text-gray-700">Pending</span>
+                                <span class="text-sm font-medium text-gray-700">Tertunda</span>
                                 <span class="text-sm font-bold text-gray-900">{{ $statusPendingPct }}%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
@@ -137,7 +136,7 @@
                         {{-- Rejected --}}
                         <div>
                             <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-medium text-gray-700">Rejected</span>
+                                <span class="text-sm font-medium text-gray-700">Ditolak</span>
                                 <span class="text-sm font-bold text-gray-900">{{ $statusRejectedPct }}%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
@@ -147,12 +146,12 @@
                     </div>
 
                     <div class="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                        <p class="text-xs text-gray-600 mb-1">Total Requests This Month</p>
+                        <p class="text-xs text-gray-600 mb-1">Total permintaan bulan ini</p>
                         <p class="text-2xl font-bold text-gray-900">{{ $totalRequestsThisMonth }}</p>
 
                         @php $pct = (int) $monthVsLastMonthPct; @endphp
                         <p class="text-xs mt-1 {{ $pct >= 0 ? 'text-green-600' : 'text-rose-600' }}">
-                            {{ $pct >= 0 ? '↑' : '↓' }} {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% from last month
+                            {{ $pct >= 0 ? '↑' : '↓' }} {{ $pct >= 0 ? '+' : '' }}{{ $pct }}% Dari bulan kemarin
                         </p>
                     </div>
                 </div>

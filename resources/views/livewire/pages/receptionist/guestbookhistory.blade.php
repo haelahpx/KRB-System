@@ -63,7 +63,7 @@
                             <x-heroicon-o-user-group class="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h1 class="text-lg sm:text-xl font-semibold">Guestbook</h1>
+                            <h1 class="text-lg sm:text-xl font-semibold">Buku Tamu</h1>
                             <p class="text-sm text-white/80">
                                 Pantau kunjungan yang masih aktif dan riwayat kunjungan tamu.
                             </p>
@@ -75,7 +75,7 @@
                             <input type="checkbox"
                                    wire:model.live="withTrashed"
                                    class="rounded border-white/30 bg-white/10 focus:ring-white/40">
-                            <span>Include deleted</span>
+                            <span>Sertakan entri terhapus</span>
                         </label>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
             <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200 space-y-3">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
-                        <h2 class="text-base font-semibold text-gray-900">Guestbook</h2>
+                        <h2 class="text-base font-semibold text-gray-900">Buku Tamu</h2>
                         <p class="text-xs text-gray-500">
                             Beralih antara riwayat kunjungan dan kunjungan terbaru yang masih aktif.
                         </p>
@@ -120,7 +120,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                         {{-- Search --}}
                         <div>
-                            <label class="{{ $label }}">Search</label>
+                            <label class="{{ $label }}">Cari</label>
                             <div class="relative">
                                 <input type="text"
                                        class="{{ $input }} pl-9"
@@ -193,7 +193,7 @@
                                                 @endif
                                                 @if($e->deleted_at)
                                                     <span class="text-[11px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 flex-shrink-0">
-                                                        Deleted
+                                                        Dihapus
                                                     </span>
                                                 @endif
                                             </div>
@@ -238,7 +238,7 @@
                                         
                                         {{-- 4. Timestamp --}}
                                         <span class="inline-block text-[10px] text-gray-500">
-                                            Created: {{ \Carbon\Carbon::parse($e->created_at)->format('d M Y H:i') }}
+                                            Dibuat: {{ \Carbon\Carbon::parse($e->created_at)->format('d M Y H:i') }}
                                         </span>
                                     </div>
                                 </div>
@@ -254,7 +254,7 @@
                                             wire:target="openEdit({{ $e->guestbook_id }})"
                                             class="{{ $btnBlk }} px-4 py-2">
                                         <span wire:loading.remove wire:target="openEdit({{ $e->guestbook_id }})">
-                                            Edit
+                                            Ubah
                                         </span>
                                         <span wire:loading wire:target="openEdit({{ $e->guestbook_id }})">
                                             Memuat…
@@ -282,7 +282,7 @@
                                                 wire:target="restore({{ $e->guestbook_id }})"
                                                 class="px-4 py-2 text-xs font-medium rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 disabled:opacity-60 transition">
                                             <span wire:loading.remove wire:target="restore({{ $e->guestbook_id }})">
-                                                Restore
+                                                Pulihkan
                                             </span>
                                             <span wire:loading wire:target="restore({{ $e->guestbook_id }})">
                                                 Memproses…
@@ -385,7 +385,7 @@
                                         {{-- 4. Timestamp --}}
                                         @if(!empty($r->created_at))
                                             <span class="inline-block text-[10px] text-gray-500">
-                                                Created: {{ \Carbon\Carbon::parse($r->created_at)->format('d M Y H:i') }}
+                                                Dibuat: {{ \Carbon\Carbon::parse($r->created_at)->format('d M Y H:i') }}
                                             </span>
                                         @endif
                                     </div>

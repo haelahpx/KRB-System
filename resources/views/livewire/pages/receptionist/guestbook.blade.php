@@ -23,7 +23,7 @@
                         <x-heroicon-o-user-group class="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h2 class="text-lg sm:text-xl font-semibold">Guestbook</h2>
+                        <h2 class="text-lg sm:text-xl font-semibold">Buku Tamu</h2>
                         <p class="text-sm text-white/80">Kelola kunjungan dan entri tamu hari ini</p>
                     </div>
                 </div>

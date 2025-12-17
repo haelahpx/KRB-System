@@ -52,9 +52,9 @@
             <div class="relative z-10 p-6 sm:px-8">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div class="space-y-1">
-                        <h2 class="text-lg sm:text-xl font-semibold">Bookings Approval (Receptionist)</h2>
+                        <h2 class="text-lg sm:text-xl font-semibold">Persetujuan Booking (Resepsionis)</h2>
                         <p class="text-sm text-white/80">
-                            Kelola permintaan booking ruangan (online/offline): approve, reject (wajib isi alasan), atau reschedule.
+                            Kelola permintaan booking ruangan (online/offline): setujui, tolak (wajib isi alasan), atau jadwal ulang.
                         </p>
                     </div>
 
@@ -64,7 +64,7 @@
                             class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 text-xs font-medium border border-white/30 hover:bg-white/20 md:hidden"
                             wire:click="openFilterModal">
                             <x-heroicon-o-funnel class="w-4 h-4"/>
-                            <span>Filter</span>
+                            <span>Saring</span>
                         </button>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200 space-y-3">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div>
-                            <h3 class="text-base font-semibold text-gray-900">Approval Queue</h3>
+                            <h3 class="text-base font-semibold text-gray-900">Antrian Persetujuan</h3>
                             <p class="text-xs text-gray-500">
                                 Kelola booking yang menunggu persetujuan atau sedang berlangsung.
                             </p>
@@ -89,12 +89,12 @@
                             <button type="button"
                                 wire:click="setTab('pending')"
                                 class="px-3 py-1 rounded-full {{ $activeTab === 'pending' ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
-                                Pending
+                                Tertunda
                             </button>
                             <button type="button"
                                 wire:click="setTab('ongoing')"
                                 class="px-3 py-1 rounded-full {{ $activeTab === 'ongoing' ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
-                                Ongoing
+                                Berlangsung
                             </button>
                         </div>
                     </div>
@@ -106,13 +106,13 @@
                                 @php $activeRoom = collect($roomsOptions)->firstWhere('id', $roomFilterId); @endphp
                                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-900 text-white border border-gray-800">
                                     <x-heroicon-o-building-office class="w-3.5 h-3.5"/>
-                                    <span>Room: {{ $activeRoom['label'] ?? 'Unknown' }}</span>
+                                    <span>Ruangan: {{ $activeRoom['label'] ?? 'Unknown' }}</span>
                                     <button type="button" class="ml-1 hover:text-gray-200" wire:click="clearRoomFilter">×</button>
                                 </span>
                             @else
                                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-dashed border-gray-300">
                                     <x-heroicon-o-funnel class="w-3.5 h-3.5"/>
-                                    <span>No room filter</span>
+                                    <span>Tidak ada filter ruangan</span>
                                 </span>
                             @endif
                         </div>
@@ -120,7 +120,7 @@
                         <div class="inline-flex items-center bg-gray-100 rounded-full p-1 text-[11px] font-medium">
                             <button type="button" wire:click="setTypeScope('all')"
                                 class="px-3 py-1 rounded-full {{ $typeScope === 'all' ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
-                                All
+                                Semua
                             </button>
                             <button type="button" wire:click="setTypeScope('offline')"
                                 class="px-3 py-1 rounded-full {{ $typeScope === 'offline' ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
@@ -128,7 +128,7 @@
                             </button>
                             <button type="button" wire:click="setTypeScope('online')"
                                 class="px-3 py-1 rounded-full {{ $typeScope === 'online' ? 'bg-gray-900 text-white' : 'text-gray-700' }}">
-                                Online
+                                Online 
                             </button>
                         </div>
                     </div>
@@ -138,7 +138,7 @@
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="{{ $label }}">Search</label>
+                            <label class="{{ $label }}">Cari</label>
                             <div class="relative">
                                 <input type="text" class="{{ $input }} pl-9"
                                     placeholder="Cari judul meeting…"
@@ -158,7 +158,7 @@
                         <div>
                             <label class="{{ $label }}">Urutkan</label>
                             <select wire:model.live="dateMode" class="{{ $input }}">
-                                <option value="semua">Default (terbaru)</option>
+                                <option value="semua">Standar (Terbaru)</option>
                                 <option value="terbaru">Tanggal terbaru</option>
                                 <option value="terlama">Tanggal terlama</option>
                             </select>
@@ -214,7 +214,7 @@
                                                 {{-- 2. TOP ROW: Title, Type, Status --}}
                                                 <div class="flex items-center justify-between gap-3 min-w-0 mb-2">
                                                     <h4 class="font-semibold text-gray-900 text-base truncate pr-2">
-                                                        {{ $b->meeting_title ?? 'Untitled meeting' }}
+                                                        {{ $b->meeting_title ?? 'Pertemuan tanpa judul' }}
                                                     </h4>
                                                     <div class="flex-shrink-0 flex items-center gap-2">
                                                         {{-- Type (Offline/Online) --}}
@@ -245,7 +245,7 @@
                                                         <span class="{{ $chip }} text-xs px-2.5 py-0.5">
                                                             <x-heroicon-o-building-office class="w-3.5 h-3.5 text-gray-500"/>
                                                             <span class="font-medium {{ $b->room?->room_name ? 'text-gray-700' : 'text-rose-600' }}">
-                                                                Room: {{ $b->room?->room_name ?? 'Not selected' }}
+                                                                Ruangan: {{ $b->room?->room_name ?? 'Belum dipilih' }}
                                                             </span>
                                                         </span>
                                                     @elseif($isOnline && $platform)
@@ -260,7 +260,7 @@
                                                 {{-- 4. BOTTOM LEFT: Requester Info --}}
                                                 <div class="text-[12px] text-gray-600">
                                                     @if($requesterName)
-                                                        <p class="mb-1">Req. by <span class="font-medium text-gray-800">{{ $requesterName }}</span></p>
+                                                        <p class="mb-1">Diminta oleh <span class="font-medium text-gray-800">{{ $requesterName }}</span></p>
                                                     @endif
                                                     @if($requesterDept)
                                                         <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 text-[11px] border border-gray-200">
@@ -271,14 +271,14 @@
                                                 
                                                 {{-- 5. Created Timestamp (Placed here to be near Requester info) --}}
                                                 <div class="text-[10px] text-gray-500 mt-2">
-                                                    Created: {{ optional($b->created_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+                                                    Dibuat: {{ optional($b->created_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
                                                 </div>
 
                                                 {{-- Reject Note (if any) --}}
                                                 @if($b->book_reject)
                                                     <div class="mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg p-2">
-                                                        <span class="font-medium">Note:</span> {{ $b->book_reject }}
-                                                    </div>
+                                                            <span class="font-medium">Catatan:</span> {{ $b->book_reject }}
+                                                        </div>
                                                 @endif
                                             </div>
                                             
@@ -301,7 +301,7 @@
                                                 wire:target="approve"
                                                 class="px-4 py-2 text-xs font-medium rounded-lg bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600/20 disabled:opacity-60 transition inline-flex items-center justify-center">
                                                 <x-heroicon-o-check class="w-3.5 h-3.5 inline-block mr-0.5"/>
-                                                Approve
+                                                Setujui
                                             </button>
 
                                             {{-- REJECT BUTTON (Red) --}}
@@ -311,7 +311,7 @@
                                                 wire:target="openReject"
                                                 class="px-4 py-2 text-xs font-medium rounded-lg bg-rose-700 text-white hover:bg-rose-800 focus:outline-none focus:ring-2 focus:ring-rose-700/20 disabled:opacity-60 transition inline-flex items-center justify-center">
                                                 <x-heroicon-o-x-mark class="w-3.5 h-3.5 inline-block mr-0.5"/>
-                                                Reject
+                                                Tolak
                                             </button>
                                         </div>
                                     </div>
@@ -366,7 +366,7 @@
                                                 {{-- TOP ROW: Title, Type, Status --}}
                                                 <div class="flex items-center justify-between gap-3 min-w-0 mb-2">
                                                     <h4 class="font-semibold text-gray-900 text-base truncate pr-2">
-                                                        {{ $b->meeting_title ?? 'Untitled meeting' }}
+                                                        {{ $b->meeting_title ?? 'Pertemuan tanpa judul' }}
                                                     </h4>
                                                     <div class="flex-shrink-0 flex items-center gap-2">
                                                         <span class="text-[11px] px-2 py-0.5 rounded-full border flex-shrink-0 {{ $isOnline ? 'border-emerald-300 text-emerald-700 bg-emerald-50' : 'border-blue-300 text-blue-700 bg-blue-50' }}">
@@ -394,8 +394,8 @@
                                                         <span class="{{ $chip }} text-xs px-2.5 py-0.5">
                                                             <x-heroicon-o-building-office class="w-3.5 h-3.5 text-gray-500"/>
                                                             <span class="font-medium text-gray-700">
-                                                                Room: {{ $b->room?->room_name ?? '—' }}
-                                                            </span>
+                                                                    Ruangan: {{ $b->room?->room_name ?? '—' }}
+                                                                </span>
                                                         </span>
                                                     @elseif($isOnline && $platform)
                                                         <span class="{{ $chip }} text-xs px-2.5 py-0.5 bg-emerald-50 border border-emerald-100 text-emerald-700">
@@ -408,7 +408,7 @@
                                                 {{-- BOTTOM LEFT: Requester Info --}}
                                                 <div class="text-[12px] text-gray-600">
                                                     @if($requesterName)
-                                                        <p class="mb-1">Requested by <span class="font-medium text-gray-800">{{ $requesterName }}</span></p>
+                                                        <p class="mb-1">Diminta oleh <span class="font-medium text-gray-800">{{ $requesterName }}</span></p>
                                                     @endif
                                                     @if($requesterDept)
                                                         <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 text-[11px] border border-gray-200">
@@ -418,9 +418,9 @@
                                                 </div>
                                                 
                                                 {{-- Reject Note (if any) --}}
-                                                @if($b->book_reject)
+                                                    @if($b->book_reject)
                                                     <div class="mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg p-2">
-                                                        <span class="font-medium">Note:</span> {{ $b->book_reject }}
+                                                        <span class="font-medium">Catatan:</span> {{ $b->book_reject }}
                                                     </div>
                                                 @endif
                                             </div>
@@ -440,7 +440,7 @@
                                                     <button type="button"
                                                         x-data
                                                         @click="
-                                                            if (confirm('Are you sure you want to cancel this request?')) {
+                                                            if (confirm('Yakin ingin membatalkan permintaan ini?')) {
                                                                 $wire.openReschedule({{ $b->bookingroom_id }});
                                                             }
                                                         "
@@ -448,12 +448,12 @@
                                                         wire:target="openReschedule"
                                                         class="px-3 py-2 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition inline-flex items-center justify-center">
                                                         <x-heroicon-o-x-mark class="w-3.5 h-3.5 inline-block mr-0.5"/>
-                                                        Cancel
+                                                        Batalkan
                                                     </button>
                                                 </div>
 
                                                 <span class="inline-block text-[10px] px-2 py-0.5 rounded-lg bg-gray-50 text-gray-500 border border-gray-200">
-                                                    Created: {{ optional($b->created_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+                                                    Dibuat: {{ optional($b->created_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
                                                 </span>
                                             </div>
                                         </div>
@@ -480,8 +480,8 @@
             <aside class="hidden md:flex md:flex-col md:col-span-1 gap-4">
                 <section class="{{ $card }}">
                     <div class="px-4 py-4 border-b border-gray-200">
-                        <h3 class="text-sm font-semibold text-gray-900">Filter by Room</h3>
-                        <p class="text-xs text-gray-500 mt-1">Klik salah satu ruangan untuk mem-filter daftar approval.</p>
+                        <h3 class="text-sm font-semibold text-gray-900">Filter berdasarkan Ruangan</h3>
+                        <p class="text-xs text-gray-500 mt-1">Klik salah satu ruangan untuk mem-filter daftar persetujuan.</p>
                     </div>
 
                     <div class="px-4 py-3 max-h-64 overflow-y-auto">
@@ -492,12 +492,12 @@
                                 {{ is_null($roomFilterId) ? 'bg-gray-900 text-white' : 'text-gray-800 hover:bg-gray-100' }}">
                             <span class="flex items-center gap-2">
                                 <span class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-gray-300 text-[11px]">
-                                    All
+                                    Semua
                                 </span>
-                                <span>All Rooms</span>
+                                <span>Semua Ruangan</span>
                             </span>
-                            @if(is_null($roomFilterId))
-                                <span class="text[10px] uppercase tracking-wide opacity-80">Active</span>
+                                @if(is_null($roomFilterId))
+                                <span class="text[10px] uppercase tracking-wide opacity-80">Aktif</span>
                             @endif
                         </button>
 
@@ -515,7 +515,7 @@
                                         <span class="truncate">{{ $r['label'] }}</span>
                                     </span>
                                     @if($active)
-                                        <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
+                                        <span class="text-[10px] uppercase tracking-wide opacity-80">Aktif</span>
                                     @endif
                                 </button>
                             @empty
@@ -577,7 +577,7 @@
                             class="px-3 py-2 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition inline-flex items-center gap-1.5"
                             wire:loading.attr="disabled" wire:target="confirmReject">
                             <x-heroicon-o-x-mark class="w-4 h-4" />
-                            <span>Konfirmasi Tolak</span>
+                            <span>Konfirmasi Penolakan</span>
                         </button>
                     </div>
                 </form>
@@ -594,9 +594,9 @@
                 <form wire:submit.prevent="submitReschedule">
                     <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-900">Reschedule Booking</h3>
+                            <h3 class="text-sm font-semibold text-gray-900">Jadwal Ulang Booking</h3>
                             <p class="text-xs text-gray-500">
-                                Atur ulang tanggal, waktu, dan ruangan. Alasan reschedule wajib diisi.
+                                Atur ulang tanggal, waktu, dan ruangan. Alasan penjadwalan ulang wajib diisi.
                             </p>
                         </div>
                         <button type="button" class="text-gray-400 hover:text-gray-600" wire:click="closeReschedule">✕</button>
@@ -634,7 +634,7 @@
                         </div>
 
                         <div>
-                            <label class="{{ $label }}">Alasan reschedule <span class="text-rose-600">*</span></label>
+                            <label class="{{ $label }}">Alasan penjadwalan ulang <span class="text-rose-600">*</span></label>
                             <textarea rows="3" class="{{ $textareaInput }} resize-none" wire:model.live="rescheduleReason" required></textarea>
                             @error('rescheduleReason') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
@@ -645,7 +645,7 @@
                             Batal
                         </button>
                         <button type="submit" class="{{ $btnBlk }}" wire:loading.attr="disabled" wire:target="submitReschedule">
-                            Simpan Reschedule
+                            Simpan Jadwal Ulang
                         </button>
                     </div>
                 </form>
@@ -660,14 +660,14 @@
             <div class="absolute inset-x-0 bottom-0 bg-white rounded-t-2xl shadow-xl max-h-[80vh] overflow-hidden">
                 <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-900">Filter & Recent</h3>
+                        <h3 class="text-sm font-semibold text-gray-900">Filter & Aktivitas Terbaru</h3>
                         <p class="text-[11px] text-gray-500">Filter berdasarkan ruangan & lihat aktivitas terbaru.</p>
                     </div>
                 </div>
 
                 <div class="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
                     <div>
-                        <h4 class="text-xs font-semibold text-gray-800 mb-2">Filter by Room</h4>
+                        <h4 class="text-xs font-semibold text-gray-800 mb-2">Filter berdasarkan Ruangan</h4>
 
                         <button type="button"
                             wire:click="clearRoomFilter"
@@ -675,12 +675,12 @@
                                 {{ is_null($roomFilterId) ? 'bg-gray-900 text-white' : 'text-gray-800 hover:bg-gray-100' }}">
                             <span class="flex items-center gap-2">
                                 <span class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-gray-300 text-[11px]">
-                                    All
+                                    Semua
                                 </span>
-                                <span>All Rooms</span>
+                                <span>Semua Ruangan</span>
                             </span>
                             @if(is_null($roomFilterId))
-                                <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
+                                <span class="text-[10px] uppercase tracking-wide opacity-80">Aktif</span>
                             @endif
                         </button>
 
@@ -700,8 +700,8 @@
                                         <span class="truncate">{{ $r['label'] }}</span>
                                     </span>
                                     @if($active)
-                                        <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
-                                    @endif
+                                            <span class="text-[10px] uppercase tracking-wide opacity-80">Aktif</span>
+                                        @endif
                                 </button>
                             @empty
                                 <p class="text-xs text-gray-500">Tidak ada data ruangan.</p>
@@ -714,7 +714,7 @@
                     <button type="button"
                         class="w-full h-10 rounded-xl bg-gray-900 text-white text-xs font-medium"
                         wire:click="closeFilterModal">
-                        Apply & Close
+                        Terapkan & Tutup
                     </button>
                 </div>
             </div>
@@ -792,7 +792,7 @@
 
                     {{-- Title and Status --}}
                     <div class="pb-2 border-b border-gray-100">
-                        <h4 class="text-lg font-bold text-gray-900 mb-1">{{ $detail->meeting_title ?? 'Untitled Meeting' }}</h4>
+                        <h4 class="text-lg font-bold text-gray-900 mb-1">{{ $detail->meeting_title ?? 'Pertemuan tanpa judul' }}</h4>
                         <span class="{{ $chip }} {{ $statusClass[strtolower($detail->status ?? 'cancelled')] ?? 'bg-gray-100 text-gray-700 ring-gray-300' }}">
                             Status: {{ ucfirst(strtolower($status)) }}
                         </span>
@@ -808,7 +808,7 @@
                                 <x-heroicon-o-check-badge class="w-4 h-4 text-gray-400" />
                                 Daftar Kebutuhan:
                                 @if ($loadedFromBugged)
-                                    <span class="text-[10px] text-rose-600 font-semibold">(LOADED FROM BUGGED DATA)</span>
+                                    <span class="text-[10px] text-rose-600 font-semibold">(DIAMBIL DARI DATA YANG RUSAK)</span>
                                 @endif
                             </div>
 

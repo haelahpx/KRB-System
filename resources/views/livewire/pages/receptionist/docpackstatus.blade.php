@@ -53,18 +53,18 @@
                             <x-heroicon-o-archive-box class="w-6 h-6 text-white"/>
                         </div>
                         <div>
-                            <h2 class="text-lg sm:text-xl font-semibold">Documents & Packages — Status</h2>
-                            <p class="text-sm text-white/80">Pantau item pending & tersimpan sebelum delivered/taken.
+                            <h2 class="text-lg sm:text-xl font-semibold">Status Dokumen & Paket</h2>
+                            <p class="text-sm text-white/80">Pantau item tertunda & tersimpan sebelum dikirim/diambil.
                             </p>
                         </div>
                     </div>
 
                     {{-- MOBILE FILTER BUTTON --}}
-                    <button type="button"
+                        <button type="button"
                         class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 text-xs font-medium border border-white/30 hover:bg-white/20 md:hidden"
                         wire:click="openFilterModal">
                         <x-heroicon-o-bars-3 class="w-4 h-4"/>
-                        <span>Filter</span>
+                        <span>Saring</span>
                     </button>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200 space-y-3">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div>
-                            <h3 class="text-base font-semibold text-gray-900">Items</h3>
+                            <h3 class="text-base font-semibold text-gray-900">Item</h3>
                             <p class="text-xs text-gray-500">Daftar dokumen & paket yang diterima.</p>
                         </div>
 
@@ -88,13 +88,13 @@
                                         {{ $activeTab === 'pending'
     ? 'bg-gray-900 text-white shadow-sm'
     : 'text-gray-700 hover:bg-gray-200' }}">
-                                Pending
+                                Tertunda
                             </button>
                             <button type="button" wire:click="setTab('stored')" class="px-3 py-1 rounded-full transition
                                         {{ $activeTab === 'stored'
     ? 'bg-gray-900 text-white shadow-sm'
     : 'text-gray-700 hover:bg-gray-200' }}">
-                                Stored
+                                Tersimpan
                             </button>
                         </div>
                     </div>
@@ -106,19 +106,19 @@
                                         {{ $type === 'all'
     ? 'bg-gray-900 text-white shadow-sm'
     : 'text-gray-700 hover:bg-gray-200' }}">
-                                All
+                                Semua
                             </button>
                             <button type="button" wire:click="$set('type', 'document')" class="px-3 py-1 rounded-full transition
                                         {{ $type === 'document'
     ? 'bg-gray-900 text-white shadow-sm'
     : 'text-gray-700 hover:bg-gray-200' }}">
-                                Document
+                                Dokumen
                             </button>
                             <button type="button" wire:click="$set('type', 'package')" class="px-3 py-1 rounded-full transition
                                         {{ $type === 'package'
     ? 'bg-gray-900 text-white shadow-sm'
     : 'text-gray-700 hover:bg-gray-200' }}">
-                                Package
+                                Paket
                             </button>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="{{ $label }}">Search</label>
+                            <label class="{{ $label }}">Cari</label>
                             <div class="relative">
                                 <input type="text" class="{{ $input }} pl-9"
                                     placeholder="Cari nama item / pengirim / penerima…" wire:model.live="q">
@@ -192,7 +192,7 @@
                                                 </span>
                                                 {{-- Status Chip --}}
                                                 <span class="text-[11px] px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-medium flex-shrink-0">
-                                                    Pending
+                                                    Tertunda
                                                 </span>
                                             </div>
                                         </div>
@@ -202,19 +202,19 @@
                                             @if($row->nama_pengirim)
                                                 <div class="flex items-center gap-2">
                                                     <x-heroicon-o-user class="w-4 h-4 text-gray-400"/>
-                                                    <span class="truncate font-medium text-gray-800">From: {{ $row->nama_pengirim }}</span>
+                                                    <span class="truncate font-medium text-gray-800">Dari: {{ $row->nama_pengirim }}</span>
                                                 </div>
                                             @endif
                                             @if($row->nama_penerima)
                                                 <div class="flex items-center gap-2">
                                                     <x-heroicon-o-user class="w-4 h-4 text-gray-400"/>
-                                                    <span class="truncate font-medium text-gray-800">To: {{ $row->nama_penerima }}</span>
+                                                    <span class="truncate font-medium text-gray-800">Ke: {{ $row->nama_penerima }}</span>
                                                 </div>
                                             @endif
                                             @if($row->created_at)
                                                 <div class="flex items-center gap-2 text-[12px] text-gray-600">
                                                     <x-heroicon-o-clock class="w-3.5 h-3.5 text-gray-400"/>
-                                                    <span>Received: {{ fmtDate($row->created_at) }} {{ fmtTime($row->created_at) }}</span>
+                                                    <span>Diterima: {{ fmtDate($row->created_at) }} {{ fmtTime($row->created_at) }}</span>
                                                 </div>
                                             @endif
                                         </div>
@@ -227,15 +227,15 @@
                                         #{{ $rowNo }}
                                     </span>
                                     
-                                    <button type="button" wire:click="openEdit({{ $row->delivery_id }})"
+                                        <button type="button" wire:click="openEdit({{ $row->delivery_id }})"
                                         wire:loading.attr="disabled"
                                         class="px-4 py-2 text-xs font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500/20 transition">
-                                        Edit
+                                        Ubah
                                     </button>
                                     <button type="button" wire:click="storeItem({{ $row->delivery_id }})"
                                         wire:loading.attr="disabled"
                                         class="px-4 py-2 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 shadow-sm transition">
-                                        Store
+                                        Simpan
                                     </button>
                                 </div>
                             </div>
@@ -252,8 +252,8 @@
                                 $avatarChar = strtoupper(substr($row->item_name ?? 'S', 0, 1));
                                 $rowNo = ($stored->firstItem() ?? 1) + $loop->index;
                                 $dir = $storedDirections[$row->delivery_id] ?? 'taken';
-                                $dirLabel = $dir === 'deliver' ? 'Deliver' : 'Taken';
-                                $actionLabel = $dir === 'deliver' ? 'Delivered' : 'Taken';
+                                $dirLabel = $dir === 'deliver' ? 'Dikirim' : 'Diambil';
+                                $actionLabel = $dir === 'deliver' ? 'Terkirim' : 'Diambil';
                             @endphp
 
                             {{-- START: MODIFIED STORED CARD DESIGN --}}
@@ -284,7 +284,7 @@
                                                 </span>
                                                 {{-- Status Chip --}}
                                                 <span class="text-[11px] px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-medium flex-shrink-0">
-                                                    Stored
+                                                    Tersimpan
                                                 </span>
                                             </div>
                                         </div>
@@ -294,18 +294,18 @@
                                             @if($row->nama_pengirim)
                                                 <div class="flex items-center gap-2">
                                                     <x-heroicon-o-user class="w-4 h-4 text-gray-400"/>
-                                                    <span class="truncate font-medium text-gray-800">From: {{ $row->nama_pengirim }}</span>
+                                                    <span class="truncate font-medium text-gray-800">Dari: {{ $row->nama_pengirim }}</span>
                                                 </div>
                                             @endif
                                             @if($row->nama_penerima)
                                                 <div class="flex items-center gap-2">
                                                     <x-heroicon-o-user class="w-4 h-4 text-gray-400"/>
-                                                    <span class="truncate font-medium text-gray-800">To: {{ $row->nama_penerima }}</span>
+                                                    <span class="truncate font-medium text-gray-800">Ke: {{ $row->nama_penerima }}</span>
                                                 </div>
                                             @endif
                                             <div class="flex items-center gap-2 text-[12px] text-gray-600">
                                                 <x-heroicon-o-arrow-up-right class="w-3.5 h-3.5 text-gray-400"/>
-                                                <span>Direction: {{ $dirLabel }}</span>
+                                                <span>Arah: {{ $dirLabel }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -320,7 +320,7 @@
                                     <button type="button" wire:click="openEdit({{ $row->delivery_id }})"
                                         wire:loading.attr="disabled"
                                         class="px-4 py-2 text-xs font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500/20 transition">
-                                        Edit
+                                        Ubah
                                     </button>
                                     <button type="button" wire:click="finalizeItem({{ $row->delivery_id }})"
                                         wire:loading.attr="disabled"
@@ -353,18 +353,18 @@
                 {{-- Filter by Department & User --}}
                 <section class="{{ $card }}">
                     <div class="px-4 py-4 border-b border-gray-200">
-                        <h3 class="text-sm font-semibold text-gray-900">Advanced Filters</h3>
-                        <p class="text-xs text-gray-500 mt-1">Filter berdasarkan department & user.</p>
+                        <h3 class="text-sm font-semibold text-gray-900">Filter Lanjutan</h3>
+                        <p class="text-xs text-gray-500 mt-1">Filter berdasarkan departemen & pengguna.</p>
                     </div>
 
                     <div class="px-4 py-3 space-y-4">
                         {{-- Department Filter --}}
                         <div>
-                            <label class="{{ $label }}">Department</label>
+                            <label class="{{ $label }}">Departemen</label>
                             <input type="text" wire:model.live="departmentQ" class="{{ $input }}"
-                                placeholder="Cari department...">
+                                placeholder="Cari departemen...">
                             <select wire:model.live="departmentId" class="{{ $input }} mt-2">
-                                <option value="">Semua Department</option>
+                                <option value="">Semua Departemen</option>
                                 @foreach($departments as $dept)
                                     <option value="{{ $dept->department_id }}">{{ $dept->department_name }}</option>
                                 @endforeach
@@ -373,10 +373,10 @@
 
                         {{-- User Filter --}}
                         <div>
-                            <label class="{{ $label }}">Receptionist / User</label>
-                            <input type="text" wire:model.live="userQ" class="{{ $input }}" placeholder="Cari user...">
+                            <label class="{{ $label }}">Resepsionis / Pengguna</label>
+                            <input type="text" wire:model.live="userQ" class="{{ $input }}" placeholder="Cari pengguna...">
                             <select wire:model.live="userId" class="{{ $input }} mt-2">
-                                <option value="">Semua User</option>
+                                <option value="">Semua Pengguna</option>
                                 @foreach($users as $u)
                                     <option value="{{ $u->user_id }}">{{ $u->full_name }}</option>
                                 @endforeach
@@ -395,22 +395,22 @@
             <div class="absolute inset-x-0 bottom-0 bg-white rounded-t-2xl shadow-xl max-h-[80vh] overflow-hidden">
                 <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-900">Advanced Filters</h3>
-                        <p class="text-[11px] text-gray-500">Filter berdasarkan department & user.</p>
+                        <h3 class="text-sm font-semibold text-gray-900">Filter Lanjutan</h3>
+                        <p class="text-[11px] text-gray-500">Filter berdasarkan departemen & pengguna.</p>
                     </div>
                     <button type="button" class="text-gray-500 hover:text-gray-700" wire:click="closeFilterModal">
                         <x-heroicon-o-x-mark class="w-5 h-5"/>
                     </button>
                 </div>
 
-                <div class="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
+                    <div class="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
                     {{-- Department Filter --}}
                     <div>
-                        <label class="{{ $label }}">Department</label>
+                        <label class="{{ $label }}">Departemen</label>
                         <input type="text" wire:model.live="departmentQ" class="{{ $input }}"
-                            placeholder="Cari department...">
+                            placeholder="Cari departemen...">
                         <select wire:model.live="departmentId" class="{{ $input }} mt-2">
-                            <option value="">Semua Department</option>
+                            <option value="">Semua Departemen</option>
                             @foreach($departments as $dept)
                                 <option value="{{ $dept->department_id }}">{{ $dept->department_name }}</option>
                             @endforeach
@@ -419,10 +419,10 @@
 
                     {{-- User Filter --}}
                     <div>
-                        <label class="{{ $label }}">Receptionist / User</label>
-                        <input type="text" wire:model.live="userQ" class="{{ $input }}" placeholder="Cari user...">
+                        <label class="{{ $label }}">Resepsionis / Pengguna</label>
+                        <input type="text" wire:model.live="userQ" class="{{ $input }}" placeholder="Cari pengguna...">
                         <select wire:model.live="userId" class="{{ $input }} mt-2">
-                            <option value="">Semua User</option>
+                            <option value="">Semua Pengguna</option>
                             @foreach($users as $u)
                                 <option value="{{ $u->user_id }}">{{ $u->full_name }}</option>
                             @endforeach
@@ -433,7 +433,7 @@
                 <div class="px-4 py-3 border-t border-gray-200">
                     <button type="button" class="w-full h-10 rounded-xl bg-gray-900 text-white text-xs font-medium"
                         wire:click="closeFilterModal">
-                        Apply & Close
+                        Terapkan & Tutup
                     </button>
                 </div>
             </div>
@@ -447,7 +447,7 @@
             <div class="absolute inset-0 flex items-center justify-center p-4">
                 <div class="w-full max-w-lg bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
                     <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
-                        <h3 class="font-semibold text-black">Edit Item</h3>
+                        <h3 class="font-semibold text-black">Ubah Item</h3>
                         <button type="button" class="text-gray-500 hover:text-gray-700"
                             wire:click="$set('showEdit', false)">
                             <x-heroicon-o-x-mark class="w-5 h-5"/>
@@ -455,7 +455,7 @@
                     </div>
                     <div class="p-5 space-y-4">
                         <div>
-                            <label class="{{ $label }}">Item Name</label>
+                            <label class="{{ $label }}">Nama Item</label>
                             <input type="text" class="{{ $input }}" wire:model.defer="edit.item_name">
                             @error('edit.item_name') <p class="text-sm text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>

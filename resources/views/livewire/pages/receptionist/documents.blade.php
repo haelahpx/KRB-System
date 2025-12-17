@@ -71,11 +71,11 @@
                         @enderror
                     </div>
                     <div>
-                        <label class="{{ $label }}">Type</label>
+                        <label class="{{ $label }}">Tipe</label>
                         <select wire:model.defer="type" class="{{ $input }}">
-                            <option value="document">Document</option>
-                            <option value="invoice">Invoice</option>
-                            <option value="etc">Etc</option>
+                            <option value="document">Dokumen</option>
+                            <option value="invoice">Faktur</option>
+                            <option value="etc">Lainnya</option>
                         </select>
                         @error('type') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                     </div>
@@ -120,15 +120,15 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="{{ $label }}">Status</label>
-                        <select wire:model.defer="status" class="{{ $input }}">
-                            <option value="pending">Pending</option>
-                            <option value="taken">Taken</option>
-                            <option value="delivered">Delivered</option>
+                            <label class="{{ $label }}">Status</label>
+                            <select wire:model.defer="status" class="{{ $input }}">
+                            <option value="pending">Tertunda</option>
+                            <option value="taken">Diambil</option>
+                            <option value="delivered">Terkirim</option>
                         </select>
                         @error('status') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                         <p class="text-[11px] text-gray-500 mt-1">
-                            Jika pilih <b>Delivered</b>, data langsung masuk ke kotak Riwayat (ditandai waktu sekarang).
+                            Jika pilih <b>Terkirim</b>, data langsung masuk ke kotak Riwayat (ditandai waktu sekarang).
                         </p>
                     </div>
                 </div>
@@ -172,8 +172,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-2 h-2 bg-amber-500 rounded-full"></div>
                     <div>
-                        <h3 class="text-base font-semibold text-gray-900">Dokumen Pending</h3>
-                        <p class="text-sm text-gray-500">Menampilkan semua dokumen berstatus pending</p>
+                        <h3 class="text-base font-semibold text-gray-900">Dokumen Tertunda</h3>
+                        <p class="text-sm text-gray-500">Menampilkan semua dokumen berstatus tertunda</p>
                     </div>
                 </div>
             </div>
@@ -194,10 +194,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2">
                             <button wire:click="openEdit({{ $r->document_id }})" wire:loading.attr="disabled"
                                 wire:target="openEdit({{ $r->document_id }})" class="{{ $btnBlk }}">
-                                <span wire:loading.remove wire:target="openEdit({{ $r->document_id }})">Edit</span>
+                                <span wire:loading.remove wire:target="openEdit({{ $r->document_id }})">Ubah</span>
                                 <span wire:loading wire:target="openEdit({{ $r->document_id }})">Memuat…</span>
                             </button>
 
@@ -217,7 +217,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="text-center py-8 text-gray-500 text-sm">Tidak ada pending.</div>
+                    <div class="text-center py-8 text-gray-500 text-sm">Tidak ada dokumen tertunda.</div>
                 @endforelse
             </div>
         </div>
@@ -228,7 +228,7 @@
                     <div class="w-2 h-2 bg-emerald-600 rounded-full"></div>
                     <div>
                         <h3 class="text-base font-semibold text-gray-900">Riwayat Dokumen</h3>
-                        <p class="text-sm text-gray-500">Hanya dokumen yang sudah dikirim</p>
+                        <p class="text-sm text-gray-500">Hanya dokumen yang sudah terkirim</p>
                     </div>
                 </div>
             </div>
@@ -245,7 +245,7 @@
                     </div>
                     <div class="relative flex-1">
                         <input type="text" wire:model.live="q"
-                            placeholder="Cari nama dokumen / pengirim / penerima / type / penyimpanan / status..."
+                            placeholder="Cari nama dokumen / pengirim / penerima / tipe / penyimpanan / status..."
                             class="{{ $input }} pl-9 w-full">
                         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
@@ -318,7 +318,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                             </svg>
-                                            <span class="font-medium text-gray-700">Status: {{ ucfirst($e->status) }}</span>
+                                            <span class="font-medium text-gray-700">Status: {{ $e->status === 'delivered' ? 'Terkirim' : ($e->status === 'taken' ? 'Diambil' : ($e->status === 'pending' ? 'Tertunda' : ucfirst($e->status))) }}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -330,7 +330,7 @@
                                 <div class="flex flex-wrap gap-2 justify-end pt-1.5">
                                     <button wire:click="openEdit({{ $e->document_id }})" wire:loading.attr="disabled"
                                         wire:target="openEdit({{ $e->document_id }})" class="{{ $btnBlk }}">
-                                        <span wire:loading.remove wire:target="openEdit({{ $e->document_id }})">Edit</span>
+                                        <span wire:loading.remove wire:target="openEdit({{ $e->document_id }})">Ubah</span>
                                         <span wire:loading wire:target="openEdit({{ $e->document_id }})">Memuat…</span>
                                     </button>
                                     <button wire:click="delete({{ $e->document_id }})"
@@ -397,11 +397,11 @@
 
                     <div class="grid grid-cols-2 gap-3.5">
                         <div class="space-y-1.5">
-                            <label class="{{ $label }}">Type</label>
+                            <label class="{{ $label }}">Tipe</label>
                             <select wire:model="edit.type" class="{{ $editIn }}">
-                                <option value="document">Document</option>
-                                <option value="invoice">Invoice</option>
-                                <option value="etc">Etc</option>
+                                <option value="document">Dokumen</option>
+                                <option value="invoice">Faktur</option>
+                                <option value="etc">Lainnya</option>
                             </select>
                             @error('edit.type') <p class="text-[11px] text-red-600 font-medium">{{ $message }}</p> @enderror
                         </div>
@@ -453,14 +453,14 @@
                         <div class="space-y-1.5">
                             <label class="{{ $label }}">Status</label>
                             <select wire:model="edit.status" class="{{ $editIn }}">
-                                <option value="pending">Pending</option>
-                                <option value="taken">Taken</option>
-                                <option value="delivered">Delivered</option>
+                                <option value="pending">Tertunda</option>
+                                <option value="taken">Diambil</option>
+                                <option value="delivered">Terkirim</option>
                             </select>
                             @error('edit.status') <p class="text-[11px] text-red-600 font-medium">{{ $message }}</p>
                             @enderror
                             <p class="text-[11px] text-gray-500 mt-1">
-                                Akan otomatis menjadi <b>Delivered</b> bila <b>Pengiriman</b> diisi.
+                                Akan otomatis menjadi <b>Terkirim</b> bila <b>Pengiriman</b> diisi.
                             </p>
                         </div>
                     </div>

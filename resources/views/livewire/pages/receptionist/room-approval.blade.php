@@ -14,7 +14,7 @@
                 </svg>
             </div>
             <div>
-                <h2 class="text-lg sm:text-xl font-semibold">Room Approval</h2>
+                <h2 class="text-lg sm:text-xl font-semibold">Persetujuan Ruangan</h2>
                 <p class="text-sm text-white/80">Setujui permintaan booking & pantau rapat berjalan.</p>
             </div>
         </header>
@@ -25,8 +25,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-2 h-2 bg-blue-600 rounded-full"></div>
                     <div>
-                        <h3 class="text-base font-semibold text-gray-900">Pending Approval</h3>
-                        <p class="text-sm text-gray-500">Permintaan menunggu persetujuan receptionist.</p>
+                        <h3 class="text-base font-semibold text-gray-900">Menunggu Persetujuan</h3>
+                        <p class="text-sm text-gray-500">Permintaan menunggu persetujuan resepsionis.</p>
                     </div>
                 </div>
             </div>
@@ -49,11 +49,11 @@
                                 <div class="mt-1 text-[12px] text-gray-600">{{ $m['participants'] }} peserta</div>
 
                                 <div class="mt-3 flex flex-wrap gap-2">
-                                    <button class="{{ $btn }} bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-600/20"
-                                            wire:click="approve({{ $id }})" wire:loading.attr="disabled">Approve</button>
+                                        <button class="{{ $btn }} bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-600/20"
+                                            wire:click="approve({{ $id }})" wire:loading.attr="disabled">Setujui</button>
 
-                                    <button class="{{ $btn }} bg-rose-600 hover:bg-rose-700 focus:ring-rose-600/20"
-                                            wire:click="askReject({{ $id }})" wire:loading.attr="disabled">Reject</button>
+                                        <button class="{{ $btn }} bg-rose-600 hover:bg-rose-700 focus:ring-rose-600/20"
+                                            wire:click="askReject({{ $id }})" wire:loading.attr="disabled">Tolak</button>
                                 </div>
 
                                 {{-- Reject box (reason is UI-only) --}}
@@ -84,7 +84,7 @@
                 <div class="flex items-center gap-3">
                     <div class="w-2 h-2 bg-amber-600 rounded-full"></div>
                     <div>
-                        <h3 class="text-base font-semibold text-gray-900">Ongoing</h3>
+                        <h3 class="text-base font-semibold text-gray-900">Rapat Berlangsung</h3>
                         <p class="text-sm text-gray-500">Rapat sedang berlangsung (sudah disetujui).</p>
                     </div>
                 </div>

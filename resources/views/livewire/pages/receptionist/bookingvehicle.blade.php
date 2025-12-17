@@ -32,7 +32,7 @@
                             <x-heroicon-o-truck class="w-6 h-6 text-white"/>
                         </div>
                         <div>
-                            <h2 class="text-lg sm:text-xl font-semibold">Vehicle Booking (Receptionist)</h2>
+                            <h2 class="text-lg sm:text-xl font-semibold">Booking Kendaraan (Resepsionis)</h2>
                             <p class="text-sm text-white/80">
                                 Isi form di bawah untuk mengajukan peminjaman kendaraan atas nama user/departemen tertentu.
                             </p>
@@ -43,12 +43,12 @@
                         <a href="{{ route('bookingstatus') }}"
                            class="px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-white/80 hover:text-white border-r border-white/20 inline-flex items-center gap-2">
                             <x-heroicon-o-calendar-days class="w-4 h-4"/>
-                            Room Booking
+                            Booking Ruangan
                         </a>
                         <a href="{{ route('receptionist.vehiclestatus') ?? '#' }}"
                            class="px-3 md:px-4 py-2 text-xs md:text-sm font-medium bg-white text-gray-900 inline-flex items-center gap-2">
                             <x-heroicon-o-truck class="w-4 h-4"/>
-                            Vehicle Status
+                            Status Kendaraan
                         </a>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
 
                         {{-- User peminjam (filtered by department) --}}
                         <div>
-                            <label class="{{ $label }}">User (filtered by department)</label>
+                            <label class="{{ $label }}">User (difilter berdasarkan departemen)</label>
 
                             {{-- search user --}}
                             <input
@@ -121,13 +121,13 @@
                                 @if(!$department_id)
                                     <option value="">Pilih departemen terlebih dahulu</option>
                                 @else
-                                    <option value="">— Select User —</option>
+                                    <option value="">— Pilih User —</option>
                                     @forelse($users as $u)
                                         <option value="{{ $u->user_id }}">
                                             {{ $u->full_name }} — {{ $u->email }}
                                         </option>
                                     @empty
-                                        <option value="">— No users found —</option>
+                                        <option value="">— Tidak ada user ditemukan —</option>
                                     @endforelse
                                 @endif
                             </select>
@@ -319,7 +319,7 @@
                     {{-- Submit Button --}}
                     <div class="pt-2">
                         <button type="submit" class="{{ $btnBlk }}">
-                            Submit Booking
+                            Ajukan Peminjaman
                         </button>
                     </div>
                 </form>

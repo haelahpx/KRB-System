@@ -30,7 +30,7 @@
                         <x-heroicon-o-archive-box class="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h2 class="text-lg sm:text-xl font-semibold">Doc/Pack Form</h2>
+                        <h2 class="text-lg sm:text-xl font-semibold">Form Paket / Dokumen</h2>
                         <p class="text-sm text-white/80">Input paket/dokumen dengan alur masuk/keluar</p>
                     </div>
                 </div>
@@ -53,10 +53,10 @@
                 {{-- Row: Direction & Type & Storage --}}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
-                        <label class="{{ $label }}">Arah</label>
+                            <label class="{{ $label }}">Arah</label>
                         <select class="{{ $input }}" wire:model.live="direction" wire:key="direction-select">
-                            <option value="taken">Masuk untuk internal (Taken)</option>
-                            <option value="deliver">Titip untuk dikirim (Deliver later)</option>
+                            <option value="taken">Masuk (Internal)</option>
+                            <option value="deliver">Titip (Dikirim nanti)</option>
                         </select>
                         @error('direction') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                     </div>
@@ -64,8 +64,8 @@
                     <div>
                         <label class="{{ $label }}">Tipe</label>
                         <select class="{{ $input }}" wire:model.live="itemType" wire:key="type-select">
-                            <option value="package">Package</option>
-                            <option value="document">Document</option>
+                            <option value="package">Paket</option>
+                            <option value="document">Dokumen</option>
                         </select>
                         @error('itemType') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                     </div>
@@ -137,13 +137,13 @@
                     <div class="space-y-5">
                         @if ($direction === 'taken')
                             <div>
-                                <label class="{{ $label }}">Nama Pengirim (Free Text)</label>
+                                <label class="{{ $label }}">Nama Pengirim (teks bebas)</label>
                                 <input type="text" class="{{ $input }}" wire:model.defer="senderText" placeholder="Kurir / Ekspedisi / Pengirim">
                                 @error('senderText') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                             </div>
                         @else
                             <div>
-                                <label class="{{ $label }}">Nama Penerima (Free Text)</label>
+                                <label class="{{ $label }}">Nama Penerima (teks bebas)</label>
                                 <input type="text" class="{{ $input }}" wire:model.defer="receiverText" placeholder="Nama penerima">
                                 @error('receiverText') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                             </div>

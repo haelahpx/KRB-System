@@ -53,8 +53,8 @@
                             <x-heroicon-o-document-text class="w-6 h-6 text-white"/>
                         </div>
                         <div>
-                            <h2 class="text-lg sm:text-xl font-semibold">Documents & Packages — History</h2>
-                            <p class="text-sm text-white/80">Pantau status document & package yang sudah selesai.</p>
+                            <h2 class="text-lg sm:text-xl font-semibold">Riwayat Dokumen & Paket</h2>
+                                <p class="text-sm text-white/80">Pantau status dokumen & paket yang sudah dikirim atau diambil.</p>
                         </div>
                     </div>
 
@@ -63,7 +63,7 @@
                         class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 text-xs font-medium border border-white/30 hover:bg-white/20 md:hidden"
                         wire:click="openFilterModal">
                         <x-heroicon-o-bars-3 class="w-4 h-4"/>
-                        <span>Filter</span>
+                        <span>Saring</span>
                     </button>
                 </div>
             </div>
@@ -77,8 +77,8 @@
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200 space-y-3">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div>
-                            <h3 class="text-base font-semibold text-gray-900">Completed Items</h3>
-                            <p class="text-xs text-gray-500">Daftar dokumen & paket yang sudah delivered/taken.</p>
+                            <h3 class="text-base font-semibold text-gray-900">Item Selesai</h3>
+                                <p class="text-xs text-gray-500">Daftar dokumen & paket yang sudah dikirim atau diambil.</p>
                         </div>
 
                         {{-- Type scope: All / Document / Package --}}
@@ -87,19 +87,19 @@
                                         {{ $type === 'all'
     ? 'bg-gray-900 text-white shadow-sm'
     : 'text-gray-700 hover:bg-gray-200' }}">
-                                All
+                                Semua
                             </button>
                             <button type="button" wire:click="$set('type', 'document')" class="px-3 py-1 rounded-full transition
                                         {{ $type === 'document'
     ? 'bg-gray-900 text-white shadow-sm'
     : 'text-gray-700 hover:bg-gray-200' }}">
-                                Document
+                                Dokumen
                             </button>
                             <button type="button" wire:click="$set('type', 'package')" class="px-3 py-1 rounded-full transition
                                         {{ $type === 'package'
     ? 'bg-gray-900 text-white shadow-sm'
     : 'text-gray-700 hover:bg-gray-200' }}">
-                                Package
+                                Paket
                             </button>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="{{ $label }}">Search</label>
+                            <label class="{{ $label }}">Cari</label>
                             <div class="relative">
                                 <input type="text" class="{{ $input }} pl-9"
                                     placeholder="Cari nama item / pengirim / penerima…" wire:model.live="q">
@@ -141,7 +141,7 @@
                             $avatarChar = strtoupper(substr($row->item_name ?? 'D', 0, 1));
                             $rowNo = ($done->firstItem() ?? 1) + $loop->index;
                             $isDelivered = $row->status === 'delivered';
-                            $statusLabel = $isDelivered ? 'Delivered' : 'Taken';
+                            $statusLabel = $isDelivered ? 'Terkirim' : 'Diambil';
                             $statusBg = $isDelivered ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800';
 
                             $completionDate = $row->created_at; // Default to created_at
@@ -190,25 +190,25 @@
                                         @if($row->nama_pengirim)
                                             <div class="flex items-center gap-2">
                                                 <x-heroicon-o-user class="w-4 h-4 text-gray-400"/>
-                                                <span class="truncate font-medium text-gray-800">From: {{ $row->nama_pengirim }}</span>
+                                                <span class="truncate font-medium text-gray-800">Dari: {{ $row->nama_pengirim }}</span>
                                             </div>
                                         @endif
                                         @if($row->nama_penerima)
                                             <div class="flex items-center gap-2">
                                                 <x-heroicon-o-user class="w-4 h-4 text-gray-400"/>
-                                                <span class="truncate font-medium text-gray-800">To: {{ $row->nama_penerima }}</span>
+                                                <span class="truncate font-medium text-gray-800">Ke: {{ $row->nama_penerima }}</span>
                                             </div>
                                         @endif
-                                        <div class="flex items-center gap-2 text-[12px] text-gray-600">
-                                            <x-heroicon-o-clock class="w-3.5 h-3.5 text-gray-400"/>
-                                            <span>
-                                                {{ $statusLabel }}: {{ fmtDate($completionDate) }} {{ fmtTime($completionDate) }}
-                                            </span>
-                                        </div>
+                                            <div class="flex items-center gap-2 text-[12px] text-gray-600">
+                                                <x-heroicon-o-clock class="w-3.5 h-3.5 text-gray-400"/>
+                                                <span>
+                                                    {{ $statusLabel }}: {{ fmtDate($completionDate) }} {{ fmtTime($completionDate) }}
+                                                </span>
+                                            </div>
                                         @if($row->receptionist?->full_name)
                                             <div class="flex items-center gap-2 text-[12px] text-gray-600">
                                                 <x-heroicon-o-user-circle class="w-3.5 h-3.5 text-gray-400"/>
-                                                <span class="truncate">Recp: {{ $row->receptionist->full_name }}</span>
+                                                <span class="truncate">Resepsionis: {{ $row->receptionist->full_name }}</span>
                                             </div>
                                         @endif
                                     </div>
@@ -224,13 +224,13 @@
                                     <button type="button" wire:click="openEdit({{ $row->delivery_id }})"
                                         wire:loading.attr="disabled"
                                         class="px-4 py-2 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 transition">
-                                        Edit
+                                        Ubah
                                     </button>
                                     <button type="button" wire:click="softDelete({{ $row->delivery_id }})"
                                         wire:loading.attr="disabled"
-                                        wire:confirm="Are you sure you want to delete this item?"
+                                        wire:confirm="Yakin ingin menghapus item ini?"
                                         class="px-4 py-2 text-xs font-medium rounded-lg bg-rose-700 text-white hover:bg-rose-800 focus:outline-none focus:ring-2 focus:ring-rose-700/20 transition">
-                                        Delete
+                                        Hapus
                                     </button>
                                 </div>
                             </div>
@@ -254,18 +254,18 @@
                 {{-- Filter by Department & User --}}
                 <section class="{{ $card }}">
                     <div class="px-4 py-4 border-b border-gray-200">
-                        <h3 class="text-sm font-semibold text-gray-900">Advanced Filters</h3>
-                        <p class="text-xs text-gray-500 mt-1">Filter berdasarkan department & user.</p>
+                        <h3 class="text-sm font-semibold text-gray-900">Filter Lanjutan</h3>
+                        <p class="text-xs text-gray-500 mt-1">Filter berdasarkan departemen & pengguna.</p>
                     </div>
 
                     <div class="px-4 py-3 space-y-4">
                         {{-- Department Filter --}}
                         <div>
-                            <label class="{{ $label }}">Department</label>
+                            <label class="{{ $label }}">Departemen</label>
                             <input type="text" wire:model.live="departmentQ" class="{{ $input }}"
-                                placeholder="Cari department...">
+                                placeholder="Cari departemen...">
                             <select wire:model.live="departmentId" class="{{ $input }} mt-2">
-                                <option value="">Semua Department</option>
+                                <option value="">Semua Departemen</option>
                                 @foreach($departments as $dept)
                                     <option value="{{ $dept->department_id }}">{{ $dept->department_name }}</option>
                                 @endforeach
@@ -274,10 +274,10 @@
 
                         {{-- User Filter --}}
                         <div>
-                            <label class="{{ $label }}">Receptionist / User</label>
-                            <input type="text" wire:model.live="userQ" class="{{ $input }}" placeholder="Cari user...">
+                            <label class="{{ $label }}">Resepsionis / Pengguna</label>
+                            <input type="text" wire:model.live="userQ" class="{{ $input }}" placeholder="Cari pengguna...">
                             <select wire:model.live="userId" class="{{ $input }} mt-2">
-                                <option value="">Semua User</option>
+                                <option value="">Semua Pengguna</option>
                                 @foreach($users as $u)
                                     <option value="{{ $u->user_id }}">{{ $u->full_name }}</option>
                                 @endforeach
@@ -296,8 +296,8 @@
             <div class="absolute inset-x-0 bottom-0 bg-white rounded-t-2xl shadow-xl max-h-[80vh] overflow-hidden">
                 <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-900">Advanced Filters</h3>
-                        <p class="text-[11px] text-gray-500">Filter berdasarkan department & user.</p>
+                        <h3 class="text-sm font-semibold text-gray-900">Filter Lanjutan</h3>
+                        <p class="text-[11px] text-gray-500">Filter berdasarkan departemen & pengguna.</p>
                     </div>
                     <button type="button" class="text-gray-500 hover:text-gray-700" wire:click="closeFilterModal">
                         <x-heroicon-o-x-mark class="w-5 h-5"/>
@@ -334,7 +334,7 @@
                 <div class="px-4 py-3 border-t border-gray-200">
                     <button type="button" class="w-full h-10 rounded-xl bg-gray-900 text-white text-xs font-medium"
                         wire:click="closeFilterModal">
-                        Apply & Close
+                        Terapkan & Tutup
                     </button>
                 </div>
             </div>
@@ -348,7 +348,7 @@
             <div class="absolute inset-0 flex items-center justify-center p-4">
                 <div class="w-full max-w-lg bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
                     <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
-                        <h3 class="font-semibold text-black">Edit Item</h3>
+                        <h3 class="font-semibold text-black">Ubah Item</h3>
                         <button type="button" class="text-gray-500 hover:text-gray-700"
                             wire:click="$set('showEdit', false)">
                             <x-heroicon-o-x-mark class="w-5 h-5"/>
