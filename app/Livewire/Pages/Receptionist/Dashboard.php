@@ -21,12 +21,9 @@ class Dashboard extends Component
 
     private function asCarbon(null|Carbon|\DateTimeInterface|string $v): ?Carbon
     {
-        if ($v === null)
-            return null;
-        if ($v instanceof Carbon)
-            return $v->timezone($this->tz);
-        if ($v instanceof \DateTimeInterface)
-            return Carbon::instance($v)->timezone($this->tz);
+        if ($v === null) return null;
+        if ($v instanceof Carbon) return $v->timezone($this->tz);
+        if ($v instanceof \DateTimeInterface) return Carbon::instance($v)->timezone($this->tz);
 
         try {
             return Carbon::parse($v)->timezone($this->tz);
@@ -47,16 +44,52 @@ class Dashboard extends Component
         return $c ? $c->format($fmt) : '—';
     }
 
+    private function wowPct(int $current, int $prev): int
+    {
+        if ($prev <= 0) return $current > 0 ? 100 : 0;
+        return (int) round((($current - $prev) / $prev) * 100);
+    }
+
+    private function groupCountByDate(string $modelClass, ?int $companyId, Carbon $start, Carbon $end, string $dateColumn = 'created_at'): array
+    {
+        /** @var \Illuminate\Database\Eloquent\Model $modelClass */
+        return $modelClass::query()
+            ->when($companyId, fn($q) => $q->where('company_id', $companyId))
+            ->whereBetween($dateColumn, [$start, $end])
+            ->selectRaw("DATE($dateColumn) as d, COUNT(*) as c")
+            ->groupBy('d')
+            ->pluck('c', 'd')
+            ->toArray();
+    }
+
+    private function makeDailySeries(array $days, array $mapByDate): array
+    {
+        return array_map(function (Carbon $day) use ($mapByDate) {
+            $key = $day->toDateString();
+            return (int) ($mapByDate[$key] ?? 0);
+        }, $days);
+    }
+
     public function render()
     {
         $companyId = optional(Auth::user())->company_id;
 
-        // Range 7 hari terakhir (hari ini + 6 hari ke belakang)
+        // 7 hari terakhir (hari ini + 6 hari ke belakang)
         $startOfRange = Carbon::now($this->tz)->subDays(6)->startOfDay();
-        $endOfRange = Carbon::now($this->tz)->endOfDay();
+        $endOfRange   = Carbon::now($this->tz)->endOfDay();
+
+        // 7 hari sebelumnya (untuk % vs last week)
+        $prevStart = $startOfRange->copy()->subDays(7)->startOfDay();
+        $prevEnd   = $startOfRange->copy()->subDay()->endOfDay();
+
+        // Days array
+        $days = [];
+        for ($i = 0; $i < 7; $i++) {
+            $days[] = $startOfRange->copy()->addDays($i);
+        }
 
         /**
-         * Weekly totals (7 hari terakhir) per modul
+         * Weekly totals (7 hari terakhir)
          */
         $weeklyRoomBookingsCount = BookingRoom::query()
             ->when($companyId, fn($q) => $q->where('company_id', $companyId))
@@ -79,7 +112,104 @@ class Dashboard extends Component
             ->count();
 
         /**
-         * Newest Booking Room (limit 5)
+         * Previous week totals (untuk %)
+         */
+        $prevRoom = BookingRoom::query()
+            ->when($companyId, fn($q) => $q->where('company_id', $companyId))
+            ->whereBetween('created_at', [$prevStart, $prevEnd])
+            ->count();
+
+        $prevVehicle = VehicleBooking::query()
+            ->when($companyId, fn($q) => $q->where('company_id', $companyId))
+            ->whereBetween('created_at', [$prevStart, $prevEnd])
+            ->count();
+
+        $prevGuest = Guestbook::query()
+            ->when($companyId, fn($q) => $q->where('company_id', $companyId))
+            ->whereBetween('created_at', [$prevStart, $prevEnd])
+            ->count();
+
+        $prevDoc = Delivery::query()
+            ->when($companyId, fn($q) => $q->where('company_id', $companyId))
+            ->whereBetween('created_at', [$prevStart, $prevEnd])
+            ->count();
+
+        $roomWowPct    = $this->wowPct($weeklyRoomBookingsCount, $prevRoom);
+        $vehicleWowPct = $this->wowPct($weeklyVehicleBookingsCount, $prevVehicle);
+        $guestWowPct   = $this->wowPct($weeklyGuestsCount, $prevGuest);
+        $docWowPct     = $this->wowPct($weeklyDocsCount, $prevDoc);
+
+        /**
+         * Weekly chart activity (REAL)
+         */
+        $labels = array_map(fn(Carbon $d) => $d->format('D'), $days);
+
+        $roomByDate = $this->groupCountByDate(BookingRoom::class, $companyId, $startOfRange, $endOfRange, 'created_at');
+        $vehByDate  = $this->groupCountByDate(VehicleBooking::class, $companyId, $startOfRange, $endOfRange, 'created_at');
+        $docByDate  = $this->groupCountByDate(Delivery::class, $companyId, $startOfRange, $endOfRange, 'created_at');
+        $gstByDate  = $this->groupCountByDate(Guestbook::class, $companyId, $startOfRange, $endOfRange, 'created_at');
+
+        $weeklyActivity = [
+            'labels'  => $labels,
+            'room'    => $this->makeDailySeries($days, $roomByDate),
+            'vehicle' => $this->makeDailySeries($days, $vehByDate),
+            'docpac'  => $this->makeDailySeries($days, $docByDate),
+            'guest'   => $this->makeDailySeries($days, $gstByDate),
+        ];
+
+        /**
+         * Status Distribution (This Month) - gabungan BookingRoom + VehicleBooking
+         */
+        $now = Carbon::now($this->tz);
+        $monthStart = $now->copy()->startOfMonth()->startOfDay();
+        $monthEnd   = $now->copy()->endOfMonth()->endOfDay();
+
+        $lastMonthStart = $now->copy()->subMonthNoOverflow()->startOfMonth()->startOfDay();
+        $lastMonthEnd   = $now->copy()->subMonthNoOverflow()->endOfMonth()->endOfDay();
+
+        $approvedStatuses = ['approved', 'accept', 'accepted'];
+        $pendingStatuses  = ['pending', 'waiting', 'submitted'];
+        $rejectedStatuses = ['rejected', 'declined', 'cancelled', 'canceled'];
+
+        $countStatus = function (string $model, array $statuses, Carbon $from, Carbon $to) use ($companyId) {
+            return $model::query()
+                ->when($companyId, fn($q) => $q->where('company_id', $companyId))
+                ->whereBetween('created_at', [$from, $to])
+                ->whereIn(\DB::raw('LOWER(status)'), $statuses)
+                ->count();
+        };
+
+        $approvedCount = $countStatus(BookingRoom::class, $approvedStatuses, $monthStart, $monthEnd)
+            + $countStatus(VehicleBooking::class, $approvedStatuses, $monthStart, $monthEnd);
+
+        $pendingCount = $countStatus(BookingRoom::class, $pendingStatuses, $monthStart, $monthEnd)
+            + $countStatus(VehicleBooking::class, $pendingStatuses, $monthStart, $monthEnd);
+
+        $rejectedCount = $countStatus(BookingRoom::class, $rejectedStatuses, $monthStart, $monthEnd)
+            + $countStatus(VehicleBooking::class, $rejectedStatuses, $monthStart, $monthEnd);
+
+        $totalRequestsThisMonth =
+            BookingRoom::query()->when($companyId, fn($q) => $q->where('company_id', $companyId))
+                ->whereBetween('created_at', [$monthStart, $monthEnd])->count()
+            + VehicleBooking::query()->when($companyId, fn($q) => $q->where('company_id', $companyId))
+                ->whereBetween('created_at', [$monthStart, $monthEnd])->count();
+
+        $totalRequestsLastMonth =
+            BookingRoom::query()->when($companyId, fn($q) => $q->where('company_id', $companyId))
+                ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count()
+            + VehicleBooking::query()->when($companyId, fn($q) => $q->where('company_id', $companyId))
+                ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
+
+        $statusApprovedPct = $totalRequestsThisMonth > 0 ? (int) round(($approvedCount / $totalRequestsThisMonth) * 100) : 0;
+        $statusPendingPct  = $totalRequestsThisMonth > 0 ? (int) round(($pendingCount / $totalRequestsThisMonth) * 100) : 0;
+
+        // biar total 100% rapih
+        $statusRejectedPct = max(0, 100 - $statusApprovedPct - $statusPendingPct);
+
+        $monthVsLastMonthPct = $this->wowPct($totalRequestsThisMonth, $totalRequestsLastMonth);
+
+        /**
+         * Newest lists (punyamu tetap)
          */
         $latestBookingRooms = BookingRoom::query()
             ->when($companyId, fn($q) => $q->where('company_id', $companyId))
@@ -95,9 +225,6 @@ class Dashboard extends Component
                 'status' => ucfirst($br->status ?? '—'),
             ]);
 
-        /**
-         * Newest Vehicle Bookings (limit 5)
-         */
         $latestVehicleBookings = VehicleBooking::query()
             ->when($companyId, fn($q) => $q->where('company_id', $companyId))
             ->latest('created_at')
@@ -112,9 +239,6 @@ class Dashboard extends Component
                 'status' => ucfirst($vb->status ?? '—'),
             ]);
 
-        /**
-         * Newest Guestbook Entries (limit 5)
-         */
         $latestGuests = Guestbook::query()
             ->when($companyId, fn($q) => $q->where('company_id', $companyId))
             ->latest('created_at')
@@ -128,9 +252,6 @@ class Dashboard extends Component
                 'date' => $this->fmtDate($g->date),
             ]);
 
-        /**
-         * Newest Document / Package Deliveries (limit 5)
-         */
         $latestDocs = Delivery::query()
             ->when($companyId, fn($q) => $q->where('company_id', $companyId))
             ->latest('created_at')
@@ -150,10 +271,24 @@ class Dashboard extends Component
             'latestVehicleBookings' => $latestVehicleBookings,
             'latestGuests' => $latestGuests,
             'latestDocs' => $latestDocs,
+
             'weeklyRoomBookingsCount' => $weeklyRoomBookingsCount,
             'weeklyVehicleBookingsCount' => $weeklyVehicleBookingsCount,
             'weeklyGuestsCount' => $weeklyGuestsCount,
             'weeklyDocsCount' => $weeklyDocsCount,
+
+            'roomWowPct' => $roomWowPct,
+            'vehicleWowPct' => $vehicleWowPct,
+            'guestWowPct' => $guestWowPct,
+            'docWowPct' => $docWowPct,
+
+            'weeklyActivity' => $weeklyActivity,
+
+            'statusApprovedPct' => $statusApprovedPct,
+            'statusPendingPct' => $statusPendingPct,
+            'statusRejectedPct' => $statusRejectedPct,
+            'totalRequestsThisMonth' => $totalRequestsThisMonth,
+            'monthVsLastMonthPct' => $monthVsLastMonthPct,
         ]);
     }
 }
