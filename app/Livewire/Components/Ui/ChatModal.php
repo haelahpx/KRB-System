@@ -10,292 +10,328 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
 use App\Models\Department;
-use App\Models\Wifi;
 use Throwable;
 
 class ChatModal extends Component
 {
-    public $isOpen = false;
-    public $currentMessage = '';
-    public $messages = [];
+    /* =========================
+     | UI STATE
+     ========================= */
+    public bool $isOpen = false;
+    public string $currentMessage = '';
+    public array $messages = [];
 
+    /* =========================
+     | FLOW STATE
+     ========================= */
+    public bool $waitingForProblemDescription = false;
+    public bool $needsConfirmation = false;
+
+    public ?string $ticketQuestion = null;
+    public ?string $ticketSummary = null;
+    public ?int $selectedDepartmentId = null;
     public string $ticketPriority = 'medium';
     public string $aiReasoning = '';
 
+    public array $availableDepartments = [];
+
     private const FAQ_FILE_PATH = 'faq_data.json';
 
-    public bool $needsConfirmation = false;
-    public ?string $ticketSummary = null;
-    public ?string $ticketQuestion = null;
-    public ?int $selectedDepartmentId = null;
-    public array $availableDepartments = [];
-    public string $ticketPhase = 'idle';
-
+    /* =========================
+     | MOUNT
+     ========================= */
     public function mount()
     {
-        $user = Auth::user();
+        $this->loadDepartments();
 
-        if ($user) {
-            $this->availableDepartments = Department::query()
-                ->when($user->company_id, fn($q) => $q->where('company_id', $user->company_id))
-                ->orderBy('department_name', 'asc')
-                ->get(['department_id', 'department_name'])
-                ->toArray();
+        $this->messages[] = [
+            'role' => 'system',
+            'text' => $this->systemPrompt()
+        ];
 
-            if ($user->department_id) {
-                $this->selectedDepartmentId = $user->department_id;
-            } else if (!empty($this->availableDepartments)) {
-                $this->selectedDepartmentId = $this->availableDepartments[0]['department_id'];
-            }
-        }
-
-        $userName = optional($user)->name ?? '';
-        $welcomeMessage = 'Halo' . ($userName ? ', ' . $userName : '') . '! Saya adalah Asisten Chat. Apa yang ingin Anda ketahui?';
-
-        if (empty($this->messages)) {
-            $this->messages[] = ['role' => 'system', 'text' => $this->getFaqContext()];
-            $this->messages[] = ['role' => 'model', 'text' => $welcomeMessage];
-        }
+        $this->messages[] = [
+            'role' => 'model',
+            'text' => 'Halo! Saya Asisten Chat Kebun Raya. Ada yang bisa saya bantu?'
+        ];
     }
 
-    private function getFaqContext()
+    /* =========================
+     | SYSTEM PROMPT
+     ========================= */
+    private function systemPrompt(): string
     {
-        $faqText = $this->loadFaqData();
-        $wifiText = $this->loadWifiData();
-        $deptNames = collect($this->availableDepartments)->pluck('department_name')->implode(', ');
+        return <<<PROMPT
+Anda adalah Asisten AI internal Kebun Raya (PT Mitra Natura Raya).
 
-        return "ANDA ADALAH SISTEN TIKETING CERDAS.
-    DAFTAR DEPARTEMEN: [ $deptNames ]
-    
-    PROSEDUR ANALISIS:
-    1. KLASIFIKASI DEPARTEMEN:
-       - Kata kunci (gaji, uang, reimburse, bonus, slip gaji, finance) -> WAJIB FINANCE.
-       - Kata kunci (internet, komputer, aplikasi, login, password, error, printer) -> WAJIB IT.
-       - Kata kunci (cuti, kontrak, asuransi, absensi) -> WAJIB HR.
-    
-    2. ANALISIS PRIORITAS:
-       - HIGH: Masalah mendesak, sistem mati, atau kerugian finansial langsung.
-       - MEDIUM: Kendala operasional harian (seperti gaji belum masuk).
-       - LOW: Pertanyaan atau permintaan informasi.
+ATURAN WAJIB:
+- KRS = Kebun Raya System
+- Jangan gunakan konteks kampus, mahasiswa, atau SKS
+- Jangan membuat tiket tanpa masalah yang jelas
+- Jika user minta tiket → minta penjelasan masalah dulu
+- Jawaban singkat dan profesional
 
-    3. OUTPUT:
-       Jika user ingin membuat tiket atau mengeluh tentang masalah, Anda WAJIB membalas dengan JSON ini:
-       {
-         \"action\": \"confirm_ticket\",
-         \"summary\": \"Ringkasan masalah user\",
-         \"department\": \"Nama departemen yang tepat dari daftar di atas\",
-         \"priority\": \"low/medium/high\",
-         \"reason\": \"Alasan pemilihan departemen & prioritas\"
-       }
-
-    ATURAN:
-    - JANGAN tampilkan teks JSON ke user.
-    - Gunakan bahasa Indonesia yang sopan.
-    
-    DATA:
-    \n" . $wifiText . "\n" . $faqText;
+FORMAT JSON (HANYA UNTUK SISTEM):
+{
+  "action": "create_ticket",
+  "summary": "...",
+  "department": "...",
+  "priority": "low|medium|high",
+  "reason": "..."
+}
+PROMPT;
     }
 
-    private function loadFaqData()
-    {
-        $path = storage_path('app/' . self::FAQ_FILE_PATH);
-        if (!File::exists($path)) return "FAQ tidak tersedia.";
-
-        $faqData = json_decode(File::get($path), true);
-        if (json_last_error() !== JSON_ERROR_NONE || !is_array($faqData)) return "FAQ tidak valid.";
-
-        $faqText = "\n### Daftar FAQ:\n";
-        foreach ($faqData as $item) {
-            $faqText .= "Q: " . ($item['pertanyaan'] ?? '') . "\nA: " . ($item['jawaban'] ?? '') . "\n";
-        }
-        return $faqText;
-    }
-
-    private function loadWifiData()
-    {
-        $user = Auth::user();
-        $wifiData = Wifi::query()
-            ->when(optional($user)->company_id, fn($q) => $q->where('company_id', $user->company_id))
-            ->where('is_active', true)
-            ->get(['ssid', 'password', 'location'])
-            ->toArray();
-
-        $wifiText = "Daftar WiFi Aktif:\n";
-        foreach ($wifiData as $item) {
-            $wifiText .= "- SSID: {$item['ssid']}, Pass: {$item['password']}, Lokasi: {$item['location']}\n";
-        }
-        return $wifiText;
-    }
-
+    /* =========================
+     | SEND MESSAGE
+     ========================= */
     public function sendMessage()
     {
         $text = trim($this->currentMessage);
-        if (empty($text)) return;
+        if ($text === '') return;
 
-        $this->currentMessage = '';
         $this->messages[] = ['role' => 'user', 'text' => $text];
-        $this->ticketQuestion = $text;
-        $this->dispatch('chatUpdated');
+        $this->currentMessage = '';
 
+        $lower = strtolower($text);
+
+        /* BLOCK INPUT DURING CONFIRMATION */
         if ($this->needsConfirmation) {
-            $this->messages[] = ['role' => 'model', 'text' => 'Mohon konfirmasi tiket atau batalkan terlebih dahulu.'];
-            $this->dispatch('chatUpdated');
+            $this->messages[] = [
+                'role' => 'model',
+                'text' => 'Silakan konfirmasi atau batalkan tiket terlebih dahulu.'
+            ];
             return;
         }
 
-        // ORIGINAL FEATURE: ticketPhase handling
-        if ($this->ticketPhase === 'waiting_for_summary') {
-            $this->ticketSummary = substr(trim($text), 0, 250);
-            $this->needsConfirmation = true;
-            $this->ticketPhase = 'idle';
-            $this->messages[] = ['role' => 'model', 'text' => "Ringkasan tiket: {$this->ticketSummary}. Silakan klik Konfirmasi & Buat Tiket."];
-            $this->dispatch('chatUpdated');
+        /* GREETING */
+        if (in_array($lower, ['halo', 'hai', 'hi', 'hello'])) {
+            $this->messages[] = [
+                'role' => 'model',
+                'text' => 'Halo! Ada yang bisa saya bantu?'
+            ];
             return;
         }
 
-        // ORIGINAL FEATURE: Keyword matching
-        $lowerText = strtolower($text);
-        if (preg_match('/(buat tiket|open ticket|bikin tiket)/', $lowerText)) {
-            $this->ticketPhase = 'waiting_for_summary';
-            $this->messages[] = ['role' => 'model', 'text' => 'Boleh, mohon berikan ringkasan masalah Anda.'];
-            $this->dispatch('chatUpdated');
+        /* USER WANTS TO CREATE TICKET */
+        if (
+            !$this->waitingForProblemDescription &&
+            preg_match('/\b(bantu|buat|bikin|tolong)\b/i', $lower) &&
+            str_contains($lower, 'tiket')
+        ) {
+            $this->waitingForProblemDescription = true;
+            $this->messages[] = [
+                'role' => 'model',
+                'text' => 'Baik. Bisa jelaskan masalah yang Anda alami?'
+            ];
             return;
         }
 
-        $aiResponse = $this->callOllama();
-
-        if (!$aiResponse) {
-            $aiResponse = "Maaf, asisten AI sedang tidak dapat dihubungi.";
+        /* USER DESCRIBES THE PROBLEM */
+        if ($this->waitingForProblemDescription) {
+            $this->waitingForProblemDescription = false;
+            $this->ticketQuestion = $text;
+            $this->dispatch('startAiResponse');
+            return;
         }
 
-        $this->handleAiOutput($aiResponse);
+        /* FAQ FIRST */
+        $faq = $this->matchFaq($text);
+        if ($faq) {
+            $this->messages[] = [
+                'role' => 'model',
+                'text' => $faq['jawaban']
+            ];
+            return;
+        }
+
+        /* NORMAL AI RESPONSE */
+        $this->ticketQuestion = $text;
+        $this->dispatch('startAiResponse');
     }
 
-    private function callOllama()
+    /* =========================
+     | FAQ
+     ========================= */
+    private function loadFaq(): array
     {
-        try {
-            $history = collect($this->messages)->map(function ($msg) {
-                return [
-                    'role' => ($msg['role'] === 'model') ? 'assistant' : $msg['role'],
-                    'content' => $msg['text']
-                ];
-            })->toArray();
+        $path = storage_path('app/' . self::FAQ_FILE_PATH);
+        if (!File::exists($path)) return [];
+        return json_decode(File::get($path), true) ?? [];
+    }
 
-            $response = Http::timeout(45)->post(env('OLLAMA_API_URL', 'http://localhost:11434/api/chat'), [
-                'model' => env('OLLAMA_MODEL', 'mistral'),
-                'messages' => $history,
-                'stream' => false,
-                'options' => ['temperature' => 0.1]
-            ]);
+    private function matchFaq(string $input): ?array
+    {
+        $input = strtolower($input);
 
-            return $response->successful() ? $response->json()['message']['content'] : null;
-        } catch (Throwable $e) {
-            Log::warning("Ollama connection failed: " . $e->getMessage());
+        foreach ($this->loadFaq() as $faq) {
+            similar_text($input, strtolower($faq['pertanyaan']), $p);
+            if ($p > 45) return $faq;
         }
         return null;
     }
 
-    private function handleAiOutput($responseText)
-{
-    $jsonPattern = '/\{.*\}/s';
-    if (preg_match($jsonPattern, $responseText, $matches)) {
-        $cleanResponse = $matches[0];
-        $action = json_decode($cleanResponse, true);
-
-        if (isset($action['action']) && $action['action'] === 'confirm_ticket') {
-            
-            if (strlen($this->ticketQuestion) < 10 && $this->ticketPhase === 'idle') {
-                $this->messages[] = ['role' => 'model', 'text' => "Tentu, bisa tolong jelaskan detail kendalanya agar saya bisa menentukan departemen yang tepat?"];
-                $this->dispatch('chatUpdated');
-                return;
-            }
-
-            $this->ticketSummary = $action['summary'] ?? $this->ticketQuestion;
-            $this->ticketPriority = strtolower($action['priority'] ?? 'medium');
-            $this->aiReasoning = $action['reason'] ?? 'Analisis otomatis.';
-
-            $aiDeptName = strtolower($action['department'] ?? '');
-            foreach ($this->availableDepartments as $dept) {
-                $currentDeptName = strtolower($dept['department_name']);
-                // Cek apakah nama departemen dari AI ada di dalam daftar departemen sistem
-                if (str_contains($aiDeptName, $currentDeptName) || str_contains($currentDeptName, $aiDeptName)) {
-                    $this->selectedDepartmentId = $dept['department_id'];
-                    break;
-                }
-            }
-
-            $this->needsConfirmation = true;
-            $this->dispatch('chatUpdated');
-            return;
+    /* =========================
+     | AI CALL
+     ========================= */
+    #[On('startAiResponse')]
+    public function generateAiResponse()
+    {
+        $response = $this->callAi();
+        if ($response) {
+            $this->handleAiOutput($response);
         }
     }
 
-    $this->messages[] = ['role' => 'model', 'text' => $responseText];
-    $this->dispatch('chatUpdated');
-}
-    public function confirmTicket()
+    private function callAi(): ?string
     {
-        if (!$this->selectedDepartmentId || !$this->ticketSummary) return;
-
         try {
-            $ticket = Ticket::create([
-                'company_id' => Auth::user()->company_id,
-                'requestdept_id' => Auth::user()->department_id,
-                'department_id' => $this->selectedDepartmentId,
-                'user_id' => Auth::id(),
-                'subject' => "Chatbot: " . $this->ticketSummary,
-                'description' => "Original issue: " . $this->ticketQuestion,
-                'priority' => strtoupper($this->ticketPriority),
-                'status' => 'OPEN',
-            ]);
+            $history = collect($this->messages)->map(fn ($m) => [
+                'role' => $m['role'] === 'model' ? 'assistant' : $m['role'],
+                'content' => $m['text']
+            ])->toArray();
 
-            $this->messages[] = ['role' => 'model', 'text' => "✅ Tiket #{$ticket->ticket_id} berhasil dibuat."];
+            $res = Http::post(
+                env('OLLAMA_API_URL', 'http://localhost:11434/api/chat'),
+                [
+                    'model' => env('OLLAMA_MODEL', 'mistral'),
+                    'messages' => $history,
+                    'stream' => false,
+                    'options' => ['temperature' => 0.1]
+                ]
+            );
+
+            return $res->json()['message']['content'] ?? null;
         } catch (Throwable $e) {
-            Log::error('Ticket Create Error: ' . $e->getMessage());
-            $this->messages[] = ['role' => 'model', 'text' => 'Gagal membuat tiket.'];
+            Log::error($e->getMessage());
+            return null;
+        }
+    }
+
+    /* =========================
+     | AI OUTPUT (JSON HIDDEN)
+     ========================= */
+    private function handleAiOutput(string $responseText)
+    {
+        // If no JSON → normal chat
+        if (!preg_match('/\{.*"action".*\}/s', $responseText, $matches)) {
+            $this->messages[] = [
+                'role' => 'model',
+                'text' => trim($responseText)
+            ];
+            return;
         }
 
-        $this->resetConfirmationState();
-        $this->dispatch('chatUpdated');
+        // Parse JSON silently
+        $data = json_decode($matches[0], true);
+        if (!$data || ($data['action'] ?? '') !== 'create_ticket') return;
+
+        // Safety check
+        if (!$this->ticketQuestion || strlen($this->ticketQuestion) < 10) {
+            $this->messages[] = [
+                'role' => 'model',
+                'text' => 'Mohon jelaskan masalah secara lebih detail.'
+            ];
+            return;
+        }
+
+        /* STORE DATA */
+        $this->ticketSummary  = $data['summary'] ?? $this->ticketQuestion;
+        $this->ticketPriority = $data['priority'] ?? 'medium';
+        $this->aiReasoning    = $data['reason'] ?? '';
+
+        // Match department
+        $this->selectedDepartmentId = null;
+        $targetDept = strtoupper(trim($data['department'] ?? ''));
+
+        foreach ($this->availableDepartments as $dept) {
+            if (strtoupper($dept['department_name']) === $targetDept) {
+                $this->selectedDepartmentId = $dept['department_id'];
+                break;
+            }
+        }
+
+        /* SHOW CONFIRMATION (NO JSON) */
+        $this->messages[] = [
+            'role' => 'model',
+            'text' =>
+                "Saya bisa membantu membuat tiket untuk masalah berikut:\n\n" .
+                "📝 {$this->ticketSummary}\n" .
+                "📌 Prioritas: " . strtoupper($this->ticketPriority) . "\n\n" .
+                "Silakan konfirmasi untuk melanjutkan."
+        ];
+
+        $this->needsConfirmation = true;
+    }
+
+    /* =========================
+     | TICKET ACTIONS
+     ========================= */
+    public function confirmTicket()
+    {
+        if (!$this->selectedDepartmentId) return;
+
+        $ticket = Ticket::create([
+            'company_id' => Auth::user()->company_id,
+            'requestdept_id' => Auth::user()->department_id,
+            'department_id' => $this->selectedDepartmentId,
+            'user_id' => Auth::id(),
+            'subject' => 'AI Ticket: ' . $this->ticketSummary,
+            'description' => $this->ticketQuestion . "\n\nAI Reason: " . $this->aiReasoning,
+            'priority' => strtoupper($this->ticketPriority),
+            'status' => 'OPEN'
+        ]);
+
+        $this->messages[] = [
+            'role' => 'model',
+            'text' => "✅ Tiket #{$ticket->ticket_id} berhasil dibuat."
+        ];
+
+        $this->resetFlow();
     }
 
     public function cancelTicket()
     {
-        $this->messages[] = ['role' => 'model', 'text' => 'Dibatalkan. Ada lagi yang bisa saya bantu?'];
-        $this->resetConfirmationState();
-        $this->dispatch('chatUpdated');
+        $this->messages[] = [
+            'role' => 'model',
+            'text' => 'Pembuatan tiket dibatalkan.'
+        ];
+
+        $this->resetFlow();
     }
 
-    private function resetConfirmationState()
+    private function resetFlow()
     {
+        $this->waitingForProblemDescription = false;
         $this->needsConfirmation = false;
+        $this->ticketQuestion = null;
         $this->ticketSummary = null;
         $this->aiReasoning = '';
-        $this->ticketPhase = 'idle';
+        $this->selectedDepartmentId = null;
     }
 
-    public function updatedIsOpen($value)
+    /* =========================
+     | DEPARTMENTS
+     ========================= */
+    private function loadDepartments()
     {
-        $this->dispatch('chat-modal-status', isOpen: $value);
-    }
+        if (!Auth::check()) return;
 
-    #[On('openChatModal')]
-    public function openModal()
-    {
-        $this->isOpen = true;
+        $this->availableDepartments = Department::where(
+            'company_id',
+            Auth::user()->company_id
+        )->get(['department_id', 'department_name'])->toArray();
     }
 
     #[On('toggleChatModal')]
-    public function toggleModal()
+    public function toggleChatModal()
     {
         $this->isOpen = !$this->isOpen;
+        $this->dispatch('chat-modal-status', isOpen: $this->isOpen);
     }
 
-    public function closeModal()
-    {
-        $this->isOpen = false;
-    }
-
+    /* =========================
+     | RENDER
+     ========================= */
     public function render()
     {
         return view('livewire.components.ui.chat-modal');

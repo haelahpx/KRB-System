@@ -30,7 +30,7 @@
 <div class="min-h-screen bg-gray-50">
     <main class="px-4 sm:px-6 py-6 space-y-6">
 
-        {{-- Flash Messages --}}
+        {{-- Pesan Flash --}}
         @if (session('success') || session('error'))
             <div class="max-w-3xl mx-auto">
                 @if (session('success'))
@@ -62,80 +62,80 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-lg sm:text-xl font-semibold">Vehicle History</h2>
+                            <h2 class="text-lg sm:text-xl font-semibold">Riwayat Kendaraan</h2>
                             <p class="text-sm text-white/80">
                                 {{ $statusTab === 'rejected'
-                                    ? 'Riwayat peminjaman yang ditolak (Rejected).'
-                                    : 'Riwayat peminjaman kendaraan yang sudah Completed (Done).' }}
+                                    ? 'Riwayat peminjaman yang ditolak.'
+                                    : 'Riwayat peminjaman kendaraan yang sudah selesai.' }}
                             </p>
                         </div>
                     </div>
 
-                    {{-- Include Deleted --}}
+                    {{-- Sertakan yang Dihapus --}}
                     <label class="inline-flex items-center gap-2 text-sm text-white/90 cursor-pointer">
                         <input type="checkbox" wire:model.live="includeDeleted"
                             class="w-4 h-4 rounded border-white/30 bg-white/10 text-gray-900 focus:ring-2 focus:ring-white/20 cursor-pointer">
-                        <span>Include Deleted</span>
+                        <span>Sertakan yang Dihapus</span>
                     </label>
                 </div>
             </div>
         </div>
 
-        {{-- MAIN GRID --}}
+        {{-- GRID UTAMA --}}
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-            {{-- LIST --}}
+            {{-- DAFTAR --}}
             <section class="{{ $card }} md:col-span-3">
 
                 {{-- Header --}}
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200 space-y-3">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div>
-                            <h3 class="text-base font-semibold text-gray-900">Vehicle History</h3>
+                            <h3 class="text-base font-semibold text-gray-900">Riwayat Kendaraan</h3>
                             <p class="text-xs text-gray-500">
                                 {{ $statusTab === 'rejected'
-                                    ? 'Riwayat peminjaman kendaraan yang ditolak (Rejected).'
-                                    : 'Riwayat peminjaman kendaraan yang telah selesai (Done / Completed).' }}
+                                    ? 'Riwayat peminjaman kendaraan yang ditolak.'
+                                    : 'Riwayat peminjaman kendaraan yang telah selesai.' }}
                             </p>
                         </div>
 
-                        {{-- Tabs --}}
+                        {{-- Tab --}}
                         <div class="inline-flex items-center bg-gray-100 rounded-full p-1 text-xs font-medium">
                             <button type="button" wire:click="$set('statusTab','done')"
                                 class="px-3 py-1 rounded-full transition {{ $statusTab === 'done' ? 'bg-gray-900 text-white shadow-sm' : 'text-gray-700 hover:bg-gray-200' }}">
-                                Done
+                                Selesai
                             </button>
                             <button type="button" wire:click="$set('statusTab','rejected')"
                                 class="px-3 py-1 rounded-full transition {{ $statusTab === 'rejected' ? 'bg-gray-900 text-white shadow-sm' : 'text-gray-700 hover:bg-gray-200' }}">
-                                Rejected
+                                Ditolak
                             </button>
                         </div>
                     </div>
 
-                    {{-- Filter Indicator --}}
+                    {{-- Indikator Filter --}}
                     <div class="flex flex-wrap items-center gap-2 text-xs mt-1">
                         @if(!is_null($vehicleFilter))
-                            @php $activeVehicle = $vehicleMap[$vehicleFilter] ?? 'Unknown'; @endphp
+                            @php $activeVehicle = $vehicleMap[$vehicleFilter] ?? 'Tidak Diketahui'; @endphp
                             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-900 text-white border border-gray-800">
-                                Vehicle: {{ $activeVehicle }}
+                                Kendaraan: {{ $activeVehicle }}
                                 <button type="button" class="ml-1 hover:text-gray-200" wire:click="$set('vehicleFilter', null)">×</button>
                             </span>
                         @else
                             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-dashed border-gray-300">
-                                No vehicle filter
+                                Tidak ada filter kendaraan
                             </span>
                         @endif
                     </div>
                 </div>
 
-                {{-- Filters --}}
+                {{-- Filter --}}
                 <div class="px-4 sm:px-6 pt-4 pb-3 border-b border-gray-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="{{ $label }}">Search</label>
+                            <label class="{{ $label }}">Cari</label>
                             <div class="relative">
                                 <input type="text" class="{{ $input }} pl-9"
-                                    placeholder="Search purpose, destination, borrower…"
+                                    placeholder="Cari tujuan, destinasi, peminjam…"
                                     wire:model.live.debounce.400ms="q">
                                 <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -160,7 +160,7 @@
                     </div>
                 </div>
 
-                {{-- LIST BODY – 2 column bento style --}}
+                {{-- ISI DAFTAR – 2 kolom gaya bento --}}
                 @if($bookings->isEmpty())
                     <div class="px-4 sm:px-6 py-14 text-center text-gray-500 text-sm">
                         Belum ada riwayat untuk filter ini.
@@ -170,50 +170,50 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         @foreach($bookings as $b)
                             @php
-                                $vehicleName = $vehicleMap[$b->vehicle_id] ?? 'Unknown';
+                                $vehicleName = $vehicleMap[$b->vehicle_id] ?? 'Tidak Diketahui';
                                 $avatarChar = strtoupper(substr($vehicleName,0,1));
                                 $isRejected = $b->status === 'rejected';
                                 $isTrashed  = method_exists($b, 'trashed') ? $b->trashed() : false;
                                 $statusStyle = $isRejected
-                                    ? ['bg'=>'bg-rose-100','text'=>'text-rose-800','label'=>'Rejected']
-                                    : ['bg'=>'bg-emerald-100','text'=>'text-emerald-800','label'=>'Completed'];
+                                    ? ['bg'=>'bg-rose-100','text'=>'text-rose-800','label'=>'Ditolak']
+                                    : ['bg'=>'bg-emerald-100','text'=>'text-emerald-800','label'=>'Selesai'];
                             @endphp
                             
-                            {{-- START: MODIFIED VEHICLE HISTORY CARD DESIGN --}}
+                            {{-- MULAI: DESAIN KARTU RIWAYAT KENDARAAN YANG DIMODIFIKASI --}}
                             <div wire:key="history-{{ $b->vehiclebooking_id }}"
                                 class="bg-white border border-gray-200 rounded-xl p-4 space-y-3 hover:shadow-sm hover:border-gray-300 transition">
                                 
                                 <div class="flex items-start gap-4">
-                                    {{-- 1. Avatar/Initial on the left --}}
+                                    {{-- 1. Avatar/Inisial di sebelah kiri --}}
                                     <div class="{{ $icoAvatar }} mt-0.5">{{ $avatarChar }}</div>
                                     
                                     <div class="flex-1 min-w-0">
-                                        {{-- 2. TOP ROW: Title, Status, ID --}}
+                                        {{-- 2. BARIS ATAS: Judul, Status, ID --}}
                                         <div class="flex items-center justify-between gap-3 min-w-0 mb-2">
                                             <h4 class="font-semibold text-gray-900 text-base truncate pr-2">
-                                                {{ $b->purpose ? ucfirst($b->purpose) : 'Vehicle Booking' }}
+                                                {{ $b->purpose ? ucfirst($b->purpose) : 'Peminjaman Kendaraan' }}
                                             </h4>
                                             <div class="flex-shrink-0 flex items-center gap-2">
-                                                {{-- Status Badge --}}
+                                                {{-- Badge Status --}}
                                                 <span class="text-[11px] px-2 py-0.5 rounded-full flex-shrink-0 {{ $statusStyle['bg'] }} {{ $statusStyle['text'] }}">
                                                     {{ $statusStyle['label'] }}
                                                 </span>
                                                 @if($isTrashed)
                                                     <span class="text-[11px] px-2 py-0.5 rounded-full bg-gray-200 text-gray-800 border border-gray-300 flex-shrink-0">
-                                                        Deleted
+                                                        Dihapus
                                                     </span>
                                                 @endif
-                                                {{-- ID Chip --}}
+                                                {{-- Chip ID --}}
                                                 <span class="text-[11px] px-2 py-0.5 rounded-full border border-gray-300 text-gray-700 bg-gray-50 flex-shrink-0">
                                                     #{{ $b->vehiclebooking_id }}
                                                 </span>
                                             </div>
                                         </div>
 
-                                        {{-- 3. MIDDLE SECTION: Vehicle, Date, Time --}}
+                                        {{-- 3. BAGIAN TENGAH: Kendaraan, Tanggal, Waktu --}}
                                         <div class="space-y-2 text-[13px] text-gray-600 mb-3 border-y border-gray-100 py-2">
                                             
-                                            {{-- Vehicle Name Chip --}}
+                                            {{-- Chip Nama Kendaraan --}}
                                             <div class="flex flex-wrap items-center gap-2">
                                                 <span class="{{ $chip }} text-xs px-2.5 py-0.5 bg-gray-100">
                                                     <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,7 +224,7 @@
                                                 </span>
                                             </div>
 
-                                            {{-- Dates and Times --}}
+                                            {{-- Tanggal dan Waktu --}}
                                             <div class="flex flex-wrap items-center gap-4">
                                                 <span class="flex items-center gap-1.5 font-medium text-gray-800">
                                                     <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,52 +243,52 @@
                                             </div>
                                         </div>
 
-                                        {{-- 4. BOTTOM LEFT: Borrower & Notes/Timestamp --}}
+                                        {{-- 4. BAWAH KIRI: Peminjam & Catatan/Waktu --}}
                                         <div class="text-[12px] text-gray-600 space-y-1">
                                             @if(!empty($b->borrower_name))
-                                                <p>Borrower: <span class="font-medium text-gray-800">{{ $b->borrower_name }}</span></p>
+                                                <p>Peminjam: <span class="font-medium text-gray-800">{{ $b->borrower_name }}</span></p>
                                             @endif
                                             <span class="inline-block text-[10px] text-gray-500 mt-1">
-                                                Created: {{ optional($b->created_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+                                                Dibuat: {{ optional($b->created_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
                                             </span>
                                         </div>
 
-                                        {{-- Rejected Note --}}
+                                        {{-- Catatan Penolakan --}}
                                         @if($isRejected && !empty($b->notes))
                                             <div class="mt-2 text-xs text-rose-700 bg-rose-50 border border-rose-100 rounded-lg p-2">
-                                                <span class="font-medium">Reject Reason:</span> {{ $b->notes }}
+                                                <span class="font-medium">Alasan Penolakan:</span> {{ $b->notes }}
                                             </div>
                                         @endif
                                         
                                     </div>
                                 </div>
 
-                                {{-- 5. BOTTOM ACTIONS (Horizontally aligned and right justified) --}}
+                                {{-- 5. AKSI BAWAH (Diratakan horizontal dan rata kanan) --}}
                                 <div class="pt-3 border-t border-gray-100 flex justify-end gap-3 items-center">
                                     
-                                    {{-- Actions based on Trashed Status --}}
+                                    {{-- Aksi berdasarkan Status Hapus --}}
                                     @if(!$isTrashed)
                                         <button type="button"
                                             class="px-4 py-2 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 transition"
                                             wire:click="softDelete({{ $b->vehiclebooking_id }})">
-                                            Delete
+                                            Hapus
                                         </button>
                                     @else
                                         <button type="button"
                                             class="px-4 py-2 text-xs font-medium rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 transition"
                                             wire:click="restore({{ $b->vehiclebooking_id }})">
-                                            Restore
+                                            Pulihkan
                                         </button>
                                     @endif
                                 </div>
                             </div>
-                            {{-- END: MODIFIED VEHICLE HISTORY CARD DESIGN --}}
+                            {{-- AKHIR: DESAIN KARTU RIWAYAT KENDARAAN YANG DIMODIFIKASI --}}
                         @endforeach
                     </div>
                 </div>
                 @endif
 
-                {{-- Pagination --}}
+                {{-- Paginasi --}}
                 @if(method_exists($bookings, 'links'))
                     <div class="px-4 sm:px-6 py-5 bg-gray-50 border-t border-gray-200 rounded-b-2xl">
                         <div class="flex justify-center">
@@ -302,7 +302,7 @@
             <aside class="hidden md:flex md:flex-col md:col-span-1 gap-4">
                 <section class="{{ $card }}">
                     <div class="px-4 py-4 border-b border-gray-200">
-                        <h3 class="text-sm font-semibold text-gray-900">Filter by Vehicle</h3>
+                        <h3 class="text-sm font-semibold text-gray-900">Filter berdasarkan Kendaraan</h3>
                         <p class="text-xs text-gray-500 mt-1">Klik kendaraan untuk filter.</p>
                     </div>
 
@@ -310,11 +310,11 @@
                         <button type="button" wire:click="$set('vehicleFilter', null)"
                             class="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-xs font-medium {{ is_null($vehicleFilter) ? 'bg-gray-900 text-white' : 'text-gray-800 hover:bg-gray-100' }}">
                             <span class="flex items-center gap-2">
-                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-gray-300 text-[11px]">All</span>
-                                <span>All Vehicles</span>
+                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-gray-300 text-[11px]">Semua</span>
+                                <span>Semua Kendaraan</span>
                             </span>
                             @if(is_null($vehicleFilter))
-                                <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
+                                <span class="text-[10px] uppercase tracking-wide opacity-80">Aktif</span>
                             @endif
                         </button>
 
@@ -335,7 +335,7 @@
                                         <span class="truncate">{{ $vLabel }}</span>
                                     </span>
                                     @if($active)
-                                        <span class="text-[10px] uppercase tracking-wide opacity-80">Active</span>
+                                        <span class="text-[10px] uppercase tracking-wide opacity-80">Aktif</span>
                                     @endif
                                 </button>
                             @empty
@@ -345,15 +345,15 @@
                     </div>
 
                     <div class="px-4 pt-3 pb-4 border-t border-gray-200 bg-gray-50">
-                        <h4 class="text-xs font-semibold text-gray-900 mb-2">Quick Stats</h4>
+                        <h4 class="text-xs font-semibold text-gray-900 mb-2">Statistik Cepat</h4>
                         <div class="space-y-2 text-xs">
                             <div class="flex items-center justify-between">
-                                <span class="text-gray-600">Total Vehicles</span>
+                                <span class="text-gray-600">Total Kendaraan</span>
                                 <span class="font-semibold text-gray-900">{{ count($vehicles) }}</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="text-gray-600">
-                                    {{ $statusTab === 'rejected' ? 'Rejected Records' : 'Completed Records' }}
+                                    {{ $statusTab === 'rejected' ? 'Data Ditolak' : 'Data Selesai' }}
                                 </span>
                                 <span class="font-semibold text-gray-900">{{ $bookings->total() }}</span>
                             </div>

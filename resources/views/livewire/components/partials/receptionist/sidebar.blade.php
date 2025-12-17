@@ -19,26 +19,26 @@
         <flux:sidebar.collapse class="lg:hidden" />
     </flux:sidebar.header>
 
-    <flux:sidebar.search placeholder="Search modules..." />
+    <flux:sidebar.search placeholder="Cari modul..." />
 
     <flux:sidebar.nav>
-        {{-- ------- Home ------- --}}
+        {{-- ------- Beranda ------- --}}
         <flux:sidebar.item
             icon="home"
             href="{{ route('receptionist.dashboard') }}"
             :current="request()->routeIs('receptionist.dashboard')"
         >
-            Home
+            Beranda
         </flux:sidebar.item>
 
-        {{-- ------- Room Management ------- --}}
-        <flux:sidebar.group expandable heading="Room Management" class="grid">
+        {{-- ------- Manajemen Ruangan ------- --}}
+        <flux:sidebar.group expandable heading="Manajemen Ruangan" class="grid">
             <flux:sidebar.item
                 icon="calendar-days"
                 href="{{ route('receptionist.schedule') }}"
                 :current="request()->routeIs('receptionist.schedule')"
             >
-                Booking Room
+                Pemesanan Ruangan
             </flux:sidebar.item>
 
             <flux:sidebar.item
@@ -46,7 +46,7 @@
                 href="{{ route('receptionist.bookings') }}"
                 :current="request()->routeIs('receptionist.bookings')"
             >
-                Booking Approval
+                Persetujuan Pemesanan
             </flux:sidebar.item>
 
             <flux:sidebar.item
@@ -54,18 +54,18 @@
                 href="{{ route('receptionist.bookinghistory') }}"
                 :current="request()->routeIs('receptionist.bookinghistory')"
             >
-                Booking History
+                Riwayat Pemesanan
             </flux:sidebar.item>
         </flux:sidebar.group>
 
-        {{-- ------- Vehicle Management ------- --}}
-        <flux:sidebar.group expandable heading="Vehicle Management" class="grid">
+        {{-- ------- Manajemen Kendaraan ------- --}}
+        <flux:sidebar.group expandable heading="Manajemen Kendaraan" class="grid">
             <flux:sidebar.item
                 icon="truck"
                 href="{{ route('receptionist.bookingvehicle') }}"
                 :current="request()->routeIs('receptionist.bookingvehicle')"
             >
-                Book Vehicle
+                Pemesanan Kendaraan
             </flux:sidebar.item>
 
             <flux:sidebar.item
@@ -73,7 +73,7 @@
                 href="{{ route('receptionist.vehiclestatus') }}"
                 :current="request()->routeIs('receptionist.vehiclestatus')"
             >
-                Vehicle Status
+                Status Kendaraan
             </flux:sidebar.item>
 
             <flux:sidebar.item
@@ -81,18 +81,18 @@
                 href="{{ route('receptionist.vehicleshistory') }}"
                 :current="request()->routeIs('receptionist.vehicleshistory')"
             >
-                Vehicle History
+                Riwayat Kendaraan
             </flux:sidebar.item>
         </flux:sidebar.group>
 
-        {{-- ------- Guest Management ------- --}}
-        <flux:sidebar.group expandable heading="Guest Management" class="grid">
+        {{-- ------- Manajemen Tamu ------- --}}
+        <flux:sidebar.group expandable heading="Manajemen Tamu" class="grid">
             <flux:sidebar.item
                 icon="inbox"
                 href="{{ route('receptionist.guestbook') }}"
                 :current="request()->routeIs('receptionist.guestbook*')"
             >
-                GuestBook
+                Buku Tamu
             </flux:sidebar.item>
 
             <flux:sidebar.item
@@ -100,18 +100,18 @@
                 href="{{ route('receptionist.guestbookhistory') }}"
                 :current="request()->routeIs('receptionist.guestbookhistory*')"
             >
-                GuestBook History
+                Riwayat Buku Tamu
             </flux:sidebar.item>
         </flux:sidebar.group>
 
-        {{-- ------- DocPac Management ------- --}}
-        <flux:sidebar.group expandable heading="DocPac Management" class="grid">
+        {{-- ------- Manajemen DocPac ------- --}}
+        <flux:sidebar.group expandable heading="Manajemen DocPac" class="grid">
             <flux:sidebar.item
                 icon="gift"
                 href="{{ route('receptionist.docpackform') }}"
                 :current="request()->routeIs('receptionist.docpackform')"
             >
-                DocPac Form
+                Form DocPac
             </flux:sidebar.item>
 
             <flux:sidebar.item
@@ -119,7 +119,7 @@
                 href="{{ route('receptionist.docpackstatus') }}"
                 :current="request()->routeIs('receptionist.docpackstatus')"
             >
-                DocPac Status
+                Status DocPac
             </flux:sidebar.item>
 
             <flux:sidebar.item
@@ -127,24 +127,15 @@
                 href="{{ route('receptionist.docpackhistory') }}"
                 :current="request()->routeIs('receptionist.docpackhistory')"
             >
-                DocPac History
+                Riwayat DocPac
             </flux:sidebar.item>
         </flux:sidebar.group>
     </flux:sidebar.nav>
 
     <flux:sidebar.spacer />
 
-    {{-- SETTINGS + MOBILE LOGOUT (via global logout form) --}}
+    {{-- PENGATURAN + LOGOUT MOBILE --}}
     <flux:sidebar.nav>
-        <flux:sidebar.item icon="cog-6-tooth" href="#">
-            Settings
-        </flux:sidebar.item>
-
-        <flux:sidebar.item icon="information-circle" href="#">
-            Help
-        </flux:sidebar.item>
-
-        {{-- Logout for MOBILE uses shared form="logout-form" --}}
         <flux:sidebar.item
             class="lg:hidden"
             icon="arrow-right-start-on-rectangle"
@@ -152,43 +143,41 @@
             type="submit"
             form="logout-form"
         >
-            Logout
+            Keluar
         </flux:sidebar.item>
     </flux:sidebar.nav>
 
-    {{-- DESKTOP DROPDOWN --}}
+    {{-- DROPDOWN DESKTOP --}}
     <flux:dropdown position="top" align="start" class="max-lg:hidden">
-        <flux:sidebar.profile avatar="" name="{{ $fullName ?? 'User' }}" />
+        <flux:sidebar.profile avatar="" name="{{ $fullName ?? 'Pengguna' }}" />
 
         <flux:menu>
             <flux:menu.radio.group>
-                <flux:menu.radio checked>{{ $fullName ?? 'User' }}</flux:menu.radio>
+                <flux:menu.radio checked>{{ $fullName ?? 'Pengguna' }}</flux:menu.radio>
 
                 <flux:sidebar.item
                     icon="user"
                     href="{{ route('user.home') }}"
                     class="cursor-pointer"
                 >
-                    User Page
+                    Halaman Pengguna
                 </flux:sidebar.item>
             </flux:menu.radio.group>
 
             <flux:menu.separator />
 
-            {{-- Logout for DESKTOP uses same form --}}
             <flux:menu.item
                 icon="arrow-right-start-on-rectangle"
                 as="button"
                 type="submit"
                 form="logout-form"
             >
-                Logout
+                Keluar
             </flux:menu.item>
         </flux:menu>
     </flux:dropdown>
 </flux:sidebar>
 
-{{-- Shared logout form (same pattern as superadmin) --}}
 <form id="logout-form" method="POST" action="{{ route('logout') }}" class="hidden">
     @csrf
 </form>
