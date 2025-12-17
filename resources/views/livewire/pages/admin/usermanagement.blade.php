@@ -109,6 +109,11 @@
                         @error('phone_number') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
                     </div>
                     <div>
+                        <label class="{{ $label }}">Employee ID</label>
+                        <input type="text" class="{{ $input }}" wire:model.defer="employee_id" placeholder="e.g. EMP-00123">
+                        @error('employee_id') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
                         <label class="{{ $label }}">Password</label>
                         <input type="password" class="{{ $input }}" wire:model.defer="password" autocomplete="new-password">
                         @error('password') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -315,6 +320,11 @@
                             <label class="{{ $label }}">Phone Number</label>
                             <input type="text" class="{{ $input }}" wire:model.defer="edit_phone_number">
                             @error('edit_phone_number') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="{{ $label }}">Employee ID</label>
+                            <input type="text" class="{{ $input }}" wire:model.defer="edit_employee_id">
+                            @error('edit_employee_id') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="{{ $label }}">Password (kosongkan jika tidak diubah)</label>

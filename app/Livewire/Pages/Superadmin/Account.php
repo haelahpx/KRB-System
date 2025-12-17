@@ -29,6 +29,7 @@ class Account extends Component
     public string $full_name = '';
     public string $email = '';
     public ?string $phone_number = null;
+    public ?string $employee_id = null;
     public ?string $password = null;
     public ?string $role_key = null;
     public ?int $department_id = null;
@@ -40,6 +41,7 @@ class Account extends Component
     public string $edit_full_name = '';
     public string $edit_email = '';
     public ?string $edit_phone_number = null;
+    public ?string $edit_employee_id = null;
     public ?string $edit_password = null;
     public ?string $edit_role_key = null;
     public ?int $edit_department_id = null;
@@ -129,6 +131,7 @@ class Account extends Component
                 Rule::unique('users', 'email')->whereNull('deleted_at'),
             ],
             'phone_number'  => ['nullable', 'string', 'max:30'],
+            'employee_id'   => ['nullable', 'string', 'max:100'],
             'password'      => ['required', 'string', 'min:6'],
             'role_key'      => ['required', 'string', Rule::in(array_column($this->roleOptions, 'key'))],
             'department_id' => $isSpecialRole
@@ -155,6 +158,7 @@ class Account extends Component
                     ->whereNull('deleted_at'),
             ],
             'edit_phone_number' => ['nullable', 'string', 'max:30'],
+            'edit_employee_id' => ['nullable', 'string', 'max:100'],
             'edit_role_key' => ['required', 'string', Rule::in(array_column($this->roleOptions, 'key'))],
             'edit_department_id' => $isSpecialRole
                 ? ['nullable']
@@ -230,6 +234,7 @@ class Account extends Component
         User::create([
             'full_name'     => $data['full_name'],
             'email'         => strtolower($data['email']),
+            'employee_id'   => $data['employee_id'] ?? null,
             'phone_number'  => $data['phone_number'] ?? null,
             'password'      => bcrypt($this->password),
             'role_id'       => $roleId,
@@ -248,6 +253,7 @@ class Account extends Component
         $this->full_name = '';
         $this->email = '';
         $this->phone_number = null;
+        $this->employee_id = null;
         $this->password = null;
         $this->role_key = null;
         $this->department_id = null;
@@ -274,6 +280,7 @@ class Account extends Component
         $this->edit_full_name = $u->full_name;
         $this->edit_email = $u->email;
         $this->edit_phone_number = $u->phone_number;
+        $this->edit_employee_id = $u->employee_id;
         $this->edit_role_key = $u->role_id . '_' . ($u->is_agent ?? 'no');
         $this->edit_department_id = $u->department_id;
         $this->edit_password = null;
@@ -288,6 +295,7 @@ class Account extends Component
         $this->edit_full_name = '';
         $this->edit_email = '';
         $this->edit_phone_number = null;
+        $this->edit_employee_id = null;
         $this->edit_role_key = null;
         $this->edit_department_id = null;
         $this->edit_password = null;
@@ -327,6 +335,7 @@ class Account extends Component
         $payload = [
             'full_name' => $data['edit_full_name'],
             'email' => strtolower($data['edit_email']),
+            'employee_id' => $data['edit_employee_id'] ?? $u->employee_id,
             'phone_number' => $data['edit_phone_number'] ?? null,
             'role_id' => $roleId,
             'is_agent' => $isAgent,

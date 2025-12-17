@@ -30,6 +30,7 @@ class Usermanagement extends Component
     public string $full_name = '';
     public string $email = '';
     public ?string $phone_number = null;
+    public ?string $employee_id = null;
     public ?string $password = null;
     public ?string $role_key = null;
 
@@ -39,6 +40,7 @@ class Usermanagement extends Component
     public string $edit_full_name = '';
     public string $edit_email = '';
     public ?string $edit_phone_number = null;
+    public ?string $edit_employee_id = null;
     public ?string $edit_password = null; // optional
     public ?string $edit_role_key = null;
 
@@ -235,6 +237,7 @@ class Usermanagement extends Component
             'full_name'    => ['required', 'string', 'max:255'],
             'email'        => ['required', 'email', 'unique:users,email,NULL,user_id,deleted_at,NULL'],
             'phone_number' => ['nullable', 'string', 'max:30'],
+            'employee_id'  => ['nullable', 'string', 'max:100'],
             'password'     => ['required', 'string', 'min:6'],
             'role_key'      => [
                 'required',
@@ -251,6 +254,7 @@ class Usermanagement extends Component
             'edit_full_name'    => ['required', 'string', 'max:255'],
             'edit_email'        => ["required", "email", "unique:users,email,{$id},user_id,deleted_at,NULL"],
             'edit_phone_number' => ['nullable', 'string', 'max:30'],
+            'edit_employee_id'  => ['nullable', 'string', 'max:100'],
             'edit_role_key'      => [
                 'required',
                 'string',
@@ -278,6 +282,7 @@ class Usermanagement extends Component
         User::create([
             'full_name'     => $data['full_name'],
             'email'         => strtolower($data['email']),
+            'employee_id'   => $data['employee_id'] ?? null,
             'phone_number'  => $data['phone_number'] ?? null,
             'password'      => $this->password,
             'role_id'       => (int) $roleId,
@@ -297,6 +302,7 @@ class Usermanagement extends Component
             'full_name',
             'email',
             'phone_number',
+            'employee_id',
             'password',
             'role_key',
         ]);
@@ -336,6 +342,7 @@ class Usermanagement extends Component
         $this->edit_full_name    = (string) $u->full_name;
         $this->edit_email        = (string) $u->email;
         $this->edit_phone_number = $u->phone_number;
+        $this->edit_employee_id  = $u->employee_id;
         $this->edit_role_key     = $u->role_id . '_' . $u->is_agent;
         $this->edit_password     = null;
 
@@ -349,6 +356,7 @@ class Usermanagement extends Component
         $this->edit_full_name   = '';
         $this->edit_email       = '';
         $this->edit_phone_number= null;
+        $this->edit_employee_id = null;
         $this->edit_role_key    = null;
         $this->edit_password    = null;
 
@@ -388,6 +396,7 @@ class Usermanagement extends Component
         $payload = [
             'full_name'    => $data['edit_full_name'],
             'email'        => strtolower($data['edit_email']),
+            'employee_id'  => $data['edit_employee_id'] ?? $u->employee_id,
             'phone_number' => $data['edit_phone_number'] ?? null,
             'role_id'      => (int) $roleId,
             'is_agent'     => $isAgent,

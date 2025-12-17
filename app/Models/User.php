@@ -31,6 +31,7 @@ class User extends Authenticatable
         'role_id',
         'full_name',
         'email',
+        'employee_id',
         'phone_number',
         'password',
         'is_agent',
@@ -42,6 +43,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'employee_id' => 'string',
             'deleted_at' => 'datetime',
         ];
     }

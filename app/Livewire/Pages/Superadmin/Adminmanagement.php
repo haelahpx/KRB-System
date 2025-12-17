@@ -39,6 +39,7 @@ class Adminmanagement extends Component
     public string  $full_name = '';
     public string  $email = '';
     public ?string $phone_number = null;
+    public ?string $employee_id = null;
     public string  $password = '';
     public string  $password_confirmation = '';
 
@@ -138,6 +139,7 @@ class Adminmanagement extends Component
         $this->full_name             = (string) $user->full_name;
         $this->email                 = (string) $user->email;
         $this->phone_number          = $user->phone_number;
+        $this->employee_id           = $user->employee_id;
         $this->primary_department_id = $user->department_id ? (int) $user->department_id : null;
 
         // additional = all dept relations except primary
@@ -188,6 +190,7 @@ class Adminmanagement extends Component
                     'role_id'       => $this->adminRoleId,
                     'full_name'     => $this->full_name,
                     'email'         => strtolower($this->email),
+                    'employee_id'   => $this->employee_id,
                     'phone_number'  => $this->phone_number,
                     'password'      => Hash::make($this->password),
                 ]);
@@ -224,6 +227,7 @@ class Adminmanagement extends Component
                     'department_id' => $this->primary_department_id,
                     'full_name'     => $this->full_name,
                     'email'         => strtolower($this->email),
+                    'employee_id'   => $this->employee_id,
                     'phone_number'  => $this->phone_number,
                 ];
 
@@ -278,6 +282,7 @@ class Adminmanagement extends Component
                 Rule::unique('users', 'email')->ignore($id, 'user_id')->whereNull('deleted_at'),
             ],
             'phone_number'             => ['nullable', 'string', 'max:30'],
+            'employee_id'              => ['nullable', 'string', 'max:100'],
             'primary_department_id'    => ['nullable', 'integer', 'exists:departments,department_id'],
             'additional_departments'   => ['array'],
             'additional_departments.*' => ['integer', 'distinct', 'different:primary_department_id', 'exists:departments,department_id'],
@@ -292,6 +297,7 @@ class Adminmanagement extends Component
             'full_name',
             'email',
             'phone_number',
+            'employee_id',
             'password',
             'password_confirmation',
             'primary_department_id',
@@ -325,7 +331,8 @@ class Adminmanagement extends Component
             $q->where(function ($qq) use ($s) {
                 $qq->where('full_name', 'like', $s)
                     ->orWhere('email', 'like', $s)
-                    ->orWhere('phone_number', 'like', $s);
+                    ->orWhere('phone_number', 'like', $s)
+                    ->orWhere('employee_id', 'like', $s);
             });
         }
 

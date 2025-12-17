@@ -191,6 +191,12 @@
                         </div>
 
                         <div>
+                            <label class="{{ $label }}">Employee ID</label>
+                            <input type="text" class="{{ $input }}" wire:model.defer="employee_id" placeholder="e.g. EMP-00123">
+                            @error('employee_id') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
                             <label class="{{ $label }}">Password</label>
                             <input type="password" class="{{ $input }}" wire:model.defer="password" autocomplete="new-password">
                             @error('password') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -280,6 +286,12 @@
                     </div>
 
                     <div>
+                        <label class="{{ $label }}">Employee ID</label>
+                        <input type="text" class="{{ $input }}" wire:model.defer="employee_id" placeholder="e.g. EMP-00123">
+                        @error('employee_id') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
                         <label class="{{ $label }}">Password</label>
                         <input type="password" class="{{ $input }}" wire:model.defer="password" autocomplete="new-password">
                         @error('password') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -337,6 +349,12 @@
                         <label class="{{ $label }}">Phone Number</label>
                         <input type="text" class="{{ $input }}" wire:model.defer="phone_number">
                         @error('phone_number') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Employee ID</label>
+                        <input type="text" class="{{ $input }}" wire:model.defer="employee_id">
+                        @error('employee_id') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
                     </div>
 
                     {{-- New Password (optional) --}}
