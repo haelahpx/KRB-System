@@ -7,7 +7,7 @@
 
             {{-- Title --}}
             <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
-                Vehicle Booking System
+                Sistem Pemesanan Kendaraan
             </h1>
 
             {{-- Navigation Tabs --}}
@@ -18,14 +18,14 @@
                     <a href="{{ route('book-vehicle') }}" wire:navigate
                         class="flex-1 lg:flex-none px-3 md:px-4 py-2 text-sm font-medium text-center
                 {{ request()->routeIs('book-vehicle') ? 'bg-gray-900 text-white' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
-                        Book Vehicle
+                        Pesan Kendaraan
                     </a>
 
                     {{-- Vehicle Status Tab --}}
                     <a href="{{ route('vehiclestatus') }}" wire:navigate
                         class="flex-1 lg:flex-none px-3 md:px-4 py-2 text-sm font-medium text-center
                 {{ request()->routeIs('vehiclestatus') ? 'bg-gray-900 text-white cursor-default' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
-                        Vehicle Status
+                        Status Kendaraan
                     </a>
 
                 </div>
@@ -41,9 +41,9 @@
             <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
                 <h2 class="text-lg font-semibold text-gray-900 mb-2">
                     @if($booking)
-                    Upload Photos - Booking #{{ $booking->vehiclebooking_id }}
+                    Unggah Foto - Pemesanan #{{ $booking->vehiclebooking_id }}
                     @else
-                    Book a Vehicle
+                    Pesan Kendaraan
                     @endif
                 </h2>
 
@@ -61,8 +61,8 @@
                 @if($booking)
                 {{-- Upload Mode (QUEUE SYSTEM) --}}
                 <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-6 text-sm space-y-2">
-                    <div class="flex justify-between"><span class="text-gray-500">Booking ID:</span><span class="font-bold">#{{ $booking->vehiclebooking_id }}</span></div>
-                    <div class="flex justify-between"><span class="text-gray-500">Vehicle:</span><span class="font-bold">{{ $booking->vehicle->name ?? 'N/A' }}</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">ID Pemesanan:</span><span class="font-bold">#{{ $booking->vehiclebooking_id }}</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">Kendaraan:</span><span class="font-bold">{{ $booking->vehicle->name ?? 'N/A' }}</span></div>
                 </div>
 
                 <form wire:submit.prevent="handlePhotoUpload" enctype="multipart/form-data" class="space-y-5">
@@ -148,19 +148,19 @@
                     </div>
 
                     <div class="flex gap-3 pt-2 justify-end">
-                        <a href="{{ route('vehiclestatus') }}" class="px-4 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50">Cancel</a>
+                        <a href="{{ route('vehiclestatus') }}" class="px-4 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50">Batal</a>
 
                         <button type="submit"
                             class="bg-gray-900 text-white px-6 py-2 rounded-lg text-sm hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                             @if(empty($collected_photos)) disabled @endif>
 
                             <span wire:loading.remove wire:target="handlePhotoUpload">
-                                Upload {{ count($collected_photos) }} Foto
+                                Unggah {{ count($collected_photos) }} Foto
                             </span>
                             <span wire:loading wire:target="handlePhotoUpload" class="flex items-center gap-2">
                                 {{-- ORIGINAL SVG: Spinner --}}
                                 <x-heroicon-o-arrow-path class="animate-spin h-4 w-4 text-white" />
-                                Uploading...
+                                Mengunggah...
                             </span>
                         </button>
                     </div>
@@ -183,9 +183,9 @@
 
                         {{-- Dept --}}
                         <div>
-                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Departement <span class="text-red-600">*</span></label>
+                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Departemen <span class="text-red-600">*</span></label>
                             <select wire:model="department_id" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-900 focus:outline-none">
-                                <option value="">Select department</option>
+                                <option value="">Pilih departemen</option>
                                 @foreach($departments as $d) <option value="{{ $d->department_id }}">{{ $d->department_name }}</option> @endforeach
                             </select>
                             @error('department_id') <div class="text-xs text-red-600 mt-1">{{ $message }}</div>@enderror
@@ -193,22 +193,22 @@
 
                         {{-- MODE SWITCHER --}}
                         <div class="md:col-span-2 pt-2">
-                            <label class="block text-xs font-bold text-gray-900 mb-2">Durasi Booking</label>
+                            <label class="block text-xs font-bold text-gray-900 mb-2">Durasi Pemesanan</label>
                             <div class="grid grid-cols-3 bg-gray-100 p-1 rounded-lg gap-1">
                                 <button type="button" wire:click="setBookingMode('perday')"
                                     class="text-sm font-medium py-2 rounded-md transition-all duration-200 {{ $booking_mode === 'perday' ? 'bg-white text-gray-900 shadow ring-1 ring-black/5 font-bold' : 'text-gray-500 hover:text-gray-700' }}">
-                                    Full Day
+                                    Seharian
                                     <span class="block text-[10px] font-normal opacity-75">08:00 - 17:00</span>
                                 </button>
                                 <button type="button" wire:click="setBookingMode('24hours')"
                                     class="text-sm font-medium py-2 rounded-md transition-all duration-200 {{ $booking_mode === '24hours' ? 'bg-white text-gray-900 shadow ring-1 ring-black/5 font-bold' : 'text-gray-500 hover:text-gray-700' }}">
-                                    24 Hours
-                                    <span class="block text-[10px] font-normal opacity-75">+1 Day</span>
+                                    24 Jam
+                                    <span class="block text-[10px] font-normal opacity-75">+1 Hari</span>
                                 </button>
                                 <button type="button" wire:click="setBookingMode('custom')"
                                     class="text-sm font-medium py-2 rounded-md transition-all duration-200 {{ $booking_mode === 'custom' ? 'bg-white text-gray-900 shadow ring-1 ring-black/5 font-bold' : 'text-gray-500 hover:text-gray-700' }}">
-                                    Custom
-                                    <span class="block text-[10px] font-normal opacity-75">Manual Time</span>
+                                    Kustom
+                                    <span class="block text-[10px] font-normal opacity-75">Waktu Manual</span>
                                 </button>
                             </div>
                         </div>
@@ -286,7 +286,7 @@
                                 $label = ($v->vehicle_name ?? $v->name) . ($v->plate_number ? " — " . $v->plate_number : '');
                                 @endphp
                                 <option value="{{ $v->vehicle_id }}" @if($isUnavailable) disabled @endif>
-                                    {{ $label }} {{ $isUnavailable ? '(Unavailable)' : '' }}
+                                    {{ $label }} {{ $isUnavailable ? '(Tidak Tersedia)' : '' }}
                                 </option>
                                 @endforeach
                             </select>
@@ -301,7 +301,7 @@
                     <div class="flex items-center gap-3 pt-2">
                         <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 inline-flex items-center gap-1.5">
                             <x-heroicon-o-check-circle class="w-4 h-4" />
-                            Submit Request
+                            Kirim Permintaan
                         </button>
                     </div>
                 </form>
@@ -324,8 +324,8 @@
                     class="w-full flex items-center justify-between px-4 py-3 md:p-5"
                     @click="if(window.innerWidth < 1024) open = !open">
                     <div class="flex flex-col text-left">
-                        <h3 class="text-base font-semibold text-gray-900 leading-none">Availability</h3>
-                        <p class="text-xs text-gray-500 mt-1 leading-none">Live status for selected date/time</p>
+                        <h3 class="text-base font-semibold text-gray-900 leading-none">Ketersediaan</h3>
+                        <p class="text-xs text-gray-500 mt-1 leading-none">Status langsung untuk tanggal/waktu yang dipilih</p>
                     </div>
 
                     {{-- Arrow --}}
@@ -350,7 +350,7 @@
                             </span>
                         </div>
                         @empty
-                        <div class="text-sm text-gray-500 italic">Select valid dates.</div>
+                        <div class="text-sm text-gray-500 italic">Pilih tanggal yang valid.</div>
                         @endforelse
                     </div>
                 </div>
@@ -367,8 +367,8 @@
                     class="w-full flex items-center justify-between px-4 py-3 md:p-5"
                     @click="if(window.innerWidth < 1024) open = !open">
                     <div class="flex flex-col text-left">
-                        <h3 class="text-base font-semibold text-gray-900 leading-none">Recent Vehicle Usage</h3>
-                        <p class="text-xs text-gray-500 mt-1 leading-none">Latest 3 logs</p>
+                        <h3 class="text-base font-semibold text-gray-900 leading-none">Penggunaan Kendaraan Terbaru</h3>
+                        <p class="text-xs text-gray-500 mt-1 leading-none">3 log terakhir</p>
                     </div>
 
                     {{-- Arrow --}}
@@ -414,7 +414,7 @@
                                 </div>
 
                                 <p class="text-xs text-gray-500 mt-1 leading-tight">
-                                    Booked by <span class="font-medium text-gray-700">{{ $rb->borrower_name }}</span><br>
+                                    Dipesan oleh <span class="font-medium text-gray-700">{{ $rb->borrower_name }}</span><br>
                                     <span class="opacity-75">
                                         {{ \Carbon\Carbon::parse($rb->start_at)->format('d M, H:i') }}
                                     </span>
@@ -424,7 +424,7 @@
                         </div>
                         @empty
                         <div class="text-sm text-gray-500 text-center py-2">
-                            No recent bookings.
+                            Tidak ada pemesanan terbaru.
                         </div>
                         @endforelse
                     </div>

@@ -5,7 +5,7 @@
 
             {{-- Title --}}
             <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
-                Support Ticket Queue
+                Antrian Tiket Dukungan
             </h1>
 
             {{-- Navigation Tabs --}}
@@ -21,7 +21,7 @@
                         {{ $tab === 'queue'
                             ? 'bg-gray-900 text-white cursor-default'
                             : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
-                        Ticket Queue
+                        Antrian Tiket
                     </button>
 
                     {{-- Claims Tab (wrapped to allow badge positioning) --}}
@@ -34,7 +34,7 @@
                             {{ $tab === 'claims'
                                 ? 'bg-gray-900 text-white cursor-default'
                                 : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
-                            My Claims
+                            Klaim Saya
                         </button>
 
                         {{-- FIXED BADGE (no cropping anymore, overflow-visible enabled) --}}
@@ -68,7 +68,7 @@
                         <input
                             type="text"
                             wire:model.debounce.400ms="search"
-                            placeholder="Search subject or description..."
+                            placeholder="Cari subjek atau deskripsi..."
                             class="w-full pl-9 px-3 py-2 text-sm border border-gray-300 rounded-md
                                 text-gray-900 placeholder:text-gray-400
                                 focus:outline-none focus:ring-2 focus:ring-gray-900">
@@ -85,11 +85,11 @@
                         wire:model.live="status"
                         class="px-3 py-2 text-sm border border-gray-300 rounded-md
                             text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
-                        <option value="">All Status</option>
-                        <option value="OPEN">Open</option>
-                        <option value="IN_PROGRESS">In Progress</option>
-                        <option value="RESOLVED">Resolved</option>
-                        <option value="CLOSED">Closed</option>
+                        <option value="">Semua Status</option>
+                        <option value="OPEN">Buka</option>
+                        <option value="IN_PROGRESS">Dalam Proses</option>
+                        <option value="RESOLVED">Terselesaikan</option>
+                        <option value="CLOSED">Ditutup</option>
                     </select>
 
                     {{-- Priority --}}
@@ -97,10 +97,10 @@
                         wire:model.live="priority"
                         class="px-3 py-2 text-sm border border-gray-300 rounded-md
                             text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
-                        <option value="">All Priority</option>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                        <option value="">Semua Prioritas</option>
+                        <option value="low">Rendah</option>
+                        <option value="medium">Sedang</option>
+                        <option value="high">Tinggi</option>
                     </select>
 
                 </div>
@@ -110,7 +110,7 @@
             <div class="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
                 {{-- ORIGINAL SVG: Document/File icon --}}
                 <x-heroicon-o-document-text class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No tickets found</h3>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Tidak ada tiket ditemukan</h3>
                 <p class="mt-1 text-sm text-gray-500">Tidak ada tiket yang cocok dengan filter Anda.</p>
             </div>
             @else
@@ -185,13 +185,13 @@
                             <div class="flex items-center gap-1">
                                 {{-- ORIGINAL SVG: Clock (Time) --}}
                                 <x-heroicon-o-clock class="w-3 h-3" />
-                                <span>Created {{ \Carbon\Carbon::parse($t->created_at)->diffForHumans() }}</span>
+                                <span>Dibuat {{ \Carbon\Carbon::parse($t->created_at)->diffForHumans() }}</span>
                             </div>
                             @if($t->updated_at != $t->created_at)
                             <div class="flex items-center gap-1">
                                 {{-- ORIGINAL SVG: Arrow Path (Update) --}}
                                 <x-heroicon-o-arrow-path class="w-3 h-3" />
-                                <span>Updated {{ optional($t->updated_at)->diffForHumans() }}</span>
+                                <span>Diperbarui {{ optional($t->updated_at)->diffForHumans() }}</span>
                             </div>
                             @endif
                         </div>
@@ -207,8 +207,8 @@
                                 class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 shadow-sm">
                                 {{-- ORIGINAL SVG: Arrow Up Tray (Claim/Assign) --}}
                                 <x-heroicon-o-arrow-up-tray class="w-4 h-4" />
-                                <span wire:loading.remove wire:target="claim">Claim Ticket</span>
-                                <span wire:loading wire:target="claim">Processing...</span>
+                                <span wire:loading.remove wire:target="claim">Ambil Tiket</span>
+                                <span wire:loading wire:target="claim">Memproses...</span>
                             </button>
                         </div>
                     </div>
@@ -249,10 +249,10 @@
             <div class="flex flex-col md:flex-row md:items-center gap-4 pb-4 mb-4 border-b border-gray-100">
                 <div class="w-full md:w-1/4">
                     <select wire:model.live="claimPriority" class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                        <option value="">All Priority</option>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                        <option value="">Semua Prioritas</option>
+                        <option value="low">Rendah</option>
+                        <option value="medium">Sedang</option>
+                        <option value="high">Tinggi</option>
                     </select>
                 </div>
             </div>
@@ -261,7 +261,7 @@
             <div class="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
                 {{-- ORIGINAL SVG: Document/File icon --}}
                 <x-heroicon-o-document-text class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No claims yet</h3>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada klaim</h3>
                 <p class="mt-1 text-sm text-gray-500">Anda belum meng-claim tiket apapun.</p>
             </div>
             @else
@@ -348,7 +348,7 @@
 
                                     @if ($unreadCount > 0)
                                     <span class="text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded-full font-bold leading-none"
-                                        title="{{ $unreadCount }} unread comments">
+                                        title="{{ $unreadCount }} komentar belum dibaca">
                                         {{ $unreadCount }}
                                     </span>
                                     @endif
@@ -377,7 +377,7 @@
                         @empty
 
                         <div class="flex flex-col items-center justify-center h-24 border-2 border-dashed border-gray-200 rounded-lg text-gray-400">
-                            <span class="text-xs italic">Empty</span>
+                            <span class="text-xs italic">Kosong</span>
                         </div>
                         @endforelse
                     </div>

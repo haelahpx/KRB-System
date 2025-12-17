@@ -5,7 +5,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
             {{-- Title --}}
             <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
-                Room Booking Status
+                Status Pemesanan Ruangan
             </h1>
 
             {{-- Tabs --}}
@@ -20,7 +20,7 @@
                         : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
                         <div class="inline-flex items-center gap-2 justify-center">
                             <x-heroicon-o-building-office-2 class="w-4 h-4" />
-                            Meeting
+                            Pertemuan
                         </div>
                     </button>
 
@@ -32,7 +32,7 @@
                         : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
                         <div class="inline-flex items-center gap-2 justify-center">
                             <x-heroicon-o-video-camera class="w-4 h-4" />
-                            Online
+                            Daring
                         </div>
                     </button>
 
@@ -56,7 +56,7 @@
                 <div class="relative md:col-span-1">
                     <input type="text"
                         wire:model.live.debounce.400ms="q"
-                        placeholder="Search title..."
+                        placeholder="Cari judul..."
                         class="w-full px-3 py-2 pl-9 text-sm text-gray-900 placeholder:text-gray-400
                 border border-gray-300 rounded-md focus:outline-none focus:ring-2
                 focus:ring-gray-900 focus:border-transparent">
@@ -70,7 +70,7 @@
                     <select wire:model.live="roomFilter"
                         class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md
                 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                        <option value="">All Rooms</option>
+                        <option value="">Semua Ruangan</option>
                         @foreach($rooms as $r)
                         <option value="{{ $r->room_id }}">{{ $r->room_number }}</option>
                         @endforeach
@@ -83,9 +83,9 @@
                     <select wire:model.live="sortFilter"
                         class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md
                 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                        <option value="recent">Newest first</option>
-                        <option value="oldest">Oldest first</option>
-                        <option value="nearest">Nearest time</option>
+                        <option value="recent">Terbaru dulu</option>
+                        <option value="oldest">Tertua dulu</option>
+                        <option value="nearest">Waktu terdekat</option>
                     </select>
                 </div>
 
@@ -94,11 +94,11 @@
                     <select wire:model.live="dbStatusFilter"
                         class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md
                 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                        <option value="all">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                        <option value="completed">Completed</option>
+                        <option value="all">Semua Status</option>
+                        <option value="pending">Tertunda</option>
+                        <option value="approved">Disetujui</option>
+                        <option value="rejected">Ditolak</option>
+                        <option value="completed">Selesai</option>
                     </select>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                 <div class="relative">
                     <input type="text"
                         wire:model.live.debounce.400ms="q"
-                        placeholder="Search title..."
+                        placeholder="Cari judul..."
                         class="w-full px-3 py-2 pl-9 text-sm text-gray-900 placeholder:text-gray-400
                 border border-gray-300 rounded-md focus:outline-none focus:ring-2
                 focus:ring-gray-900 focus:border-transparent">
@@ -125,7 +125,7 @@
                     @if($mode === 'meeting')
                     <select wire:model.live="roomFilter"
                         class="px-3 py-2 text-sm border border-gray-300 rounded-md w-full">
-                        <option value="">Rooms</option>
+                        <option value="">Ruangan</option>
                         @foreach($rooms as $r)
                         <option value="{{ $r->room_id }}">{{ $r->room_number }}</option>
                         @endforeach
@@ -135,19 +135,20 @@
                     {{-- Sort --}}
                     <select wire:model.live="sortFilter"
                         class="px-3 py-2 text-sm border border-gray-300 rounded-md w-full">
-                        <option value="recent">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="nearest">Nearest</option>
+                        <option value="recent">Terbaru</option>
+                        <option value="oldest">Tertua</option>
+                        <option value="nearest">Terdekat</option>
                     </select>
 
                     {{-- Status --}}
                     <select wire:model.live="dbStatusFilter"
                         class="px-3 py-2 text-sm border border-gray-300 rounded-md w-full">
                         <option value="all">Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                        <option value="completed">Completed</option>
+                        <option value="pending">Tertunda</option>
+                        <option value="approved">Disetujui</option>
+                        <option value="rejected">Ditolak</option>
+                        <option value="completed">Selesai</option>
+                    </select>
                     </select>
 
                 </div>
@@ -179,7 +180,7 @@
                 <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-3">
                     <div class="flex-1 min-w-0">
                         <h3 class="text-lg font-bold text-gray-900 mb-2 truncate">
-                            {{ $b->meeting_title ?? 'Untitled' }}
+                            {{ $b->meeting_title ?? 'Tanpa Judul' }}
                         </h3>
 
                         <div class="flex flex-wrap items-center gap-2 text-xs">
@@ -190,7 +191,7 @@
                             @if($mode === 'meeting' && $b->room_id)
                             <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 font-medium">
                                 <x-heroicon-o-building-office-2 class="w-3 h-3" />
-                                Room {{ $roomName }}
+                                Ruangan {{ $roomName }}
                             </span>
                             @endif
 
@@ -219,13 +220,21 @@
                         @elseif($statusConfig['icon'] === 'x-circle') <x-heroicon-o-x-circle class="w-3.5 h-3.5" />
                         @else <x-heroicon-o-archive-box class="w-3.5 h-3.5" />
                         @endif
-                        {{ ucfirst($b->status) }}
+                        @if($b->status === 'pending')
+                            Tertunda
+                        @elseif($b->status === 'approved')
+                            Disetujui
+                        @elseif($b->status === 'rejected')
+                            Ditolak
+                        @else
+                            Selesai
+                        @endif
                     </span>
                 </div>
 
                 @if(!empty($b->special_notes))
                 <div class="mt-3 text-sm text-gray-600 bg-gray-50 rounded-lg p-3 border border-gray-100">
-                    <span class="font-semibold text-gray-900">Note:</span> {{ $b->special_notes }}
+                    <span class="font-semibold text-gray-900">Catatan:</span> {{ $b->special_notes }}
                 </div>
                 @endif
 
@@ -234,7 +243,7 @@
                 <div class="mt-3 rounded-lg border border-red-200 bg-red-50 p-3">
                     <div class="text-xs font-bold text-red-800 inline-flex items-center gap-1 mb-1">
                         <x-heroicon-o-exclamation-circle class="w-4 h-4" />
-                        Rejection Reason
+                        Alasan Penolakan
                     </div>
                     <div class="text-sm text-red-700">{{ $b->book_reject }}</div>
                 </div>
@@ -242,7 +251,7 @@
                 <div class="mt-3 rounded-lg border border-yellow-200 bg-yellow-50 p-3">
                     <div class="text-xs font-bold text-yellow-800 inline-flex items-center gap-1 mb-1">
                         <x-heroicon-o-information-circle class="w-4 h-4" />
-                        Note
+                        Catatan
                     </div>
                     <div class="text-sm text-yellow-700">{{ $b->book_reject }}</div>
                 </div>
@@ -253,7 +262,7 @@
                 <div class="mt-4 pt-3 border-t border-dashed border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs">
                     @if(!empty($b->online_meeting_url))
                     <div class="flex flex-col">
-                        <span class="text-gray-500 font-medium">Meeting Link</span>
+                        <span class="text-gray-500 font-medium">Tautan Rapat</span>
                         <a href="{{ $b->online_meeting_url }}" target="_blank" class="text-blue-600 hover:underline truncate font-medium flex items-center gap-1">
                             {{ $b->online_meeting_url }}
                             <x-heroicon-o-arrow-top-right-on-square class="w-3 h-3" />
@@ -262,13 +271,13 @@
                     @endif
                     @if(!empty($b->online_meeting_code))
                     <div class="flex flex-col">
-                        <span class="text-gray-500 font-medium">Meeting ID / Code</span>
+                        <span class="text-gray-500 font-medium">ID / Kode Rapat</span>
                         <span class="text-gray-900 font-mono">{{ $b->online_meeting_code }}</span>
                     </div>
                     @endif
                     @if(!empty($b->online_meeting_password))
                     <div class="flex flex-col">
-                        <span class="text-gray-500 font-medium">Password</span>
+                        <span class="text-gray-500 font-medium">Sandi</span>
                         <span class="text-gray-900 font-mono">{{ $b->online_meeting_password }}</span>
                     </div>
                     @endif
@@ -279,12 +288,12 @@
                     <div class="flex items-center gap-3">
                         <div class="flex items-center gap-1">
                             <x-heroicon-o-pencil-square class="w-3 h-3" />
-                            Created {{ optional($b->created_at)->format('d M Y') }}
+                            Dibuat {{ optional($b->created_at)->format('d M Y') }}
                         </div>
                         @if($b->updated_at != $b->created_at)
                         <div class="flex items-center gap-1">
                             <x-heroicon-o-arrow-path class="w-3 h-3" />
-                            Updated {{ optional($b->updated_at)->diffForHumans() }}
+                            Diperbarui {{ optional($b->updated_at)->diffForHumans() }}
                         </div>
                         @endif
                     </div>
@@ -294,8 +303,8 @@
             <div class="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
                 {{-- Original SVG was a Calendar/Date icon --}}
                 <x-heroicon-o-calendar class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No bookings found</h3>
-                <p class="mt-1 text-sm text-gray-500">Try adjusting the filters above.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Tidak ada pemesanan ditemukan</h3>
+                <p class="mt-1 text-sm text-gray-500">Coba sesuaikan filter di atas.</p>
             </div>
             @endforelse
         </div>

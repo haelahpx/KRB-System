@@ -3,20 +3,20 @@
     <div class="bg-[#0a0a0a] rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
         <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
-                Room Booking System
+                Sistem Pemesanan Ruangan
             </h1>
 
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <div class="flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-full lg:w-auto">
                     <a href="{{ route('book-room') }}"
                         @class([ 'flex-1 lg:flex-none px-3 lg:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white' , 'bg-gray-900' , 'text-white' ,])>
-                        Offline (Room)
+                        Luring (Ruangan)
                     </a>
                     <a href="{{ route('user.meetonline') }}"
                         @class([ 'flex-1 lg:flex-none px-3 lg:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white'=> request()->routeIs('user.meetonline'),
                         'text-gray-700 hover:text-gray-900' => !request()->routeIs('user.meetonline'),
                         ])>
-                        Online Meeting
+                        Rapat Online
                     </a>
                 </div>
 
@@ -42,12 +42,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="order-1 lg:order-1 lg:col-span-2">
             <div class="bg-white rounded-xl border-2 border-black/80 shadow-md p-4 md:p-5">
-                <h2 class="text-lg font-semibold text-gray-900 mb-2">Book a Meeting Room</h2>
-                <p class="text-sm text-gray-600 mb-6">Fill out the form below to request a room booking</p>
+                <h2 class="text-lg font-semibold text-gray-900 mb-2">Pesan Ruang Pertemuan</h2>
+                <p class="text-sm text-gray-600 mb-6">Isi formulir di bawah untuk meminta pemesanan ruangan</p>
 
                 <div class="bg-blue-50 mb-6 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
                     <h4 class="font-semibold mb-2 inline-flex items-center gap-1.5">
-                        <x-heroicon-o-clock class="w-4 h-4" /> Booking Rules
+                        <x-heroicon-o-clock class="w-4 h-4" /> Aturan Pemesanan
                     </h4>
                     <ul class="list-disc pl-5 space-y-1 text-xs md:text-sm">
                         <li>Slot 30 menit.</li>
@@ -61,19 +61,19 @@
                 <form wire:submit.prevent="submitBooking" class="space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Meeting Title</label>
-                            <input type="text" wire:model.defer="meeting_title" placeholder="Enter meeting title"
+                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Judul Pertemuan</label>
+                            <input type="text" wire:model.defer="meeting_title" placeholder="Masukkan judul pertemuan"
                                 class="w-full px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                             @error('meeting_title') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Room</label>
+                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Ruangan</label>
                             <select wire:model="room_id"
                                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                                <option value="">Select room</option>
+                                <option value="">Pilih ruangan</option>
                                 @foreach($rooms as $room)
                                 <option value="{{ $room['id'] }}" {{ !$room['available_req'] ? 'disabled' : '' }}>
-                                    {{ $room['name'] }} {{ !$room['available_req'] ? '(Occupied)' : '' }}
+                                    {{ $room['name'] }} {{ !$room['available_req'] ? '(Ditempati)' : '' }}
                                 </option>
                                 @endforeach
                             </select>
@@ -83,13 +83,13 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Date</label>
+                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Tanggal</label>
                             <input type="date" wire:model.live="date" wire:change="selectDate($event.target.value)"
                                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                             @error('date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Number of Attendees</label>
+                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Jumlah Peserta</label>
                             <input type="number" wire:model.defer="number_of_attendees" placeholder="0" min="1"
                                 class="w-full px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                             @error('number_of_attendees') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
@@ -98,13 +98,13 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Start Time</label>
+                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Waktu Mulai</label>
                             <input type="time" wire:model.live="start_time" min="{{ $minStart }}"
                                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                             @error('start_time') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-gray-900 mb-1.5">End Time</label>
+                            <label class="block text-xs font-medium text-gray-900 mb-1.5">Waktu Berakhir</label>
                             <input type="time" wire:model.live="end_time" min="{{ $start_time ?: $minStart }}"
                                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                             @error('end_time') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
@@ -112,7 +112,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-gray-900 mb-2">Additional Requirements</label>
+                        <label class="block text-xs font-medium text-gray-900 mb-2">Kebutuhan Tambahan</label>
                         <div class="grid grid-cols-2 gap-3">
                             @forelse ($requirementsMaster as $reqName)
                             <label class="flex items-center space-x-2">
@@ -127,15 +127,15 @@
                             <label class="flex items-center space-x-2">
                                 <input type="checkbox" wire:model.live="requirements" value="other"
                                     class="rounded border-gray-300 text-gray-900 focus:ring-gray-900">
-                                <span class="text-sm text-gray-700">Other</span>
+                                <span class="text-sm text-gray-700">Lainnya</span>
                             </label>
                         </div>
                     </div>
 
                     @if (in_array('other', $requirements ?? [], true))
                     <div class="mt-4">
-                        <label class="block text-xs font-medium text-gray-900 mb-1.5">Special Notes</label>
-                        <textarea wire:model.defer="special_notes" rows="3" placeholder="Please specify your other requirement…"
+                        <label class="block text-xs font-medium text-gray-900 mb-1.5">Catatan Khusus</label>
+                        <textarea wire:model.defer="special_notes" rows="3" placeholder="Harap sebutkan kebutuhan lain Anda…"
                             class="w-full px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent resize-none"></textarea>
                         @error('special_notes') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
@@ -146,7 +146,7 @@
                             <input type="checkbox" wire:model.live="informInfo"
                                 class="mt-0.5 rounded border-gray-300 text-gray-900 focus:ring-gray-900">
                             <span class="text-sm text-gray-700">
-                                Minta Information Dept menginformasikan meeting ini (akan disimpan sebagai <span class="font-semibold text-gray-900">request</span>)
+                                Minta Departemen Informasi menginformasikan rapat ini (akan disimpan sebagai <span class="font-semibold text-gray-900">permintaan</span>)
                             </span>
                         </label>
                     </div>
@@ -155,7 +155,7 @@
                         <button type="submit"
                             class="px-4 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors inline-flex items-center gap-1.5">
                             <x-heroicon-o-check-circle class="w-4 h-4" />
-                            Submit Request
+                            Kirim Permintaan
                         </button>
                     </div>
                 </form>
@@ -178,7 +178,7 @@
             "
                     class="w-full flex items-center justify-between px-4 md:px-5 py-4 lg:cursor-default">
 
-                    <h3 class="text-lg font-semibold text-gray-900">Room Availability</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Ketersediaan Ruangan</h3>
 
                     {{-- Arrow (right → down) --}}
                     <span class="lg:hidden transition-transform -rotate-90" id="arrowAvailability">
@@ -190,7 +190,7 @@
                 <div id="roomAvailability" class="px-4 md:px-5 pb-4 space-y-3 hidden lg:block">
 
                     <p class="text-xs text-gray-600">
-                        For {{ \Carbon\Carbon::parse($date)->format('l, F j, Y') }}
+                        Untuk {{ \Carbon\Carbon::parse($date)->format('l, F j, Y') }}
                         @if($start_time && $end_time) — {{ $start_time }}–{{ $end_time }} @endif
                     </p>
 
@@ -211,7 +211,7 @@
 
                             <span class="text-xs font-bold uppercase
                         {{ $room['available_req'] ? 'text-green-700' : 'text-red-700' }}">
-                                {{ $room['available_req'] ? 'Available' : 'Occupied' }}
+                                {{ $room['available_req'] ? 'Tersedia' : 'Ditempati' }}
                             </span>
                         </div>
                         @endforeach
@@ -235,7 +235,7 @@
             "
                     class="w-full flex items-center justify-between px-4 md:px-5 py-4 lg:cursor-default">
 
-                    <h3 class="text-lg font-semibold text-gray-900">Recent Bookings</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Pemesanan Terbaru</h3>
 
                     {{-- Arrow (right → down) --}}
                     <span class="lg:hidden transition-transform -rotate-90" id="arrowRecent">
@@ -282,7 +282,7 @@
                                 {{ collect($rooms)->firstWhere('id', $booking['room_id'])['name'] ?? 'Unknown Room' }}
 
                                 @if(!empty($booking['requestinformation']))
-                                <span class="ml-1 text-xs text-blue-600">• Info Req</span>
+                                <span class="ml-1 text-xs text-blue-600">• Req Info</span>
                                 @endif
                             </p>
                         </div>
@@ -300,18 +300,16 @@
     {{-- Calendar View (Mobile Optimized) --}}
     <div wire:poll.60s class="bg-white rounded-xl border-2 border-black/80 shadow-md overflow-hidden">
 
-        {{-- Header --}}
+            {{-- Header --}}
         <div class="bg-gray-50 border-b-2 border-black/10 p-4">
 
             {{-- 1. TITLE + DATE --}}
             <div class="text-center mb-3">
-                <h2 class="text-lg font-bold text-gray-900">Room Schedule</h2>
+                <h2 class="text-lg font-bold text-gray-900">Jadwal Ruangan</h2>
                 <p class="text-sm text-gray-600">
                     {{ \Carbon\Carbon::parse($date)->format('l, F j, Y') }}
                 </p>
             </div>
-
-
             {{-- 2. DAY NAVIGATION --}}
             <div class="flex items-center justify-center gap-2">
 
@@ -338,32 +336,32 @@
 
                 <button wire:click="previousMonth"
                     class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 flex items-center gap-1.5">
-                    <x-heroicon-o-chevron-double-left class="w-3 h-3" /> Month
+                    <x-heroicon-o-chevron-double-left class="w-3 h-3" /> Bulan
                 </button>
 
                 <button wire:click="previousWeek"
                     class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 flex items-center gap-1.5">
-                    <x-heroicon-o-chevron-left class="w-3 h-3" /> Week
+                    <x-heroicon-o-chevron-left class="w-3 h-3" /> Minggu
                 </button>
 
                 <button wire:click="nextWeek"
                     class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 flex items-center gap-1.5">
-                    Week <x-heroicon-o-chevron-right class="w-3 h-3" />
+                    Minggu <x-heroicon-o-chevron-right class="w-3 h-3" />
                 </button>
 
                 <button wire:click="nextMonth"
                     class="px-3 py-1.5 border border-gray-300 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 flex items-center gap-1.5">
-                    Month <x-heroicon-o-chevron-double-right class="w-3 h-3" />
+                    Bulan <x-heroicon-o-chevron-double-right class="w-3 h-3" />
                 </button>
             </div>
 
 
             {{-- 4. SHOWING ROOMS --}}
             <div class="mt-4 text-center text-xs text-gray-500 font-medium">
-                Showing rooms
+                Menampilkan ruangan
                 {{ ($roomsPage - 1) * $roomsPerPage + 1 }} –
                 {{ min($roomsPage * $roomsPerPage, count($rooms)) }}
-                of {{ count($rooms) }}
+                dari {{ count($rooms) }}
             </div>
 
 
@@ -378,7 +376,7 @@
                 </button>
 
                 <span class="text-[11px] font-semibold text-gray-700">
-                    Rooms
+                    Ruangan
                 </span>
 
                 <button wire:click="nextRoomPage"
@@ -391,7 +389,7 @@
 
         {{-- Mobile Swipe Hint --}}
         <div class="lg:hidden text-center text-[11px] text-gray-500 pb-2 animate-pulse">
-            ← Swipe to see more →
+            ← Geser untuk melihat lebih banyak →
         </div>
 
         {{-- Calendar Grid --}}

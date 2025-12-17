@@ -50,15 +50,15 @@
 
                 {{-- Desktop Navigation --}}
                 <div class="hidden md:flex items-center gap-1">
-                    <a href="{{ route('user.home') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('home') ? 'bg-gray-800 text-white' : '' }}">Home</a>
-                    <a href="{{ route('create-ticket') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('create-ticket') ? 'bg-gray-800 text-white' : '' }}">Create Ticket</a>
-                    <a href="{{ route('book-room') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('book-room') ? 'bg-gray-800 text-white' : '' }}">Book Room</a>
-                    <a href="{{ route('book-vehicle') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('book-vehicle') ? 'bg-gray-800 text-white' : '' }}">Book Vehicle</a>
+                    <a href="{{ route('user.home') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('home') ? 'bg-gray-800 text-white' : '' }}">Beranda</a>
+                    <a href="{{ route('create-ticket') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('create-ticket') ? 'bg-gray-800 text-white' : '' }}">Buat Tiket</a>
+                    <a href="{{ route('book-room') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('book-room') ? 'bg-gray-800 text-white' : '' }}">Pesan Ruangan</a>
+                    <a href="{{ route('book-vehicle') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('book-vehicle') ? 'bg-gray-800 text-white' : '' }}">Pesan Kendaraan</a>
 
                     @if(auth()->user() && auth()->user()->is_agent == 'yes')
                     <a href="{{ route('user.ticket.queue') }}" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('user.ticket.queue') ? 'bg-gray-800 text-white' : '' }} flex items-center gap-1">
                         <x-heroicon-o-queue-list class="w-4 h-4" /> 
-                        Queue
+                        Antrian
                         {{-- COUNT FOR UNCLAIMED TICKETS --}}
                         @if ($unclaimedTicketCount > 0)
                             <span class="ml-1 px-1.5 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full leading-none">{{ $unclaimedTicketCount }}</span>
@@ -79,12 +79,12 @@
                         </button>
                         <div data-dropdown-menu class="dropdown-menu absolute right-0 mt-2 w-52 bg-gray-900 rounded-lg shadow-xl border border-gray-700 py-1 z-50">
                             <a href="{{ route('ticketstatus') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                                <x-heroicon-o-ticket class="w-4 h-4" /> Ticket Status
+                                <x-heroicon-o-ticket class="w-4 h-4" /> Status Tiket
                                 {{-- COUNT FOR UNREAD COMMENTS (Inside Dropdown) - FORCED RENDER --}}
                                 <span class="ml-auto px-1.5 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full leading-none " data-count="{{ $totalUnreadCount }}">{{ $totalUnreadCount }}</span>
                             </a>
-                            <a href="{{ route('bookingstatus') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"><x-heroicon-o-calendar class="w-4 h-4" /> Meeting Status</a>
-                            <a href="{{ route('vehiclestatus') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"><x-heroicon-o-truck class="w-4 h-4" /> Vehicle Status</a>
+                            <a href="{{ route('bookingstatus') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"><x-heroicon-o-calendar class="w-4 h-4" /> Status Rapat</a>
+                            <a href="{{ route('vehiclestatus') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"><x-heroicon-o-truck class="w-4 h-4" /> Status Kendaraan</a>
                         </div>
                     </div>
                     @else
@@ -93,7 +93,7 @@
 
                     @guest
                     <a href="{{ route('login') }}" class="ml-2 bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2">
-                        <x-heroicon-o-arrow-right-on-rectangle class="w-4 h-4" /> Login
+                        <x-heroicon-o-arrow-right-on-rectangle class="w-4 h-4" /> Masuk
                     </a>
                     @endguest
 
@@ -113,12 +113,12 @@
                                 <p class="text-xs text-gray-400 mt-0.5 truncate">{{ auth()->user()->email }}</p>
                                 @if(auth()->user()->is_agent == 'yes')
                                 <span class="inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 bg-blue-600 rounded-full text-xs font-medium text-white">
-                                    <x-heroicon-s-check-badge class="w-3 h-3" /> Agent
+                                    <x-heroicon-s-check-badge class="w-3 h-3" /> Agen
                                 </span>
                                 @endif
                             </div>
                             <a href="{{ route('profile') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                                <x-heroicon-o-user-circle class="w-5 h-5" /> My Profile
+                                <x-heroicon-o-user-circle class="w-5 h-5" /> Profil Saya
                             </a>
                             
                             {{-- MODIFIED DASHBOARD LINKS LOGIC --}}
@@ -127,21 +127,21 @@
                             {{-- 1. Superadmin Dashboard (Only Superadmin) --}}
                             @if($role === 'Superadmin')
                             <a href="{{ route('superadmin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                                <x-heroicon-o-shield-check class="w-5 h-5" /> Superadmin DB
+                                <x-heroicon-o-shield-check class="w-5 h-5" /> DB Superadmin
                             </a>
                             @endif
 
                             {{-- 2. Admin Dashboard (Admin OR Superadmin) --}}
                             @if(in_array($role, ['Superadmin', 'Admin']))
                             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                                <x-heroicon-o-computer-desktop class="w-5 h-5" /> Admin DB
+                                <x-heroicon-o-computer-desktop class="w-5 h-5" /> DB Admin
                             </a>
                             @endif
 
                             {{-- 3. Receptionist Dashboard (Receptionist OR Superadmin) --}}
                             @if(in_array($role, ['Superadmin', 'Receptionist']))
                             <a href="{{ route('receptionist.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                                <x-heroicon-o-clipboard-document-list class="w-5 h-5" /> Receptionist DB
+                                <x-heroicon-o-clipboard-document-list class="w-5 h-5" /> DB Resepsionis
                             </a>
                             @endif
                             {{-- END MODIFIED LOGIC --}}
@@ -150,7 +150,7 @@
                             <form method="POST" action="{{ route('logout') }}" class="px-2">
                                 @csrf
                                 <button type="submit" class="w-full flex items-center gap-3 px-2 py-2.5 text-sm text-white hover:text-red-300 hover:bg-gray-800 rounded-md transition-colors">
-                                    <x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5" /> Logout
+                                    <x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5" /> Keluar
                                 </button>
                             </form>
                         </div>
@@ -186,7 +186,7 @@
                     @if(auth()->user()->is_agent == 'yes')
                     <div class="mt-2">
                         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-600 rounded-full text-xs font-medium text-white">
-                            <x-heroicon-s-check-badge class="w-3 h-3" /> Agent
+                            <x-heroicon-s-check-badge class="w-3 h-3" /> Agen
                         </span>
                     </div>
                     @endif
@@ -194,15 +194,15 @@
                 @endauth
 
                 {{-- Mobile Nav Links --}}
-                <a href="{{ route('user.home') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('home') ? 'bg-gray-800 text-white' : '' }}"><x-heroicon-o-home class="w-5 h-5" /> Home</a>
-                <a href="{{ route('create-ticket') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('create-ticket') ? 'bg-gray-800 text-white' : '' }}"><x-heroicon-o-ticket class="w-5 h-5" /> Create Ticket</a>
-                <a href="{{ route('book-room') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('book-room') ? 'bg-gray-800 text-white' : '' }}"><x-heroicon-o-building-office class="w-5 h-5" /> Book Room</a>
-                <a href="{{ route('book-vehicle') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('book-vehicle') ? 'bg-gray-800 text-white' : '' }}"><x-heroicon-o-truck class="w-5 h-5" /> Book Vehicle</a>
+                <a href="{{ route('user.home') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('home') ? 'bg-gray-800 text-white' : '' }}"><x-heroicon-o-home class="w-5 h-5" /> Beranda</a>
+                <a href="{{ route('create-ticket') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('create-ticket') ? 'bg-gray-800 text-white' : '' }}"><x-heroicon-o-ticket class="w-5 h-5" /> Buat Tiket</a>
+                <a href="{{ route('book-room') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('book-room') ? 'bg-gray-800 text-white' : '' }}"><x-heroicon-o-building-office class="w-5 h-5" /> Pesan Ruangan</a>
+                <a href="{{ route('book-vehicle') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('book-vehicle') ? 'bg-gray-800 text-white' : '' }}"><x-heroicon-o-truck class="w-5 h-5" /> Pesan Kendaraan</a>
 
                 @if(auth()->user() && auth()->user()->is_agent == 'yes')
                 <a href="{{ route('user.ticket.queue') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 {{ request()->routeIs('user.ticket.queue') ? 'bg-gray-800 text-white' : '' }}">
                     <x-heroicon-o-queue-list class="w-5 h-5" /> 
-                    Ticket Queue
+                    Antrian Tiket
                     {{-- COUNT FOR UNCLAIMED TICKETS (Mobile) --}}
                     @if ($unclaimedTicketCount > 0)
                         <span class="ml-auto px-1.5 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full leading-none ">{{ $unclaimedTicketCount }}</span>
@@ -224,12 +224,12 @@
                     </button>
                     <div data-mobile-content class="mobile-dropdown-content pl-4">
                         <a href="{{ route('ticketstatus') }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors">
-                            <span class="flex items-center gap-3"><x-heroicon-o-ticket class="w-4 h-4" /> Ticket Status</span>
+                            <span class="flex items-center gap-3"><x-heroicon-o-ticket class="w-4 h-4" /> Status Tiket</span>
                             {{-- COUNT FOR UNREAD COMMENTS (Inside Dropdown Mobile) - FORCED RENDER --}}
                             <span class="px-1.5 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full leading-none" data-count="{{ $totalUnreadCount }}">{{ $totalUnreadCount }}</span>
                         </a>
-                        <a href="{{ route('bookingstatus') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors"><x-heroicon-o-calendar class="w-4 h-4" /> Meeting Status</a>
-                        <a href="{{ route('vehiclestatus') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors"><x-heroicon-o-truck class="w-4 h-4" /> Vehicle Status</a>
+                        <a href="{{ route('bookingstatus') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors"><x-heroicon-o-calendar class="w-4 h-4" /> Status Rapat</a>
+                        <a href="{{ route('vehiclestatus') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors"><x-heroicon-o-truck class="w-4 h-4" /> Status Kendaraan</a>
                     </div>
                 </div>
                 @else
@@ -238,40 +238,40 @@
 
                 @auth
                 <div class="border-t border-gray-800 pt-3 mt-3 space-y-1">
-                    <a href="{{ route('profile') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors"><x-heroicon-o-user-circle class="w-5 h-5" /> My Profile</a>
+                    <a href="{{ route('profile') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors"><x-heroicon-o-user-circle class="w-5 h-5" /> Profil Saya</a>
                     
                     {{-- MODIFIED MOBILE DASHBOARD LINKS LOGIC --}}
                     @php $role = auth()->user()->role->name; @endphp
 
                     @if($role === 'Superadmin')
                     <a href="{{ route('superadmin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors">
-                        <x-heroicon-o-shield-check class="w-5 h-5" /> Superadmin DB
+                        <x-heroicon-o-shield-check class="w-5 h-5" /> DB Superadmin
                     </a>
                     @endif
 
                     @if(in_array($role, ['Superadmin', 'Admin']))
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors">
-                        <x-heroicon-o-computer-desktop class="w-5 h-5" /> Admin DB
+                        <x-heroicon-o-computer-desktop class="w-5 h-5" /> DB Admin
                     </a>
                     @endif
 
                     @if(in_array($role, ['Superadmin', 'Receptionist']))
                     <a href="{{ route('receptionist.dashboard') }}" class="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors">
-                        <x-heroicon-o-clipboard-document-list class="w-5 h-5" /> Receptionist DB
+                        <x-heroicon-o-clipboard-document-list class="w-5 h-5" /> DB Resepsionis
                     </a>
                     @endif
                     {{-- END MODIFIED MOBILE LOGIC --}}
 
                     <form method="POST" action="{{ route('logout') }}" class="mt-2">
                         @csrf
-                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-white hover:text-red-300 hover:bg-gray-800/50 transition-colors"><x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5" /> Logout</button>
+                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg text-white hover:text-red-300 hover:bg-gray-800/50 transition-colors"><x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5" /> Keluar</button>
                     </form>
                 </div>
                 @endauth
 
                 @guest
                 <div class="border-t border-gray-800 pt-3 mt-3">
-                    <a href="{{ route('login') }}" class="flex items-center justify-center gap-2 w-full px-4 py-3 text-base font-semibold text-black bg-white rounded-lg hover:bg-gray-200 transition-all"><x-heroicon-o-arrow-right-on-rectangle class="w-5 h-5" /> Login / Register</a>
+                    <a href="{{ route('login') }}" class="flex items-center justify-center gap-2 w-full px-4 py-3 text-base font-semibold text-black bg-white rounded-lg hover:bg-gray-200 transition-all"><x-heroicon-o-arrow-right-on-rectangle class="w-5 h-5" /> Masuk / Daftar</a>
                 </div>
                 @endguest
             </div>

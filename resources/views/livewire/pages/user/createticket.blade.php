@@ -6,19 +6,19 @@
 
       {{-- Title --}}
       <h1 class="text-xl md:text-2xl font-bold text-white text-center md:text-left">
-        Support Ticket System
+        Sistem Tiket Dukungan
       </h1>
 
       {{-- Navigation Tabs --}}
       <div class="flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-full md:w-auto">
         <span
           class="flex-1 md:flex-none px-3 md:px-4 py-2 text-sm font-medium bg-gray-900 text-white cursor-default border-r border-gray-200 text-center">
-          Create Ticket
+          Buat Tiket
         </span>
 
         <a href="{{ route('ticketstatus') }}"
           class="flex-1 md:flex-none px-3 md:px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors text-center">
-          Ticket Status
+          Status Tiket
         </a>
       </div>
 
@@ -29,13 +29,13 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2">
       <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
-        <h2 class="text-lg font-semibold text-gray-900 mb-2">Create Support Ticket</h2>
-        <p class="text-sm text-gray-600 mb-6">Fill out the form below to submit a new support ticket.</p>
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">Buat Tiket Dukungan</h2>
+        <p class="text-sm text-gray-600 mb-6">Isi formulir di bawah ini untuk mengirimkan tiket dukungan baru.</p>
 
         <div class="bg-blue-50 mb-6 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
           <h4 class="font-semibold mb-2 inline-flex items-center gap-1.5">
             <x-heroicon-o-information-circle class="w-4 h-4 text-blue-700" />
-            Help Tips
+            Tips Membantu
           </h4>
           <ul class="list-disc pl-5 space-y-1 text-xs md:text-sm">
             <li>Berikan deskripsi masalah yang jelas.</li>
@@ -51,22 +51,22 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               {{-- ADDED: Red Asterisk & Required Attribute --}}
-              <label class="block text-xs font-medium text-gray-900 mb-1.5">Subject <span
+              <label class="block text-xs font-medium text-gray-900 mb-1.5">Subjek <span
                   class="text-red-500">*</span></label>
-              <input type="text" wire:model.defer="subject" placeholder="Enter ticket subject" required
+              <input type="text" wire:model.defer="subject" placeholder="Masukkan subjek tiket" required
                 class="w-full px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent" />
               @error('subject') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div>
               {{-- ADDED: Red Asterisk & Required Attribute --}}
-              <label class="block text-xs font-medium text-gray-900 mb-1.5">Priority <span
+              <label class="block text-xs font-medium text-gray-900 mb-1.5">Prioritas <span
                   class="text-red-500">*</span></label>
               <select wire:model="priority" required
                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
+                <option value="low">Rendah</option>
+                <option value="medium">Sedang</option>
+                <option value="high">Tinggi</option>
               </select>
               @error('priority') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
@@ -75,18 +75,18 @@
           {{-- Inputs: Dept & Assigned --}}
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-medium text-gray-900 mb-1.5">Department (Your Dept)</label>
+              <label class="block text-xs font-medium text-gray-900 mb-1.5">Departemen (Dept Anda)</label>
               <input type="text" value="{{ $this->requester_department }}" readonly
                 class="w-full px-3 py-2 text-sm text-gray-500 bg-gray-100 border border-gray-200 rounded-md cursor-not-allowed" />
             </div>
 
             <div>
               {{-- ADDED: Red Asterisk & Required Attribute --}}
-              <label class="block text-xs font-medium text-gray-900 mb-1.5">Assigned To <span
+              <label class="block text-xs font-medium text-gray-900 mb-1.5">Ditugaskan Ke <span
                   class="text-red-500">*</span></label>
               <select wire:model="assigned_department_id" required
                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                <option value="" selected>Select department</option>
+                <option value="" selected>Pilih departemen</option>
                 @foreach($this->departments as $dept)
                   <option value="{{ $dept['department_id'] }}">{{ $dept['department_name'] }}</option>
                 @endforeach
@@ -97,9 +97,9 @@
 
           <div>
             {{-- ADDED: Red Asterisk & Required Attribute --}}
-            <label class="block text-xs font-medium text-gray-900 mb-1.5">Description <span
+            <label class="block text-xs font-medium text-gray-900 mb-1.5">Deskripsi <span
                 class="text-red-500">*</span></label>
-            <textarea wire:model.defer="description" rows="6" placeholder="Describe your issue in detail..." required
+            <textarea wire:model.defer="description" rows="6" placeholder="Jelaskan masalah Anda secara detail..." required
               class="w-full px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent resize-none"></textarea>
             @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
           </div>
@@ -111,7 +111,7 @@
             wire:model.defer="temp_items_json">
 
           <div>
-            <label class="block text-xs font-medium text-gray-900 mb-1.5">Attachments</label>
+            <label class="block text-xs font-medium text-gray-900 mb-1.5">Lampiran</label>
             <div
               class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 transition-colors">
 
@@ -130,7 +130,7 @@
                     class="p-3 bg-gray-100 rounded-full group-hover:bg-white border border-gray-200 shadow-sm transition">
                     <x-heroicon-o-cloud-arrow-up class="w-6 h-6 text-gray-600" />
                   </div>
-                  <span class="text-xs font-bold text-gray-900">Upload Files</span>
+                  <span class="text-xs font-bold text-gray-900">Unggah File</span>
                 </label>
 
                 {{-- 2. Mobile Camera --}}
@@ -140,7 +140,7 @@
                     class="p-3 bg-gray-100 rounded-full group-hover:bg-white border border-gray-200 shadow-sm transition">
                     <x-heroicon-o-camera class="w-6 h-6 text-gray-600" />
                   </div>
-                  <span class="text-xs font-bold text-gray-900">Take Photo</span>
+                  <span class="text-xs font-bold text-gray-900">Ambil Foto</span>
                 </label>
 
                 {{-- 3. Desktop Webcam --}}
@@ -155,7 +155,7 @@
 
               </div>
 
-              <p class="text-[10px] text-gray-400">Max {{ $per_file_max_mb }}MB/file. Total {{ $total_quota_mb }}MB.</p>
+              <p class="text-[10px] text-gray-400">Maksimal {{ $per_file_max_mb }}MB/file. Total {{ $total_quota_mb }}MB.</p>
 
               {{-- progress --}}
               <div id="progwrap" class="hidden mt-4 max-w-md mx-auto">
@@ -163,14 +163,14 @@
                   <div id="progress" class="bg-gray-900 h-1.5 transition-all duration-300" style="width:0%"></div>
                 </div>
                 <div class="flex justify-between text-[10px] mt-1">
-                  <span id="progmsg" class="text-gray-600">Preparing…</span>
+                  <span id="progmsg" class="text-gray-600">Mempersiapkan…</span>
                   <span id="progpercent" class="font-medium text-gray-900">0%</span>
                 </div>
               </div>
 
               {{-- preview list --}}
               <div class="mt-4 text-left max-w-2xl mx-auto">
-                <p class="text-xs font-semibold text-gray-900 mb-2">Selected files:</p>
+                <p class="text-xs font-semibold text-gray-900 mb-2">File yang dipilih:</p>
                 <ul id="preview-list" class="text-xs text-gray-600 space-y-2 border-t border-gray-100 pt-2">
                   {{-- JS will fill --}}
                 </ul>
@@ -186,8 +186,8 @@
             <button type="submit"
               class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 inline-flex items-center gap-1.5">
                             <x-heroicon-o-check-circle class="w-4 h-4" />
-              <span wire:loading.remove>Submit Ticket</span>
-              <span wire:loading>Submitting...</span>
+              <span wire:loading.remove>Kirim Tiket</span>
+              <span wire:loading>Mengirim...</span>
             </button>
           </div>
         </form>
@@ -198,9 +198,9 @@
     <div class="space-y-6">
       {{-- Card 1: Contact Support --}}
       <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
-        <h3 class="text-lg font-bold text-gray-900 mb-3">Need Immediate Help?</h3>
-        <p class="text-xs text-gray-600 mb-4">For critical issues preventing business operations, please contact us
-          directly:</p>
+        <h3 class="text-lg font-bold text-gray-900 mb-3">Butuh Bantuan Segera?</h3>
+        <p class="text-xs text-gray-600 mb-4">Untuk masalah kritis yang menghambat operasi bisnis, hubungi kami
+          secara langsung:</p>
 
         <div class="space-y-3">
           <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
@@ -214,7 +214,7 @@
           <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
             <x-heroicon-o-envelope class="w-5 h-5 text-gray-600" />
             <div>
-              <p class="text-xs font-semibold text-gray-500">Email Support</p>
+              <p class="text-xs font-semibold text-gray-500">Dukungan Email</p>
               <p class="text-sm font-bold text-gray-900">it.support@company.com</p>
             </div>
           </div>
@@ -223,21 +223,21 @@
 
       {{-- Card 2: Operational Hours --}}
       <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
-        <h3 class="text-lg font-bold mb-2">Operational Hours</h3>
-        <p class="text-xs text-gray-400 mb-4">Our standard response time is within 24 hours during working days.</p>
+        <h3 class="text-lg font-bold mb-2">Jam Operasional</h3>
+        <p class="text-xs text-gray-400 mb-4">Waktu respons standar kami adalah dalam 24 jam selama hari kerja.</p>
 
         <div class="space-y-2 text-sm">
           <div class="flex justify-between border-b border-gray-800 pb-2">
-            <span class="text-gray-400">Mon - Fri</span>
+            <span class="text-gray-400">Sen - Jum</span>
             <span class="font-medium">08:00 - 17:00</span>
           </div>
           <div class="flex justify-between border-b border-gray-800 pb-2">
-            <span class="text-gray-400">Saturday</span>
+            <span class="text-gray-400">Sabtu</span>
             <span class="font-medium">08:00 - 13:00</span>
           </div>
           <div class="flex justify-between pt-1">
-            <span class="text-gray-400">Sunday</span>
-            <span class="text-red-400 font-medium">Closed</span>
+            <span class="text-gray-400">Minggu</span>
+            <span class="text-red-400 font-medium">Tutup</span>
           </div>
         </div>
       </div>
@@ -252,7 +252,7 @@
       <div class="bg-gray-900 text-white px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-          <span class="text-sm font-medium">Webcam Live</span>
+          <span class="text-sm font-medium">Webcam Langsung</span>
         </div>
         <button type="button" id="btn-webcam-close" class="text-white hover:text-gray-300">
           <x-heroicon-o-x-mark class="w-6 h-6" />
@@ -270,7 +270,7 @@
           <button type="button" id="btn-webcam-capture"
             class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-black flex items-center gap-2">
             <x-heroicon-o-camera class="w-4 h-4" />
-            Capture
+            Ambil
           </button>
         </div>
       </div>
@@ -339,7 +339,7 @@
     function renderList() {
       listEl.innerHTML = '';
       if (!tempItems.length) {
-        listEl.innerHTML = '<li class="text-gray-400 italic">No files selected yet.</li>';
+        listEl.innerHTML = '<li class="text-gray-400 italic">Belum ada file yang dipilih.</li>';
         return;
       }
       tempItems.forEach(item => {
@@ -351,7 +351,7 @@
                     <span class="truncate font-medium text-gray-700">${item.original_filename}</span>
                     <span class="text-[10px] text-gray-400 shrink-0">(${humanKB(item.bytes)})</span>
                 </div>
-                <button type="button" class="text-red-600 hover:text-red-800 text-[10px] font-semibold uppercase px-2">Remove</button>
+                <button type="button" class="text-red-600 hover:text-red-800 text-[10px] font-semibold uppercase px-2">Hapus</button>
               `;
         li.querySelector('button').addEventListener('click', async () => {
           try {
@@ -432,7 +432,7 @@
         }
 
         try {
-          setProgress(5, 'Requesting upload…');
+          setProgress(5, 'Meminta unggahan…');
           const data = await uploadSingle(f);
           if (data && data.public_id) {
             tempItems.push({
@@ -445,11 +445,11 @@
             });
             syncHidden();
             renderList();
-            setProgress(100, 'Done');
+            setProgress(100, 'Selesai');
           }
         } catch (err) {
           console.error(err);
-          alert('Upload failed: ' + err.message);
+          alert('Unggahan gagal: ' + err.message);
           hideProgress();
         }
       }
@@ -463,7 +463,7 @@
     // --- 3. Webcam Modal Functions ---
     async function openWebcamModal() {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert('Browser does not support camera access.');
+        alert('Browser tidak mendukung akses kamera.');
         return;
       }
       try {
@@ -475,7 +475,7 @@
         modalCam.classList.add('flex');
       } catch (e) {
         console.error(e);
-        alert('Cannot access camera. Check permissions.');
+        alert('Tidak dapat mengakses kamera. Periksa izin.');
       }
     }
 

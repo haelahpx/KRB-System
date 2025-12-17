@@ -4,7 +4,7 @@
         <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             {{-- Title --}}
             <h1 class="text-xl md:text-2xl font-bold text-white text-center md:text-left">
-                Support Ticket System
+                Sistem Tiket Dukungan
             </h1>
 
             @php
@@ -19,14 +19,14 @@
                     @class([ 'flex-1 md:flex-none px-3 md:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white'=> $isCreate,
                     'text-gray-700 hover:text-gray-900 hover:bg-gray-50' => !$isCreate,
                     ])>
-                    Create Ticket
+                    Buat Tiket
                 </a>
 
                 <a href="{{ route('ticketstatus') }}"
                     @class([ 'flex-1 md:flex-none px-3 md:px-4 py-2 text-sm font-medium cursor-default border-r border-gray-200 text-center' , 'bg-gray-900 text-white'=> $isStatus,
                     'text-gray-700 hover:text-gray-900 hover:bg-gray-50' => !$isStatus,
                     ])>
-                    Ticket Status
+                    Status Tiket
                 </a>
             </div>
         </div>
@@ -41,26 +41,26 @@
                 <select wire:model.live="statusFilter"
                     class="w-full px-2 py-1.5 text-xs md:text-sm text-gray-900 border border-gray-300 rounded-md
                    focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                    <option value="">All Status</option>
-                    <option value="open">Open</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="resolved">Resolved</option>
-                    <option value="closed">Closed</option>
+                    <option value="">Semua Status</option>
+                    <option value="open">Buka</option>
+                    <option value="in_progress">Dalam Proses</option>
+                    <option value="resolved">Selesai</option>
+                    <option value="closed">Ditutup</option>
                 </select>
 
                 <select wire:model.live="priorityFilter"
                     class="w-full px-2 py-1.5 text-xs md:text-sm text-gray-900 border border-gray-300 rounded-md
                    focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                    <option value="">All Priority</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
+                    <option value="">Semua Prioritas</option>
+                    <option value="low">Rendah</option>
+                    <option value="medium">Sedang</option>
+                    <option value="high">Tinggi</option>
                 </select>
 
                 <select wire:model.live="departmentFilter"
                     class="w-full px-2 py-1.5 text-xs md:text-sm text-gray-900 border border-gray-300 rounded-md
                    focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                    <option value="">All Departments</option>
+                    <option value="">Semua Departemen</option>
                     @foreach ($departments as $dept)
                     <option value="{{ $dept->department_id }}">{{ $dept->department_name }}</option>
                     @endforeach
@@ -69,9 +69,9 @@
                 <select wire:model.live="sortFilter"
                     class="w-full px-2 py-1.5 text-xs md:text-sm text-gray-900 border border-gray-300 rounded-md
                    focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                    <option value="recent">Recent first</option>
-                    <option value="oldest">Oldest first</option>
-                    <option value="due">Nearest due</option>
+                    <option value="recent">Terbaru dulu</option>
+                    <option value="oldest">Tertua dulu</option>
+                    <option value="due">Jatuh tempo terdekat</option>
                 </select>
 
             </div>
@@ -121,7 +121,7 @@
                                 </span>
 
                                 <span class="text-[11px] text-gray-600">
-                                    #{{ $t->ticket_id }} • {{ ucfirst($priority ?: 'low') }} Priority
+                                    #{{ $t->ticket_id }} • {{ ucfirst($priority ?: 'rendah') }} Prioritas
                                 </span>
                             </div>
 
@@ -191,11 +191,11 @@
                             <div class="text-[10px] text-gray-500 space-y-1">
                                 <div class="flex items-center gap-1">
                                     <x-heroicon-o-clock class="w-3 h-3" />
-                                    Created {{ optional($t->created_at)->format('d M Y, H:i') }}
+                                    Dibuat {{ optional($t->created_at)->format('d M Y, H:i') }}
                                 </div>
                                 <div class="flex items-center gap-1">
                                     <x-heroicon-o-arrow-path class="w-3 h-3" />
-                                    Updated {{ optional($t->updated_at)->diffForHumans() }}
+                                    Diperbarui {{ optional($t->updated_at)->diffForHumans() }}
                                 </div>
                             </div>
 
@@ -218,7 +218,7 @@
                                     wire:target="markComplete"
                                     type="button">
                                     <x-heroicon-o-check-circle class="w-4 h-4 inline-block mr-1" />
-                                    Mark as Resolved
+                                    Tandai Selesai
                                 </button>
 
                                 {{-- Close Ticket --}}
@@ -230,14 +230,14 @@
                                     type="button"
                                     class="w-full text-center px-4 py-2 bg-gray-900 text-white rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
                                     <x-heroicon-o-lock-closed class="w-4 h-4 inline-block mr-1" />
-                                    Close Ticket
+                                    Tutup Tiket
                                 </button>
 
                                 {{-- Closed --}}
                                 @elseif ($statusUp === 'CLOSED')
                                 <span class="w-full flex items-center justify-center gap-2 px-4 py-2 text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 rounded-lg uppercase tracking-wide">
                                     <x-heroicon-o-lock-closed class="w-3 h-3" />
-                                    Closed
+                                    Ditutup
                                 </span>
                                 @endif
 
@@ -248,7 +248,7 @@
                             <div class="mt-1">
                                 <a href="{{ route('user.ticket.show', $t) }}"
                                     class="block w-full text-center px-4 py-2 bg-gray-900 text-white rounded-lg text-xs font-medium hover:bg-gray-800">
-                                    Open Ticket
+                                    Buka Tiket
                                 </a>
                             </div>
 
@@ -322,7 +322,7 @@
                                     @if ($hasAgent)
                                     <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800 font-medium">
                                         <x-heroicon-o-user-circle class="w-3 h-3" />
-                                        Agent Assigned
+                                        Agen Ditugaskan
                                     </span>
                                     @endif
                                 </div>
@@ -350,11 +350,11 @@
                             <div class="text-[11px] text-gray-500 flex flex-col gap-1">
                                 <div class="flex items-center gap-1">
                                     <x-heroicon-o-clock class="w-3 h-3" />
-                                    <span>Created {{ optional($t->created_at)->format('d M Y, H:i') }}</span>
+                                    <span>Dibuat {{ optional($t->created_at)->format('d M Y, H:i') }}</span>
                                 </div>
                                 <div class="flex items-center gap-1">
                                     <x-heroicon-o-arrow-path class="w-3 h-3" />
-                                    <span>Updated {{ optional($t->updated_at)->diffForHumans() }}</span>
+                                    <span>Diperbarui {{ optional($t->updated_at)->diffForHumans() }}</span>
                                 </div>
                             </div>
 
@@ -378,7 +378,7 @@
                                     wire:target="markComplete"
                                     type="button">
                                     <x-heroicon-o-check-circle class="w-4 h-4" />
-                                    Mark as Resolved
+                                    Tandai Selesai
                                 </button>
 
                                 {{-- Close Ticket --}}
@@ -390,14 +390,14 @@
                                     type="button"
                                     class="inline-flex items-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition-colors">
                                     <x-heroicon-o-lock-closed class="w-4 h-4" />
-                                    Close Ticket
+                                    Tutup Tiket
                                 </button>
 
                                 {{-- Closed --}}
                                 @elseif ($statusUp === 'CLOSED')
                                 <span class="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] md:text-xs font-bold text-gray-600 bg-gray-100 border border-gray-200 rounded-lg uppercase tracking-wide">
                                     <x-heroicon-o-lock-closed class="w-3 h-3" />
-                                    Closed
+                                    Ditutup
                                 </span>
                                 @endif
 
@@ -410,8 +410,8 @@
             @empty
             <div class="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
                 <x-heroicon-o-document-text class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No tickets found</h3>
-                <p class="mt-1 text-sm text-gray-500">Try adjusting the filters above.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Tiket tidak ditemukan</h3>
+                <p class="mt-1 text-sm text-gray-500">Coba sesuaikan filter di atas.</p>
             </div>
             @endforelse
         </div>

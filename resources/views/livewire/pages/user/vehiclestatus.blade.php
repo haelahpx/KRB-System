@@ -3,7 +3,7 @@
     <div class="bg-[#0a0a0a] rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6" wire:ignore>
         <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
-                Vehicle Booking Status
+                Status Pemesanan Kendaraan
             </h1>
 
             {{-- Navigation Tabs --}}
@@ -14,14 +14,14 @@
                     <a href="{{ route('book-vehicle') }}" wire:navigate
                         class="flex-1 lg:flex-none px-3 md:px-4 py-2 text-sm font-medium text-center
                 {{ request()->routeIs('book-vehicle') ? 'bg-gray-900 text-white' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
-                        Book Vehicle
+                        Pesan Kendaraan
                     </a>
 
                     {{-- Vehicle Status Tab --}}
                     <a href="{{ route('vehiclestatus') }}" wire:navigate
                         class="flex-1 lg:flex-none px-3 md:px-4 py-2 text-sm font-medium text-center
                 {{ request()->routeIs('vehiclestatus') ? 'bg-gray-900 text-white cursor-default' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50' }}">
-                        Vehicle Status
+                        Status Kendaraan
                     </a>
 
                 </div>
@@ -40,7 +40,7 @@
                 <div class="relative md:col-span-1 col-span-1">
                     <input type="text"
                         wire:model.live.debounce.400ms="q"
-                        placeholder="Search purpose / vehicle..."
+                        placeholder="Cari tujuan / kendaraan..."
                         class="w-full px-3 py-2 pl-9 text-sm text-gray-900 placeholder:text-gray-400
                        border border-gray-300 rounded-md
                        focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
@@ -55,7 +55,7 @@
                     <select wire:model.live="vehicleFilter"
                         class="px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md
                        focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                        <option value="">Vehicles</option>
+                        <option value="">Kendaraan</option>
                         @foreach($vehicles as $v)
                         @php $label = $v->name ?? $v->plate_number ?? ('#'.$v->vehicle_id); @endphp
                         <option value="{{ $v->vehicle_id }}">{{ $label }}</option>
@@ -66,9 +66,9 @@
                     <select wire:model.live="sortFilter"
                         class="px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md
                        focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                        <option value="recent">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="nearest">Nearest</option>
+                        <option value="recent">Terbaru</option>
+                        <option value="oldest">Tertua</option>
+                        <option value="nearest">Terdekat</option>
                     </select>
 
                     {{-- Status --}}
@@ -76,13 +76,13 @@
                         class="px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md
                        focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                         <option value="all">Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="on_progress">On Progress</option>
-                        <option value="returned">Returned</option>
-                        <option value="rejected">Rejected</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
+                        <option value="pending">Tertunda</option>
+                        <option value="approved">Disetujui</option>
+                        <option value="on_progress">Sedang Berlangsung</option>
+                        <option value="returned">Dikembalikan</option>
+                        <option value="rejected">Ditolak</option>
+                        <option value="completed">Selesai</option>
+                        <option value="cancelled">Dibatalkan</option>
                     </select>
 
                 </div>
@@ -136,7 +136,7 @@
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border animate-pulse
                                 {{ $b->status == 'approved' ? 'bg-green-100 text-green-800 border-green-300' : 'bg-indigo-100 text-indigo-800 border-indigo-300' }}">
                         <x-heroicon-o-arrow-up-tray class="w-3 h-3" />
-                        {{ $b->status == 'approved' ? 'Upload Before Photo' : 'Upload After Photo' }}
+                        {{ $b->status == 'approved' ? 'Unggah Foto Sebelumnya' : 'Unggah Foto Sesudahnya' }}
                     </span>
                 </div>
                 @endif
@@ -144,7 +144,7 @@
                 <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-3">
                     <div class="flex-1 min-w-0">
                         <h3 class="text-lg font-bold text-gray-900 mb-2 truncate group-hover:text-blue-600 transition-colors">
-                            {{ $b->purpose ? ucfirst($b->purpose) : 'Vehicle Booking' }}
+                            {{ $b->purpose ? ucfirst($b->purpose) : 'Pemesanan Kendaraan' }}
                         </h3>
 
                         <div class="flex flex-wrap items-center gap-2 text-xs">
@@ -185,25 +185,25 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 mb-4 pt-3 border-t border-dashed border-gray-200">
                     @if(!empty($b->borrower_name))
                     <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Borrower</span>
+                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Peminjam</span>
                         <span class="text-sm text-gray-900 font-medium">{{ $b->borrower_name }}</span>
                     </div>
                     @endif
                     @if(!empty($b->destination))
                     <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Destination</span>
+                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Tujuan</span>
                         <span class="text-sm text-gray-900 font-medium truncate">{{ $b->destination }}</span>
                     </div>
                     @endif
                     @if(isset($b->odd_even_area))
                     <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Odd/Even Area</span>
+                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Area Ganjil/Genap</span>
                         <span class="text-sm text-gray-900 font-medium">{{ ucfirst($b->odd_even_area) }}</span>
                     </div>
                     @endif
                     @if(!empty($b->purpose_type))
                     <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Type</span>
+                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Jenis</span>
                         <span class="text-sm text-gray-900 font-medium">{{ ucfirst($b->purpose_type) }}</span>
                     </div>
                     @endif
@@ -214,7 +214,7 @@
                 <div class="mb-4 rounded-lg border border-red-200 bg-red-50 p-3">
                     <div class="text-xs font-bold text-red-800 inline-flex items-center gap-1 mb-1">
                         <x-heroicon-o-exclamation-circle class="w-4 h-4" />
-                        Rejection Reason
+                        Alasan Penolakan
                     </div>
                     <div class="text-sm text-red-700">{{ $b->notes }}</div>
                 </div>
@@ -222,7 +222,7 @@
                 <div class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
                     <div class="text-xs font-bold text-gray-600 inline-flex items-center gap-1 mb-1">
                         <x-heroicon-o-chat-bubble-left-ellipsis class="w-4 h-4" />
-                        Note
+                        Catatan
                     </div>
                     <div class="text-sm text-gray-700">{{ $b->notes }}</div>
                 </div>
@@ -231,25 +231,25 @@
                 {{-- Footer (Photos & Dates) --}}
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-gray-100">
                     <div class="flex items-center gap-2">
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200" title="Before Photos">
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200" title="Foto Sebelumnya">
                             <x-heroicon-o-camera class="w-3.5 h-3.5" />
-                            Before: {{ $beforeC }}
+                            Sebelumnya: {{ $beforeC }}
                         </span>
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200" title="After Photos">
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200" title="Foto Sesudahnya">
                             <x-heroicon-o-camera class="w-3.5 h-3.5" />
-                            After: {{ $afterC }}
+                            Sesudahnya: {{ $afterC }}
                         </span>
                     </div>
 
                     <div class="text-[10px] text-gray-400 flex items-center gap-3">
                         <div class="flex items-center gap-1">
                             <x-heroicon-o-pencil-square class="w-3 h-3" />
-                            Created {{ optional($b->created_at)->format('d M Y') }}
+                            Dibuat {{ optional($b->created_at)->format('d M Y') }}
                         </div>
                         @if($b->updated_at != $b->created_at)
                         <div class="flex items-center gap-1">
                             <x-heroicon-o-arrow-path class="w-3 h-3" />
-                            Updated {{ optional($b->updated_at)->diffForHumans() }}
+                            Diperbarui {{ optional($b->updated_at)->diffForHumans() }}
                         </div>
                         @endif
                     </div>
@@ -258,8 +258,8 @@
             @empty
             <div class="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
                 <x-heroicon-o-truck class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No bookings found</h3>
-                <p class="mt-1 text-sm text-gray-500">Try adjusting the filters above.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Tidak ada pemesanan ditemukan</h3>
+                <p class="mt-1 text-sm text-gray-500">Coba sesuaikan filter di atas.</p>
             </div>
             @endforelse
         </div>

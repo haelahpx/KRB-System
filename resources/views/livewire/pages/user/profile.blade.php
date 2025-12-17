@@ -18,7 +18,7 @@
     <div class="bg-[#0a0a0a] rounded-xl shadow-sm border-2 border-black p-4 md:p-6 mb-4 md:mb-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <h1 class="text-xl md:text-2xl font-bold text-white text-center lg:text-left whitespace-nowrap">
-                User Profile
+                Profil Pengguna
             </h1>
 
             {{-- Back to Home --}}
@@ -29,7 +29,7 @@
 
                 {{-- House Icon --}}
                 <x-heroicon-o-home class="w-4 h-4" />
-                Back to Home
+                Kembali ke Beranda
             </a>
         </div>
     </div>
@@ -52,49 +52,49 @@
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                             </span>
-                            <span class="text-xs font-bold text-green-700 uppercase tracking-wide">Active Now</span>
+                            <span class="text-xs font-bold text-green-700 uppercase tracking-wide">Aktif Sekarang</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-6 border-b border-gray-100 pb-4">
-                    <h3 class="text-lg font-bold text-gray-900">Personal Information</h3>
-                    <p class="text-sm text-gray-500">Manage your personal information, including phone numbers and email address.</p>
+                    <h3 class="text-lg font-bold text-gray-900">Informasi Pribadi</h3>
+                    <p class="text-sm text-gray-500">Kelola informasi pribadi Anda, termasuk nomor telepon dan alamat email.</p>
                 </div>
 
                 <div class="space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Full Name</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Nama Lengkap</label>
                             <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg" x-text="profile.fullName"></div>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Email Address</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Alamat Email</label>
                             <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg" x-text="profile.email"></div>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Phone Number</label>
-                            <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg" x-text="profile.phone_number || 'Not provided'"></div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Nomor Telepon</label>
+                            <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg" x-text="profile.phone_number || 'Tidak disediakan'"></div>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Employee ID</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">ID Karyawan</label>
                             <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg" x-text="profile.employeeId || '-'"></div>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Department</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Departemen</label>
                             <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-2">
                                 <x-heroicon-o-building-office-2 class="w-4 h-4 text-gray-400" />
                                 <span x-text="profile.department"></span>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Branch</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Cabang</label>
                             <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-2">
                                 <x-heroicon-o-map-pin class="w-4 h-4 text-gray-400" />
                                 <span x-text="profile.company"></span>
@@ -104,14 +104,14 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Role</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Peran</label>
                             <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-2">
                                 <x-heroicon-o-shield-check class="w-4 h-4 text-gray-400" />
                                 <span x-text="profile.role || '-'"></span>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Join Date</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Tanggal Bergabung</label>
                             <div class="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-2">
                                 <x-heroicon-o-calendar class="w-4 h-4 text-gray-400" />
                                 <span x-text="profile.joinDate || '-'"></span>
@@ -125,15 +125,15 @@
         <div class="lg:col-span-1 space-y-6">
             <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
                 <div class="mb-4 border-b border-gray-100 pb-4">
-                    <h2 class="text-lg font-bold text-gray-900">Change Password</h2>
-                    <p class="text-xs text-gray-500 mt-1">Use a secure password to protect your account.</p>
+                    <h2 class="text-lg font-bold text-gray-900">Ubah Sandi</h2>
+                    <p class="text-xs text-gray-500 mt-1">Gunakan sandi yang aman untuk melindungi akun Anda.</p>
                 </div>
 
                 <div x-show="passwordSuccess" x-transition
                     class="mb-4 p-3 bg-emerald-50 text-emerald-700 text-sm rounded-lg border border-emerald-200 flex items-center gap-2"
                     style="display:none;">
                     <x-heroicon-o-check-circle class="w-5 h-5" />
-                    Password updated successfully!
+                    Sandi berhasil diperbarui!
                 </div>
 
                 @error('current_password')
@@ -149,27 +149,27 @@
 
                 <form wire:submit.prevent="updatePassword" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-900 mb-1.5">Current Password</label>
+                        <label class="block text-xs font-medium text-gray-900 mb-1.5">Sandi Saat Ini</label>
                         <input type="password" wire:model.defer="current_password" autocomplete="current-password" required
                             class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-gray-900 mb-1.5">New Password</label>
+                        <label class="block text-xs font-medium text-gray-900 mb-1.5">Sandi Baru</label>
                         <input type="password" wire:model.defer="new_password" autocomplete="new-password" required
                             class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                        <p class="text-[10px] text-gray-500 mt-1">Min. 8 chars, different from current.</p>
+                        <p class="text-[10px] text-gray-500 mt-1">Min. 8 karakter, berbeda dari sandi saat ini.</p>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-gray-900 mb-1.5">Confirm New Password</label>
+                        <label class="block text-xs font-medium text-gray-900 mb-1.5">Konfirmasi Sandi Baru</label>
                         <input type="password" wire:model.defer="new_password_confirmation" autocomplete="new-password" required
                             class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
 
                     <button type="submit" class="w-full px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors flex justify-center items-center gap-2" wire:loading.attr="disabled">
-                        <span wire:loading.remove>Change Password</span>
-                        <span wire:loading>Processing...</span>
+                        <span wire:loading.remove>Ubah Sandi</span>
+                        <span wire:loading>Memproses...</span>
                     </button>
                 </form>
             </div>
@@ -177,12 +177,12 @@
             <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4 md:p-5">
                 <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <x-heroicon-o-chart-bar class="w-5 h-5" />
-                    Account Summary
+                    Ringkasan Akun
                 </h3>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center py-2 border-b border-dashed border-gray-200">
                         <span class="text-sm text-gray-600 flex items-center gap-2">
-                            <x-heroicon-o-ticket class="w-4 h-4" /> Total Tickets
+                            <x-heroicon-o-ticket class="w-4 h-4" /> Total Tiket
                         </span>
                         <span class="text-sm font-bold text-yellow-600 bg-yellow-50 px-2 py-0.5 rounded"
                             x-text="stats.totalTickets"></span>
@@ -190,7 +190,7 @@
 
                     <div class="flex justify-between items-center py-2 border-b border-dashed border-gray-200">
                         <span class="text-sm text-gray-600 flex items-center gap-2">
-                            <x-heroicon-o-calendar-days class="w-4 h-4" /> Total Book Rooms
+                            <x-heroicon-o-calendar-days class="w-4 h-4" /> Total Pemesanan Ruangan
                         </span>
                         <span class="text-sm font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded"
                             x-text="stats.totalBookRooms"></span>
@@ -198,7 +198,7 @@
 
                     <div class="flex justify-between items-center py-2 border-b border-dashed border-gray-200">
                         <span class="text-sm text-gray-600 flex items-center gap-2">
-                            <x-heroicon-o-cube class="w-4 h-4" /> Total Book Vehicle
+                            <x-heroicon-o-cube class="w-4 h-4" /> Total Pemesanan Kendaraan
                         </span>
                         <span class="text-sm font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded"
                             x-text="stats.totalBookVehicle"></span>
@@ -206,7 +206,7 @@
 
                     <div class="flex justify-between items-center py-2">
                         <span class="text-sm text-gray-600 flex items-center gap-2">
-                            <x-heroicon-o-clock class="w-4 h-4" /> Member Since
+                            <x-heroicon-o-clock class="w-4 h-4" /> Anggota Sejak
                         </span>
                         <span class="text-xs font-bold text-gray-900 uppercase tracking-wide"
                             x-text="stats.memberSince"></span>

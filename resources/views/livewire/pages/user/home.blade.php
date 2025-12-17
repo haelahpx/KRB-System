@@ -45,29 +45,29 @@
                                     class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center border border-zinc-700">
                                     <x-heroicon-o-briefcase class="w-4 h-4 text-white" />
                                 </div>
-                                <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Agent Console</span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Konsol Agen</span>
                             </div>
 
                             <div class="space-y-4">
                                 {{-- Queue Counter --}}
                                 <div class="p-3 rounded-xl bg-zinc-900 border border-zinc-800">
-                                    <p class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-1">Dept. Queue
+                                    <p class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-1">Antrian Dept
                                     </p>
                                     <div class="flex items-end gap-2">
                                         <span
                                             class="text-4xl font-black text-white tracking-tighter">{{ $agentQueueCount }}</span>
-                                        <span class="text-xs text-zinc-500 mb-1">Waiting</span>
+                                        <span class="text-xs text-zinc-500 mb-1">Menunggu</span>
                                     </div>
                                 </div>
 
                                 {{-- Claim Counter --}}
                                 <div class="p-3 rounded-xl bg-zinc-900 border border-zinc-800">
-                                    <p class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider mb-1">My Active
-                                        Tasks</p>
+                                    <p class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider mb-1">Tugas Aktif
+                                        Saya</p>
                                     <div class="flex items-end gap-2">
                                         <span
                                             class="text-4xl font-black text-white tracking-tighter">{{ $agentClaimCount }}</span>
-                                        <span class="text-xs text-zinc-500 mb-1">Processing</span>
+                                        <span class="text-xs text-zinc-500 mb-1">Diproses</span>
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
 
                         <a href="{{ route('user.ticket.queue') }}"
                             class="mt-2 w-full py-3 text-white text-xs font-black uppercase tracking-wider hover:text-blue-600 rounded transition text-center flex items-center justify-center gap-2">
-                            Go to Workspace <x-heroicon-m-arrow-right class="w-3 h-3" />
+                            Ke Workspace <x-heroicon-m-arrow-right class="w-3 h-3" />
                         </a>
                     </div>
 
@@ -83,7 +83,7 @@
                     <div class="w-full md:w-[60%] bg-white p-6 flex flex-col">
                         <div class="flex justify-between items-center mb-4">
                             <div>
-                                <h2 class="text-lg font-bold text-black">Incoming Queue</h2>
+                                <h2 class="text-lg font-bold text-black">Antrian Masuk</h2>
                                 <p class="text-xs text-zinc-500">Tiket terbaru yang perlu ditangani.</p>
                             </div>
                             <span
@@ -142,14 +142,14 @@
                                     class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center border border-zinc-700">
                                     <x-heroicon-o-ticket class="w-4 h-4 text-white" />
                                 </div>
-                                <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">My Summary</span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Ringkasan Saya</span>
                             </div>
 
                             <div class="text">
                                 <p class="text-5xl font-black text-white tracking-tighter">
                                     {{ $totalTickets ?? 0 }}
                                 </p>
-                                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mt-1">Total Submitted
+                                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mt-1">Total Dikirim
                                 </p>
                             </div>
                         </div>
@@ -158,11 +158,11 @@
                             <a href="{{ route('create-ticket') }}"
                                 class="w-full py-3 bg-white text-black text-xs font-black uppercase tracking-wider rounded hover:bg-zinc-200 transition text-center flex items-center justify-center gap-2">
                                 <x-heroicon-m-plus class="w-3 h-3" />
-                                Create New
+                                Buat Baru
                             </a>
                             <a href="{{ route('ticketstatus') }}"
                                 class="w-full py-3 bg-zinc-900 text-zinc-400 border border-zinc-800 text-xs font-bold uppercase tracking-wider rounded hover:bg-zinc-800 hover:text-white transition text-center block">
-                                View All List
+                                Lihat Semua
                             </a>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                                     <span
                                         class="text-2xl font-black text-zinc-900 group-hover/stat:text-blue-700">{{ $ticketsOpen ?? 0 }}</span>
                                     <span
-                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover/stat:text-blue-400">Open</span>
+                                    <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover/stat:text-blue-400">Buka</span>
                                 </a>
                                 {{-- ON PROCESS --}}
                                 <a href="{{ route('ticketstatus', ['statusFilter' => 'IN_PROGRESS']) }}"
@@ -193,8 +193,8 @@
                                     <span
                                         class="text-2xl font-black text-zinc-900 group-hover/stat:text-yellow-700">{{ $ticketsProgress ?? 0 }}</span>
                                     <span
-                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover/stat:text-yellow-500">On
-                                        Process</span>
+                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover/stat:text-yellow-500">Dalam
+                                        Proses</span>
                                 </a>
                                 {{-- RESOLVED --}}
                                 <a href="{{ route('ticketstatus', ['statusFilter' => 'RESOLVED']) }}"
@@ -206,7 +206,7 @@
                                     <span
                                         class="text-2xl font-black text-zinc-900 group-hover/stat:text-green-700">{{ $ticketsResolved ?? 0 }}</span>
                                     <span
-                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover/stat:text-green-500">Resolved</span>
+                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover/stat:text-green-500">Selesai</span>
                                 </a>
                                 {{-- CLOSED --}}
                                 <a href="{{ route('ticketstatus', ['statusFilter' => 'CLOSED']) }}"
@@ -218,7 +218,7 @@
                                     <span
                                         class="text-2xl font-black text-zinc-900 group-hover/stat:text-black">{{ $ticketsClosed ?? 0 }}</span>
                                     <span
-                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover/stat:text-zinc-600">Closed</span>
+                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover/stat:text-zinc-600">Ditutup</span>
                                 </a>
                             </div>
                         </div>
@@ -254,8 +254,8 @@
                 <div class="p-6 flex flex-col h-full relative">
                     {{-- Copy Feedback --}}
                     <div id="copy-feedback" class="absolute top-1/2 left-0 right-0 flex justify-center opacity-0 translate-y-4 transition-all duration-300 pointer-events-none z-20">
-                         <span class="bg-zinc-900 text-white text-xs font-bold px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
-                            <x-heroicon-s-check-circle class="w-4 h-4 text-green-400"/> Copied!
+                            <span class="bg-zinc-900 text-white text-xs font-bold px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
+                            <x-heroicon-s-check-circle class="w-4 h-4 text-green-400"/> Disalin!
                          </span>
                     </div>
 
@@ -267,7 +267,7 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold text-zinc-900 leading-none">Wifi</h3>
-                                <p class="text-[10px] font-bold text-zinc-400 uppercase mt-1">Access</p>
+                                <p class="text-[10px] font-bold text-zinc-400 uppercase mt-1">Akses</p>
                             </div>
                         </div>
                         
@@ -305,7 +305,7 @@
                                     <div class="space-y-3">
                                         {{-- SSID --}}
                                         <div class="p-3 rounded-xl bg-zinc-50 border border-zinc-100 group-hover:border-yellow-200 transition-colors">
-                                            <p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">SSID</p>
+                                            <p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">Nama Jaringan</p>
                                             <p class="text-sm font-bold text-zinc-900 font-mono tracking-wide" x-text="wifi.ssid"></p>
                                         </div>
 
@@ -313,7 +313,7 @@
                                         <div class="group/pass p-3 rounded-xl bg-zinc-50 border border-zinc-100 group-hover:border-yellow-200 transition-colors flex justify-between items-center cursor-pointer"
                                              @click="copy(wifi.password)">
                                             <div>
-                                                <p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">Password</p>
+                                                <p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">Sandi</p>
                                                 <p class="text-sm font-bold text-zinc-900 font-mono tracking-wide" x-text="wifi.password"></p>
                                             </div>
                                             <button class="text-zinc-300 group-hover/pass:text-yellow-600 transition">
@@ -329,7 +329,7 @@
                         <template x-if="wifis.length === 0">
                              <div class="text-center py-8 border-2 border-dashed border-zinc-100 rounded-xl bg-zinc-50/50">
                                 <x-heroicon-o-signal-slash class="w-8 h-8 text-zinc-300 mx-auto mb-2"/>
-                                <p class="text-xs text-zinc-400 font-medium">No Wifi Configured</p>
+                                <p class="text-xs text-zinc-400 font-medium">Tidak Ada Wifi yang Dikonfigurasi</p>
                             </div>
                         </template>
                     </div>
@@ -361,9 +361,9 @@
                                 <x-heroicon-o-lifebuoy class="w-6 h-6" />
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold text-black leading-none">Support</h3>
+                                <h3 class="text-lg font-bold text-black leading-none">Dukungan</h3>
                                 <div class="flex items-center gap-2 mt-1">
-                                    <p class="text-[10px] font-bold text-zinc-400 uppercase">Center</p>
+                                    <p class="text-[10px] font-bold text-zinc-400 uppercase">Pusat</p>
                                     {{-- Visual feedback update --}}
                                     <span
                                         class="text-[9px] text-zinc-300 bg-zinc-50 px-1 rounded font-mono border border-zinc-100 animate-pulse">
@@ -383,14 +383,14 @@
 
                     {{-- System Health Monitor --}}
                     <div class="bg-zinc-50 rounded-xl p-3 border border-zinc-100 mb-4 space-y-2">
-                        <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">Live System
-                            Health</p>
+                        <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">Kesehatan Sistem
+                            Live</p>
 
                         {{-- Server --}}
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-2">
                                 <x-heroicon-s-server class="w-3.5 h-3.5 text-zinc-400" />
-                                <span class="text-xs font-bold text-zinc-600">Main Server</span>
+                                <span class="text-xs font-bold text-zinc-600">Server Utama</span>
                             </div>
                             <span
                                 class="text-[10px] font-bold px-1.5 py-0.5 rounded {{ $serverStatus === 'OK' ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100' }}">
@@ -402,7 +402,7 @@
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-2">
                                 <x-heroicon-s-circle-stack class="w-3.5 h-3.5 text-zinc-400" />
-                                <span class="text-xs font-bold text-zinc-600">Database</span>
+                                <span class="text-xs font-bold text-zinc-600">Basis Data</span>
                             </div>
                             <span
                                 class="text-[10px] font-bold px-1.5 py-0.5 rounded {{ $dbStatus === 'OK' ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100' }}">
@@ -414,7 +414,7 @@
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-2">
                                 <x-heroicon-s-globe-alt class="w-3.5 h-3.5 text-zinc-400" />
-                                <span class="text-xs font-bold text-zinc-600">Network</span>
+                                <span class="text-xs font-bold text-zinc-600">Jaringan</span>
                             </div>
                             {{-- Variabel $networkColor dikirim dari PHP (Home.php) --}}
                             <span class="text-[10px] font-bold px-1.5 py-0.5 rounded {{ $networkColor }}">
@@ -430,14 +430,14 @@
                             <x-heroicon-o-bug-ant
                                 class="w-6 h-6 text-zinc-400 group-hover/btn:text-red-600 mb-1 transition-colors" />
                             <span
-                                class="text-[10px] font-black uppercase text-zinc-600 group-hover/btn:text-red-700">Report<br>Bug</span>
+                                class="text-[10px] font-black uppercase text-zinc-600 group-hover/btn:text-red-700">Laporkan<br>Bug</span>
                         </a>
                         <a href="mailto:support@krbs.id"
                             class="flex flex-col items-center justify-center p-3 rounded-xl border-2 border-dashed border-zinc-200 hover:border-black hover:bg-zinc-50 transition group/btn text-center">
                             <x-heroicon-o-wrench-screwdriver
                                 class="w-6 h-6 text-zinc-400 group-hover/btn:text-black mb-1 transition-colors" />
                             <span
-                                class="text-[10px] font-black uppercase text-zinc-600 group-hover/btn:text-black">IT<br>Support</span>
+                                class="text-[10px] font-black uppercase text-zinc-600 group-hover/btn:text-black">Dukungan<br>IT</span>
                         </a>
                     </div>
 
@@ -450,7 +450,7 @@
                 <div class="relative h-full w-full p-6 flex flex-col">
                     <div class="flex items-center gap-3 mb-4 pb-4 border-b-2 border-red-100">
                         <x-heroicon-o-megaphone class="w-6 h-6 text-red-600" />
-                        <h3 class="text-base font-bold text-black">Announcement</h3>
+                        <h3 class="text-base font-bold text-black">Pengumuman</h3>
                     </div>
                     <div class="flex-1 overflow-y-auto custom-scroll pr-2 space-y-4">
                         @forelse ($announcements as $a)
@@ -473,7 +473,7 @@
                 <div class="relative h-full w-full p-6 flex flex-col">
                     <div class="flex items-center gap-3 mb-4 pb-4 border-b-2 border-yellow-100">
                         <x-heroicon-o-information-circle class="w-6 h-6 text-yellow-500" />
-                        <h3 class="text-base font-bold text-black">Information</h3>
+                        <h3 class="text-base font-bold text-black">Informasi</h3>
                     </div>
                     <div class="flex-1 overflow-y-auto custom-scroll pr-2 space-y-3">
                         @forelse ($informations as $info)
@@ -507,7 +507,7 @@
                         KRBS System
                     </span>
                     <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
-                        Welcome Back, <br>
+                        Selamat Datang Kembali, <br>
                         <span class="text-yellow-400">{{ $this->getUserName() }}</span>
                     </h1>
                     <p class="text-zinc-400 max-w-md leading-relaxed mb-8 font-medium">
@@ -516,11 +516,11 @@
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a href="{{ route('profile') }}"
                             class="px-6 py-3 bg-white text-black rounded-lg text-sm font-bold hover:bg-zinc-200 transition uppercase tracking-wider justify-center flex items-center gap-2">
-                            View Profile
+                            Lihat Profil
                         </a>
                         <button
                             class="px-6 py-3 bg-transparent text-yellow-400 border-2 border-yellow-400 rounded-lg text-sm font-bold hover:bg-yellow-400 hover:text-black transition uppercase tracking-wider">
-                            Documentation
+                            Dokumentasi
                         </button>
                     </div>
                 </div>
