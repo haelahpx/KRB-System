@@ -2,7 +2,6 @@
     @php
         $card   = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden';
         $head   = 'bg-gradient-to-r from-gray-900 to-black';
-        $hpad   = 'px-6 py-5';
         $label  = 'block text-sm font-medium text-gray-700 mb-2';
         $input  = 'w-full h-10 px-3 rounded-lg border border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
         $btnBlk = 'px-3 py-2 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition';
@@ -76,7 +75,9 @@
                         <select class="{{ $input }}" wire:model.defer="storageId" wire:key="storage-select">
                             <option value="">Pilih penyimpanan…</option>
                             @foreach($storages as $s)
-                                <option wire:key="storage-{{ $s['id'] }}" value="{{ $s['id'] }}">{{ $s['name'] }}</option>
+                                <option wire:key="storage-{{ $s['id'] }}" value="{{ $s['id'] }}">
+                                    {{ $s['name'] }}
+                                </option>
                             @endforeach
                         </select>
                         @error('storageId') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
@@ -99,7 +100,9 @@
                             <select class="{{ $input }}" wire:model.live="departmentId" wire:key="dept-select">
                                 <option value="">Pilih departemen…</option>
                                 @foreach($departments as $d)
-                                    <option wire:key="dept-{{ $d['id'] }}" value="{{ $d['id'] }}">{{ $d['name'] }}</option>
+                                    <option wire:key="dept-{{ $d['id'] }}" value="{{ $d['id'] }}">
+                                        {{ $d['name'] }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('departmentId') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
@@ -126,6 +129,7 @@
                                     @endforeach
                                 @endif
                             </select>
+
                             @error('userId') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -152,7 +156,6 @@
                     <label class="{{ $label }}">Bukti Foto (opsional)</label>
 
                     <div class="space-y-3">
-                        {{-- upload biasa (galeri / file explorer) --}}
                         <input
                             id="photo-input"
                             type="file"
@@ -163,7 +166,6 @@
                         >
                         @error('photo') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
 
-                        {{-- tombol khusus kamera (laptop / PC / HP) --}}
                         <button
                             type="button"
                             id="open-camera-btn"
@@ -172,7 +174,6 @@
                             Ambil dari kamera
                         </button>
 
-                        {{-- preview --}}
                         @if ($photo)
                             <div class="mt-2">
                                 <p class="text-xs text-gray-500 mb-1">Preview bukti:</p>
@@ -200,9 +201,9 @@
         </div>
     </div>
 
-    {{-- MODAL KAMERA (untuk laptop/PC & HP) --}}
+    {{-- MODAL KAMERA --}}
     <div id="camera-modal"
-         wire:ignore   {{-- penting: Livewire jangan utak-atik modal ini --}}
+         wire:ignore
          class="fixed inset-0 bg-black/60 z-50 items-center justify-center p-4 hidden">
         <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden">
             <div class="bg-gray-900 text-white px-4 py-3 flex items-center justify-between">
@@ -231,14 +232,9 @@
         </div>
     </div>
 
-    {{-- JS kamera + DEBUG LOGS --}}
     <script>
         (function () {
-            console.log('[DocPackForm] <script> tag evaluated');
-
             function initCameraScript() {
-                console.log('[DocPackForm] initCameraScript called');
-
                 let stream = null;
 
                 const openBtn   = document.getElementById('open-camera-btn');
@@ -248,52 +244,28 @@
                 const captureBtn= document.getElementById('capture-btn');
                 const fileInput = document.getElementById('photo-input');
 
-                console.log('[DocPackForm] DOM lookup:', {
-                    openBtn: !!openBtn,
-                    modal: !!modal,
-                    closeBtn: !!closeBtn,
-                    video: !!video,
-                    captureBtn: !!captureBtn,
-                    fileInput: !!fileInput,
-                });
-
-                if (!openBtn || !modal || !video || !captureBtn || !fileInput || !closeBtn) {
-                    console.warn('[DocPackForm] Some elements not found, aborting initCameraScript');
-                    return;
-                }
+                if (!openBtn || !modal || !video || !captureBtn || !fileInput || !closeBtn) return;
 
                 async function openCamera() {
-                    console.log('[DocPackForm] openCamera() called');
-
                     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                        console.error('[DocPackForm] navigator.mediaDevices.getUserMedia NOT available');
                         alert('Browser tidak mendukung kamera (getUserMedia tidak tersedia).');
                         return;
                     }
 
                     try {
-                        console.log('[DocPackForm] Requesting getUserMedia...');
                         stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                        console.log('[DocPackForm] getUserMedia SUCCESS, stream tracks:', stream.getTracks().length);
                         video.srcObject = stream;
-                        video.play().then(() => {
-                            console.log('[DocPackForm] video.play() resolved');
-                        }).catch((e) => {
-                            console.error('[DocPackForm] video.play() error:', e);
-                        });
+                        await video.play();
+
                         modal.classList.remove('hidden');
                         modal.classList.add('flex');
-                        console.log('[DocPackForm] camera modal shown');
                     } catch (e) {
-                        console.error('[DocPackForm] getUserMedia ERROR:', e);
                         alert('Gagal mengakses kamera. Cek izin browser & HTTPS / localhost.');
                     }
                 }
 
                 function closeCamera() {
-                    console.log('[DocPackForm] closeCamera() called');
                     if (stream) {
-                        console.log('[DocPackForm] stopping stream tracks');
                         stream.getTracks().forEach(t => t.stop());
                         stream = null;
                     }
@@ -302,70 +274,36 @@
                     modal.classList.remove('flex');
                 }
 
-                // Attach listeners
-                openBtn.addEventListener('click', () => {
-                    console.log('[DocPackForm] open-camera-btn CLICK');
-                    openCamera();
-                });
-
-                closeBtn.addEventListener('click', () => {
-                    console.log('[DocPackForm] close-camera-btn CLICK');
-                    closeCamera();
-                });
+                openBtn.addEventListener('click', openCamera);
+                closeBtn.addEventListener('click', closeCamera);
 
                 captureBtn.addEventListener('click', () => {
-                    console.log('[DocPackForm] capture-btn CLICK');
-                    if (!stream) {
-                        console.warn('[DocPackForm] No stream when capture clicked');
-                        return;
-                    }
+                    if (!stream) return;
 
                     const canvas = document.createElement('canvas');
                     canvas.width  = video.videoWidth  || 640;
                     canvas.height = video.videoHeight || 480;
-                    console.log('[DocPackForm] capture canvas size:', canvas.width, canvas.height);
 
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                     canvas.toBlob((blob) => {
-                        if (!blob) {
-                            console.error('[DocPackForm] canvas.toBlob returned null blob');
-                            return;
-                        }
-
-                        console.log('[DocPackForm] canvas.toBlob OK, size:', blob.size);
+                        if (!blob) return;
 
                         const file = new File([blob], 'camera-photo.png', { type: 'image/png' });
                         const dt = new DataTransfer();
                         dt.items.add(file);
 
                         fileInput.files = dt.files;
-                        console.log('[DocPackForm] fileInput.files set from camera, dispatching change event');
                         fileInput.dispatchEvent(new Event('change', { bubbles: true }));
 
                         closeCamera();
                     }, 'image/png');
                 });
-
-                // Optional: log setiap Livewire re-render
-                if (window.Livewire) {
-                    Livewire.hook('message.processed', () => {
-                        console.log('[DocPackForm] Livewire message.processed (poll re-render)');
-                    });
-                }
             }
 
-            // Try to init on both events, for safety
-            document.addEventListener('DOMContentLoaded', () => {
-                console.log('[DocPackForm] DOMContentLoaded');
-                initCameraScript();
-            });
-
-            document.addEventListener('livewire:load', () => {
-                console.log('[DocPackForm] livewire:load');
-                initCameraScript();
-            });
+            document.addEventListener('DOMContentLoaded', initCameraScript);
+            document.addEventListener('livewire:load', initCameraScript);
         })();
     </script>
 </div>

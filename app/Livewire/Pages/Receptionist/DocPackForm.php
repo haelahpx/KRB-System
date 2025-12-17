@@ -19,22 +19,24 @@ class DocPackForm extends Component
 {
     use WithFileUploads;
 
-    public string $direction = 'taken'; // taken | deliver
-    public string $itemType = 'package'; // package | document
+    public string $direction = 'taken';   // taken | deliver
+    public string $itemType  = 'package'; // package | document
 
-    public ?int $departmentId = null;
-    public ?int $userId = null;
-    public string $senderText = '';
+    // NOTE: jangan strict int untuk menghindari TypeError dari select (string)
+    public $departmentId = null; // departments.department_id
+    public $userId       = null; // users.user_id
+    public $storageId    = null; // storages.storage_id
+
+    public string $senderText   = '';
     public string $receiverText = '';
-    public ?int $storageId = null;
-    public string $itemName = '';
+    public string $itemName     = '';
 
     /** Bukti foto (upload / kamera) */
     public $photo = null;
 
     /** Dropdown Data */
     public array $departments = [];
-    public array $users = [];
+    public array $users = [];     // [user_id => full_name]
     public array $storages = [];
 
     protected function rules(): array
@@ -42,10 +44,13 @@ class DocPackForm extends Component
         $base = [
             'direction'    => ['required', 'in:taken,deliver'],
             'itemType'     => ['required', 'in:package,document'],
+
+            // FIX: sesuai struktur tabel kamu
             'storageId'    => ['required', 'integer', 'exists:storages,storage_id'],
             'itemName'     => ['required', 'string', 'max:255'],
-            'departmentId' => ['required', 'integer'],
-            'userId'       => ['required', 'integer'],
+            'departmentId' => ['required', 'integer', 'exists:departments,department_id'],
+            'userId'       => ['required', 'integer', 'exists:users,user_id'],
+
             'photo'        => ['nullable', 'image', 'max:2048'], // 2MB
         ];
 
@@ -71,6 +76,11 @@ class DocPackForm extends Component
             ->orderBy('name')
             ->get(['storage_id as id', 'name'])
             ->toArray();
+
+        // optional: kalau departmentId sudah ke-set (misal dari old state), load users
+        if ($this->departmentId) {
+            $this->loadUsers();
+        }
     }
 
     public function updatedDepartmentId(): void
@@ -88,8 +98,9 @@ class DocPackForm extends Component
             return;
         }
 
+        // FIX: PK users adalah user_id (sesuai screenshot)
         $this->users = User::where('company_id', $companyId)
-            ->where('department_id', $this->departmentId)
+            ->where('department_id', (int) $this->departmentId)
             ->orderBy('full_name')
             ->pluck('full_name', 'user_id')
             ->toArray();
@@ -110,11 +121,14 @@ class DocPackForm extends Component
 
         $now = Carbon::now('Asia/Jakarta');
 
+        // FIX: jangan whereKey(), karena defaultnya cari kolom id
+        $selectedUserName = User::where('user_id', (int) $this->userId)->value('full_name') ?? '—';
+
         if ($this->direction === 'taken') {
-            $receiver = User::whereKey($this->userId)->value('full_name') ?? '—';
+            $receiver = $selectedUserName;
             $sender   = $this->senderText;
         } else {
-            $sender   = User::whereKey($this->userId)->value('full_name') ?? '—';
+            $sender   = $selectedUserName;
             $receiver = $this->receiverText;
         }
 
@@ -126,28 +140,27 @@ class DocPackForm extends Component
             $filename = 'delivery_' . $now->format('Ymd_His') . '_' . uniqid() . '.' . $ext;
 
             $publicDir = public_path('images/deliveries');
-
             if (!is_dir($publicDir)) {
                 mkdir($publicDir, 0755, true);
             }
 
             $this->photo->move($publicDir, $filename);
-
             $imagePath = 'images/deliveries/' . $filename;
         }
 
         Delivery::create([
             'company_id'      => Auth::user()->company_id,
+            'department_id'   => (int) $this->departmentId,  // ada di tabel deliveries
             'receptionist_id' => Auth::id(),
-            'type'            => $this->itemType,
             'item_name'       => $this->itemName,
-            'storage_id'      => $this->storageId,
+            'type'            => $this->itemType,
             'nama_pengirim'   => $sender,
             'nama_penerima'   => $receiver,
-            'status'          => 'pending',
-            'direction'       => $this->direction,
+            'storage_id'      => (int) $this->storageId,
             'pengambilan'     => null,
             'pengiriman'      => null,
+            'status'          => 'pending',
+            'direction'       => $this->direction,
             'image'           => $imagePath,
             'created_at'      => $now,
             'updated_at'      => $now,
@@ -162,7 +175,10 @@ class DocPackForm extends Component
             'itemName',
             'photo',
         ]);
-        $this->users = [];
+
+        $this->direction = 'taken';
+        $this->itemType  = 'package';
+        $this->users     = [];
 
         $this->dispatch(
             'toast',
