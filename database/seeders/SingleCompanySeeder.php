@@ -37,11 +37,12 @@ class SingleCompanySeeder extends Seeder
             // Get current time for timestamps
             $now = Carbon::now();
 
-            // Define the three requested companies
+            // Define the company list (including Kebun Raya Bogor)
             $companies = [
                 ['Kebun Raya Cibodas', 'krcibodas.id', 'https://tiketkebunraya.id/assets/images/kebun-raya-cibodas.png'],
                 ['Kebun Raya Bali', 'krbali.id', 'https://tiketkebunraya.id/assets/images/kebun-raya-bali.png'],
                 ['Kebun Raya Purwodadi', 'krpurwodadi.id', 'https://tiketkebunraya.id/assets/images/kebun-raya-purwodadi.png'],
+                ['Kebun Raya Bogor', 'krbogor.id', 'https://tiketkebunraya.id/assets/images/kebun-raya-bogor.png'],
             ];
 
             // Default Company (often ID 1) - ensure it exists
