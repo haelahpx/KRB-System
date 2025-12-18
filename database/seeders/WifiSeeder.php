@@ -14,9 +14,10 @@ class WifiSeeder extends Seeder
     public function run(): void
     {
         // Data diambil dari krbs_db.sql
+        // Note: remove explicit primary key values so auto-increment won't conflict.
+        // Use upsert to avoid duplicate-key errors in production (update if exists).
         $wifis = [
             [
-                'wifi_id' => 1,
                 'company_id' => 2, // Kebun Raya Bogor
                 'ssid' => 'KRB_GUEST_FREE',
                 'password' => 'BogorSejuk2025',
@@ -26,7 +27,6 @@ class WifiSeeder extends Seeder
                 'updated_at' => '2025-11-22 12:18:23',
             ],
             [
-                'wifi_id' => 2,
                 'company_id' => 2, // Kebun Raya Bogor
                 'ssid' => 'KRB_STAFF_ONLY',
                 'password' => 'Staff@Bogor123',
@@ -36,7 +36,6 @@ class WifiSeeder extends Seeder
                 'updated_at' => '2025-11-22 12:18:23',
             ],
             [
-                'wifi_id' => 3,
                 'company_id' => 3, // Kebun Raya Bali
                 'ssid' => 'BALI_VISITOR',
                 'password' => 'BaliExotic',
@@ -46,7 +45,6 @@ class WifiSeeder extends Seeder
                 'updated_at' => '2025-11-22 12:18:23',
             ],
             [
-                'wifi_id' => 4,
                 'company_id' => 4, // Kebun Raya Cibodas
                 'ssid' => 'CIBODAS_ADMIN',
                 'password' => 'Cibodas#99',
@@ -57,7 +55,11 @@ class WifiSeeder extends Seeder
             ],
         ];
 
-        // Insert data (menggunakan insert agar ID tetap terjaga)
-        DB::table('wifis')->insert($wifis);
+        // Upsert by `company_id`+`ssid` to insert new rows or update existing ones safely.
+        DB::table('wifis')->upsert(
+            $wifis,
+            ['company_id', 'ssid'],
+            ['password', 'location', 'is_active', 'updated_at']
+        );
     }
 }
