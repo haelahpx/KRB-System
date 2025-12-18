@@ -64,11 +64,6 @@
                             class="h-4 w-4 rounded border-gray-300 text-black focus:ring-gray-800">
                         <span>Remember me</span>
                     </label>
-
-                    <a href="#"
-                        class="text-gray-500 hover:text-gray-800 transition-colors duration-200 text-sm font-medium">
-                        Forgot password?
-                    </a>
                 </div>
 
                 <button type="submit" wire:loading.attr="disabled"

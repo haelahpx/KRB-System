@@ -1,5 +1,8 @@
 <div
-    x-data="{ show: @entangle('isOpen') }"
+    x-data="{ 
+        show: @entangle('isOpen'),
+        isFull: false 
+    }"
     x-show="show"
     x-transition:enter="ease-out duration-300"
     x-transition:enter-start="opacity-0 translate-y-4"
@@ -7,56 +10,68 @@
     x-transition:leave="ease-in duration-200"
     x-transition:leave-start="opacity-100 translate-y-0"
     x-transition:leave-end="opacity-0 translate-y-4"
-    class="fixed inset-0 z-[60]"
+    class="fixed inset-0 z-[60] flex items-end justify-end"
     role="dialog"
     aria-modal="true"
     style="display: none;">
 
     <div
         x-on:click="show = false"
-        class="fixed inset-0 bg-white/5 backdrop-blur-sm transition-opacity">
+        class="fixed inset-0 bg-black/20 backdrop-blur-sm transition-opacity">
     </div>
 
     <div
-        class="fixed bottom-[4.5rem] right-6 w-full max-w-sm h-[70vh] flex flex-col z-[70] shadow-2xl">
+        :class="isFull ? 'fixed inset-0 w-full h-full z-[70]' : 'fixed bottom-20 right-4 left-4 sm:left-auto sm:bottom-[4.5rem] sm:right-6 lg:w-[400px] sm:w-[200px] h-[70vh] max-h-[600px] flex flex-col z-[70]'"
+        class="transition-all duration-300 ease-in-out">
 
-        <div class="relative transform overflow-hidden rounded-lg bg-white text-left w-full h-full flex flex-col border border-gray-200">
+        <div 
+            :class="isFull ? 'rounded-none' : 'rounded-2xl border border-gray-200'"
+            class="relative transform overflow-hidden bg-white text-left w-full h-full flex flex-col shadow-2xl">
 
-            {{-- CHAT HEADER --}}
-            <div class="flex items-center justify-between p-4 bg-black text-white rounded-t-lg shadow-md">
-                <h3 class="text-lg font-semibold leading-6">
+            <div 
+                class="flex items-center justify-between p-4 bg-black text-white shadow-md flex-shrink-0">
+                <h3 class="text-sm sm:text-lg font-semibold leading-6 truncate pr-4">
                     Kebun Raya AI Assistant
                 </h3>
-                <button
-                    type="button"
-                    x-on:click="show = false"
-                    class="text-gray-300 hover:text-white transition">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                <div class="flex items-center gap-3">
+                    <button
+                        type="button"
+                        x-on:click="isFull = !isFull"
+                        class="text-gray-300 hover:text-white transition">
+                        <template x-if="!isFull">
+                            <x-heroicon-o-arrows-pointing-out class="h-5 w-5" />
+                        </template>
+                        <template x-if="isFull">
+                            <x-heroicon-o-arrows-pointing-in class="h-5 w-5" />
+                        </template>
+                    </button>
+
+                    <button
+                        type="button"
+                        x-on:click="show = false"
+                        class="text-gray-300 hover:text-white transition">
+                        <x-heroicon-o-x-mark class="h-6 w-6" />
+                    </button>
+                </div>
             </div>
 
-            {{-- CHAT MESSAGE HISTORY --}}
             <div
-                x-init="Livewire.on('chatUpdated', () => { $el.scrollTop = $el.scrollHeight; })"
+                x-init="Livewire.on('chatUpdated', () => { $nextTick(() => { $el.scrollTop = $el.scrollHeight; }); })"
                 class="flex-grow p-4 overflow-y-auto bg-gray-50 space-y-4">
                 
                 @foreach ($messages as $index => $msg)
                     @if ($index === 0) @continue @endif
 
                     <div class="flex @if ($msg['role'] === 'user') justify-end @endif">
-                        <div class="p-3 rounded-lg max-w-[85%] @if ($msg['role'] === 'user') bg-black text-white @else bg-white border border-gray-200 text-gray-800 shadow-sm @endif">
-                            <p class="text-sm">{!! nl2br(e($msg['text'])) !!}</p>
+                        <div class="p-3 rounded-2xl max-w-[85%] text-sm @if ($msg['role'] === 'user') bg-black text-white rounded-tr-none @else bg-white border border-gray-200 text-gray-800 shadow-sm rounded-tl-none @endif">
+                            <p class="leading-relaxed">{!! nl2br(e($msg['text'])) !!}</p>
                         </div>
                     </div>
                 @endforeach
 
-                {{-- LOADING INDICATOR --}}
                 <div wire:loading wire:target="generateAiResponse">
                     <div class="flex justify-start">
-                        <div class="bg-gray-200 p-3 rounded-lg flex items-center space-x-2">
-                            <span class="text-sm text-gray-600">Asisten sedang memproses...</span>
+                        <div class="bg-gray-200 p-3 rounded-2xl rounded-tl-none flex items-center space-x-2">
                             <div class="flex space-x-1">
                                 <div class="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce"></div>
                                 <div class="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -66,34 +81,32 @@
                     </div>
                 </div>
 
-                {{-- TICKET CONFIRMATION BOX --}}
                 @if ($needsConfirmation)
-                <div class="p-4 bg-white border border-gray-300 rounded-lg space-y-3 my-2 shadow-md animate-in fade-in slide-in-from-bottom-2">
+                <div class="p-4 bg-white border border-gray-300 rounded-xl space-y-3 my-2 shadow-md">
                     <div class="flex items-center gap-2 border-b pb-2">
-                        <span class="text-lg">🎫</span>
-                        <h4 class="font-bold text-sm">Konfirmasi Tiket Otomatis</h4>
+                        <x-heroicon-o-ticket class="h-5 w-5 text-black" />
+                        <h4 class="font-bold text-xs uppercase">Konfirmasi Tiket</h4>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 text-[10px] uppercase tracking-wider font-semibold">
+                    <div class="grid grid-cols-2 gap-2 text-[10px] font-semibold">
                         <div class="bg-gray-50 p-2 rounded border">
-                            <p class="text-gray-400">Departemen</p>
-                            <p class="text-black">
-                                {{ collect($availableDepartments)->firstWhere('department_id', $selectedDepartmentId)['department_name'] ?? 'Pilih Manual' }}
+                            <p class="text-gray-400">Dept</p>
+                            <p class="text-black truncate">
+                                {{ collect($availableDepartments)->firstWhere('department_id', $selectedDepartmentId)['department_name'] ?? '-' }}
                             </p>
                         </div>
                         <div class="bg-gray-50 p-2 rounded border">
-                            <p class="text-gray-400">Prioritas AI</p>
+                            <p class="text-gray-400">Prioritas</p>
                             <p class="{{ $ticketPriority === 'high' ? 'text-red-600' : 'text-blue-600' }}">
                                 {{ strtoupper($ticketPriority) }}
                             </p>
                         </div>
                     </div>
 
-                    <p class="text-xs italic text-gray-500">"{{ $aiReasoning }}"</p>
+                    <p class="text-[11px] italic text-gray-500">"{{ $aiReasoning }}"</p>
 
                     <div class="space-y-1">
-                        <label class="block text-[10px] font-bold text-gray-400 uppercase">Edit Kategori Jika Salah</label>
-                        <select wire:model="selectedDepartmentId" class="w-full text-xs border-gray-200 rounded focus:ring-black">
+                        <select wire:model="selectedDepartmentId" class="w-full text-xs border-gray-200 rounded-lg">
                             @foreach ($availableDepartments as $dept)
                                 <option value="{{ $dept['department_id'] }}">{{ $dept['department_name'] }}</option>
                             @endforeach
@@ -101,10 +114,10 @@
                     </div>
 
                     <div class="flex gap-2">
-                        <button wire:click="confirmTicket" class="flex-1 bg-black text-white py-2 rounded text-xs font-bold hover:bg-gray-800 transition shadow-sm">
+                        <button wire:click="confirmTicket" class="flex-1 bg-black text-white py-2 rounded-lg text-xs font-bold active:scale-95 transition">
                             Buat Tiket
                         </button>
-                        <button wire:click="cancelTicket" class="px-4 py-2 bg-gray-100 text-gray-700 rounded text-xs font-bold hover:bg-gray-200 transition">
+                        <button wire:click="cancelTicket" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold">
                             Batal
                         </button>
                     </div>
@@ -112,28 +125,24 @@
                 @endif
             </div>
 
-            {{-- CHAT INPUT AREA --}}
-            <div class="p-4 border-t border-gray-200 bg-white">
+            <div class="p-4 border-t border-gray-200 bg-white flex-shrink-0">
                 <form wire:submit.prevent="sendMessage">
                     <div class="flex items-center gap-2">
                         <input
                             type="text"
                             wire:model="currentMessage"
-                            placeholder="{{ $needsConfirmation ? 'Konfirmasi tiket di atas...' : 'Ketik detail masalah Anda...' }}"
-                            class="flex-grow border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-1 focus:ring-black focus:border-black transition">
+                            placeholder="Ketik detail masalah..."
+                            class="flex-grow border border-gray-300 rounded-xl p-2.5 text-sm focus:ring-1 focus:ring-black focus:border-black transition">
                         
                         <button
                             type="submit"
                             wire:loading.attr="disabled"
-                            class="bg-black hover:bg-gray-800 text-white p-2.5 rounded-lg transition-all active:scale-95 disabled:opacity-50">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
+                            class="bg-black text-white p-2.5 rounded-xl flex-shrink-0 active:scale-90 transition">
+                            <x-heroicon-o-paper-airplane class="h-5 w-5" />
                         </button>
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 </div>
