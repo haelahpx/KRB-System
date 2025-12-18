@@ -1,0 +1,1259 @@
+{
+    "faq_version": "1.0",
+    "last_updated": "2025-12-18",
+    "categories": [
+        {
+            "category": "Umum",
+            "questions": [
+                {
+                    "id": "G001",
+                    "question": "Apa itu sistem KRBS?",
+                    "answer": "KRBS adalah sistem manajemen internal yang mencakup ticketing support, pemesanan ruangan (luring dan daring), pemesanan kendaraan, manajemen tamu, dan pengelolaan dokumen/paket. Sistem ini membantu mengatur operasional kantor secara terpadu.",
+                    "keywords": [
+                        "krbs",
+                        "sistem",
+                        "pengenalan",
+                        "overview"
+                    ]
+                },
+                {
+                    "id": "G002",
+                    "question": "Siapa saja yang bisa menggunakan sistem KRBS?",
+                    "answer": "Sistem KRBS memiliki 5 role pengguna: User Biasa (karyawan), Agen (penanganan tiket), Resepsionis (pengelola booking dan tamu), Admin (pengelola sistem), dan Superadmin (akses penuh). Setiap role memiliki hak akses berbeda.",
+                    "keywords": [
+                        "user",
+                        "role",
+                        "akses",
+                        "pengguna"
+                    ]
+                },
+                {
+                    "id": "G003",
+                    "question": "Bagaimana cara login ke sistem?",
+                    "answer": "Gunakan email dan password yang telah diberikan oleh admin. Jika belum memiliki akun, hubungi tim HR atau admin untuk pembuatan akun. Pastikan Anda logout setelah selesai menggunakan sistem, terutama di perangkat bersama.",
+                    "keywords": [
+                        "login",
+                        "akses",
+                        "password",
+                        "masuk"
+                    ]
+                },
+                {
+                    "id": "G004",
+                    "question": "Jam operasional sistem apa?",
+                    "answer": "Sistem KRBS dapat diakses 24/7. Namun, jam operasional support adalah Senin-Jumat 08:00-17:00 dan Sabtu 08:00-13:00. Minggu tutup. Untuk masalah kritis di luar jam operasional, hubungi kontak darurat.",
+                    "keywords": [
+                        "jam",
+                        "operasional",
+                        "waktu",
+                        "support"
+                    ]
+                },
+                {
+                    "id": "G005",
+                    "question": "Bagaimana cara menghubungi support jika ada masalah?",
+                    "answer": "Anda dapat menghubungi support melalui email support@krbs.id atau membuat tiket support langsung di sistem. Untuk masalah darurat, gunakan kontak darurat yang tersedia di halaman support.",
+                    "keywords": [
+                        "support",
+                        "bantuan",
+                        "kontak",
+                        "help"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Halaman Beranda",
+            "questions": [
+                {
+                    "id": "H001",
+                    "question": "Apa saja yang ada di halaman beranda?",
+                    "answer": "Halaman beranda menampilkan: Ticket Center/Konsol Agen, Wifi Carousel, Help Center & System Status, Announcements, Information, dan Welcome Header. Untuk agen, ada statistik antrian departemen dan tugas aktif.",
+                    "keywords": [
+                        "beranda",
+                        "home",
+                        "dashboard",
+                        "tampilan"
+                    ]
+                },
+                {
+                    "id": "H002",
+                    "question": "Bagaimana cara melihat informasi WiFi?",
+                    "answer": "Di halaman beranda, lihat bagian Wifi Carousel. Gunakan kontrol panah atau tekan titik indikator untuk berpindah antar WiFi. Klik tombol copy untuk menyalin password. Informasi menampilkan SSID dan password WiFi internal.",
+                    "keywords": [
+                        "wifi",
+                        "password",
+                        "ssid",
+                        "internet"
+                    ]
+                },
+                {
+                    "id": "H003",
+                    "question": "Apa arti indikator warna pada System Status?",
+                    "answer": "Indikator hijau menunjukkan layanan berjalan normal. Indikator merah menunjukkan ada masalah pada server, database, atau jaringan. Jika melihat indikator merah, klik tombol 'Laporkan Bug' atau hubungi IT.",
+                    "keywords": [
+                        "status",
+                        "indikator",
+                        "sistem",
+                        "kesehatan"
+                    ]
+                },
+                {
+                    "id": "H004",
+                    "question": "Angka antrian di beranda tidak berubah, apa yang harus dilakukan?",
+                    "answer": "Halaman beranda melakukan polling otomatis setiap beberapa detik. Jika angka tidak berubah, coba refresh browser. Jika masih tidak sinkron, periksa koneksi internet atau hubungi support.",
+                    "keywords": [
+                        "antrian",
+                        "refresh",
+                        "update",
+                        "sinkronisasi"
+                    ]
+                },
+                {
+                    "id": "H005",
+                    "question": "Apa fungsi tombol 'Ke Workspace' untuk agen?",
+                    "answer": "Tombol 'Ke Workspace' membuka antarmuka pengelolaan tiket yang lebih lengkap untuk agen. Di sini agen dapat melihat antrian tiket, mengklaim tiket, menambah komentar, dan mengubah status tiket.",
+                    "keywords": [
+                        "workspace",
+                        "agen",
+                        "tiket",
+                        "antrian"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Sistem Tiket Support",
+            "questions": [
+                {
+                    "id": "T001",
+                    "question": "Bagaimana cara membuat tiket support?",
+                    "answer": "1) Buka menu 'Buat Tiket' 2) Isi judul singkat yang menjelaskan masalah 3) Pilih prioritas (Rendah/Sedang/Tinggi) 4) Pilih departemen tujuan 5) Tulis deskripsi masalah secara detail 6) Tambahkan lampiran jika perlu 7) Tekan tombol kirim",
+                    "keywords": [
+                        "buat",
+                        "tiket",
+                        "support",
+                        "bantuan"
+                    ]
+                },
+                {
+                    "id": "T002",
+                    "question": "Kapan harus memilih prioritas Tinggi untuk tiket?",
+                    "answer": "Pilih prioritas Tinggi untuk masalah yang: mengganggu proses bisnis, berdampak pada banyak orang, atau menghentikan operasional. Prioritas Sedang untuk masalah yang mengganggu kenyamanan kerja. Prioritas Rendah untuk masalah minor yang bisa ditunda.",
+                    "keywords": [
+                        "prioritas",
+                        "tinggi",
+                        "urgent",
+                        "penting"
+                    ]
+                },
+                {
+                    "id": "T003",
+                    "question": "Jenis file apa yang bisa dilampirkan dalam tiket?",
+                    "answer": "Format yang diterima: gambar (jpg/png/webp), PDF, dokumen (doc/docx), spreadsheet, dan zip. Pastikan ukuran file tidak terlalu besar. Jika upload gagal, compress file terlebih dahulu.",
+                    "keywords": [
+                        "lampiran",
+                        "file",
+                        "upload",
+                        "attachment"
+                    ]
+                },
+                {
+                    "id": "T004",
+                    "question": "Bagaimana cara menggunakan fitur kamera untuk lampiran?",
+                    "answer": "Gunakan tombol 'Ambil Foto' atau 'Camera' untuk mengakses webcam/kamera HP. Izinkan akses kamera di browser. Ambil foto yang jelas menampilkan detail relevan seperti nomor seri atau pesan error. Foto akan ditambahkan ke daftar lampiran sebelum dikirim.",
+                    "keywords": [
+                        "kamera",
+                        "foto",
+                        "webcam",
+                        "capture"
+                    ]
+                },
+                {
+                    "id": "T005",
+                    "question": "Apa arti status tiket yang berbeda?",
+                    "answer": "Status tiket: Buka/Open (tiket baru, belum ditangani), Dalam Proses/In Progress (tim sedang menangani), Terselesaikan/Resolved (masalah selesai), Ditutup/Closed (tiket selesai dan diverifikasi). Setiap perubahan status biasanya disertai catatan dari agen.",
+                    "keywords": [
+                        "status",
+                        "tiket",
+                        "open",
+                        "closed",
+                        "resolved"
+                    ]
+                },
+                {
+                    "id": "T006",
+                    "question": "Bagaimana cara melihat status tiket saya?",
+                    "answer": "Buka menu 'Status Tiket' untuk melihat daftar tiket Anda. Gunakan filter untuk mencari berdasarkan status, prioritas, atau departemen. Klik tiket untuk melihat detail lengkap, lampiran, dan diskusi komentar.",
+                    "keywords": [
+                        "status",
+                        "tiket",
+                        "cek",
+                        "lihat"
+                    ]
+                },
+                {
+                    "id": "T007",
+                    "question": "Bisakah saya menambahkan komentar setelah membuat tiket?",
+                    "answer": "Ya, Anda bisa menulis komentar di dalam tiket untuk menambah detail atau memberi tanggapan. Namun, jika tiket sudah ditutup, biasanya tidak bisa berkomentar lagi. Agen atau pembuat tiket akan menerima notifikasi bila ada komentar baru.",
+                    "keywords": [
+                        "komentar",
+                        "diskusi",
+                        "tambahan",
+                        "komunikasi"
+                    ]
+                },
+                {
+                    "id": "T008",
+                    "question": "Berapa lama waktu respon tiket support?",
+                    "answer": "Waktu respon standar adalah dalam 24 jam hari kerja untuk permintaan non-kritis, tergantung prioritas. Untuk masalah kritis atau prioritas tinggi, respon lebih cepat. Jika tiket tidak ditangani, follow-up lewat komentar atau hubungi kontak darurat.",
+                    "keywords": [
+                        "respon",
+                        "waktu",
+                        "sla",
+                        "durasi"
+                    ]
+                },
+                {
+                    "id": "T009",
+                    "question": "Apa contoh deskripsi tiket yang baik?",
+                    "answer": "Contoh: Judul: 'Printer Lantai 3 - Paper jam berulang'. Deskripsi: 'Sejak pukul 09:15 printer di ruang A3 sering macet kertas. Sudah coba keluarkan kertas tersangkut namun masih terus terjadi. Lampiran: foto area penarik kertas dan screenshot error pada komputer.'",
+                    "keywords": [
+                        "contoh",
+                        "deskripsi",
+                        "tiket",
+                        "template"
+                    ]
+                },
+                {
+                    "id": "T010",
+                    "question": "Bagaimana cara agen mengklaim tiket?",
+                    "answer": "Agen dapat melihat daftar tiket di antrian, menggunakan filter untuk memilih tiket, lalu mengklaim tiket yang ingin ditangani. Setelah diklaim, tiket berpindah ke daftar tugas agen dan jumlah klaim yang belum dibaca berkurang.",
+                    "keywords": [
+                        "agen",
+                        "klaim",
+                        "claim",
+                        "assign"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Pemesanan Ruangan Luring",
+            "questions": [
+                {
+                    "id": "RL001",
+                    "question": "Bagaimana cara memesan ruangan luring?",
+                    "answer": "Ada 2 cara: 1) Form: Buka 'Luring (Ruangan)' → tab Form, isi judul, ruangan, tanggal, jumlah peserta, waktu mulai/selesai, centang kebutuhan tambahan, kirim. 2) Calendar: Klik slot putih/hijau yang tersedia untuk Quick Booking dengan modal cepat.",
+                    "keywords": [
+                        "pesan",
+                        "ruangan",
+                        "luring",
+                        "offline",
+                        "booking"
+                    ]
+                },
+                {
+                    "id": "RL002",
+                    "question": "Apa arti warna slot di kalender pemesanan ruangan?",
+                    "answer": "Merah: sudah dipesan, Abu-abu: slot sudah lewat/ditutup, Putih: tersedia, Hijau muda: klik untuk memesan. Slot yang kurang dari 15 menit dari waktu sekarang dianggap 'past' dan tidak bisa dipesan.",
+                    "keywords": [
+                        "warna",
+                        "slot",
+                        "kalender",
+                        "status",
+                        "tersedia"
+                    ]
+                },
+                {
+                    "id": "RL003",
+                    "question": "Berapa minimal waktu pemesanan ruangan?",
+                    "answer": "Pemesanan minimal dimulai 15 menit dari waktu sekarang. Durasi pemesanan menggunakan kelipatan slot 30 menit. Jangan pilih jam yang sudah lewat karena sistem akan menolak atau menggeser otomatis.",
+                    "keywords": [
+                        "minimal",
+                        "waktu",
+                        "durasi",
+                        "slot"
+                    ]
+                },
+                {
+                    "id": "RL004",
+                    "question": "Bagaimana jika ruangan yang saya inginkan tidak tersedia?",
+                    "answer": "Jika ruangan tidak tersedia, coba waktu lain dengan melihat kalender atau pilih ruangan alternatif. Gunakan kartu ketersediaan di sidebar untuk melihat ruangan lain yang tersedia pada waktu yang sama.",
+                    "keywords": [
+                        "penuh",
+                        "tersedia",
+                        "alternatif",
+                        "ruangan"
+                    ]
+                },
+                {
+                    "id": "RL005",
+                    "question": "Apa fungsi opsi 'Kebutuhan Tambahan'?",
+                    "answer": "Centang kebutuhan tambahan seperti proyektor, whiteboard, dll sesuai kebutuhan rapat. Jika pilih 'Lainnya', akan muncul kotak 'Catatan Khusus' untuk menuliskan permintaan spesifik yang tidak ada di daftar.",
+                    "keywords": [
+                        "kebutuhan",
+                        "tambahan",
+                        "proyektor",
+                        "peralatan"
+                    ]
+                },
+                {
+                    "id": "RL006",
+                    "question": "Bagaimana cara melihat status pemesanan ruangan saya?",
+                    "answer": "Buka halaman 'Status Pemesanan Ruangan', gunakan fitur pencarian dan filter (ruangan, status, urut). Setiap item menampilkan judul, ID pemesanan, ruangan, tanggal & jam, badge status (Tertunda/Disetujui/Ditolak/Selesai), dan catatan jika ada.",
+                    "keywords": [
+                        "status",
+                        "pemesanan",
+                        "ruangan",
+                        "cek"
+                    ]
+                },
+                {
+                    "id": "RL007",
+                    "question": "Apa yang harus dilakukan jika pemesanan ruangan ditolak?",
+                    "answer": "Jika ditolak, alasan penolakan ditampilkan di blok merah pada detail pemesanan. Baca alasannya, lalu hubungi admin jika butuh klarifikasi. Anda bisa membuat pemesanan baru dengan mempertimbangkan alasan penolakan.",
+                    "keywords": [
+                        "ditolak",
+                        "rejected",
+                        "alasan",
+                        "penolakan"
+                    ]
+                },
+                {
+                    "id": "RL008",
+                    "question": "Apa fungsi opsi 'Minta Departemen Informasi'?",
+                    "answer": "Centang opsi ini jika Anda ingin Departemen Informasi membantu menyiapkan rapat secara teknis (setup AV, streaming, dll). Mereka akan menerima notifikasi dan dapat membantu persiapan teknis rapat Anda.",
+                    "keywords": [
+                        "departemen",
+                        "informasi",
+                        "bantuan",
+                        "teknis"
+                    ]
+                },
+                {
+                    "id": "RL009",
+                    "question": "Bisakah saya memesan ruangan lebih dari 30 menit?",
+                    "answer": "Ya, pilih waktu selesai yang mencakup beberapa slot 30 menit. Misalnya untuk rapat 2 jam, pilih waktu mulai 09:00 dan waktu selesai 11:00.",
+                    "keywords": [
+                        "durasi",
+                        "lama",
+                        "jam",
+                        "panjang"
+                    ]
+                },
+                {
+                    "id": "RL010",
+                    "question": "Troubleshooting: Tidak bisa pilih ruangan atau waktu tidak valid",
+                    "answer": "Kemungkinan ruangan sudah dipesan untuk waktu itu, coba waktu lain. Untuk waktu tidak valid, periksa start_time dan end_time serta batas minimal 15 menit dari sekarang. Pastikan memilih opsi 'Lainnya' di kebutuhan tambahan jika ingin menambah catatan.",
+                    "keywords": [
+                        "error",
+                        "tidak bisa",
+                        "pilih",
+                        "ruangan"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Pemesanan Rapat Daring",
+            "questions": [
+                {
+                    "id": "RD001",
+                    "question": "Bagaimana cara memesan rapat daring (online)?",
+                    "answer": "Buka menu 'Rapat Daring' → tab Formulir, isi judul rapat, pilih platform (Zoom/Meet/lainnya), pilih tanggal dan waktu mulai/berakhir, centang opsi beritahu bagian informasi jika butuh bantuan, kirim permintaan.",
+                    "keywords": [
+                        "rapat",
+                        "daring",
+                        "online",
+                        "meeting",
+                        "zoom"
+                    ]
+                },
+                {
+                    "id": "RD002",
+                    "question": "Platform apa saja yang tersedia untuk rapat daring?",
+                    "answer": "Platform yang tersedia tergantung konfigurasi sistem, umumnya Zoom, Google Meet, atau platform lainnya. Pilih platform sesuai kebutuhan saat membuat permintaan. Admin akan menambahkan tautan rapat setelah permintaan disetujui.",
+                    "keywords": [
+                        "platform",
+                        "zoom",
+                        "meet",
+                        "google",
+                        "aplikasi"
+                    ]
+                },
+                {
+                    "id": "RD003",
+                    "question": "Kapan saya akan mendapatkan tautan rapat daring?",
+                    "answer": "Tautan rapat (URL/ID/sandi) biasanya ditambahkan oleh resepsionis atau admin setelah permintaan disetujui. Anda akan melihat online_meeting_url, online_meeting_code, dan online_meeting_password di detail pemesanan setelah status berubah menjadi Approved.",
+                    "keywords": [
+                        "tautan",
+                        "link",
+                        "url",
+                        "meeting",
+                        "kapan"
+                    ]
+                },
+                {
+                    "id": "RD004",
+                    "question": "Bagaimana cara memesan rapat daring lewat kalender?",
+                    "answer": "Buka tab 'Calendar' untuk tampilan per-slot per-provider. Pilih provider (kolom per platform) dan klik slot waktu yang tersedia (putih/hijau). Quick Modal akan muncul untuk memasukkan detail singkat (judul, start/end, attendees), lalu konfirmasi untuk mengirim.",
+                    "keywords": [
+                        "kalender",
+                        "calendar",
+                        "quick",
+                        "booking"
+                    ]
+                },
+                {
+                    "id": "RD005",
+                    "question": "Apa yang harus dilakukan jika tautan rapat tidak berfungsi?",
+                    "answer": "Hubungi penyelenggara atau resepsionis yang mengatur rapat. Mereka bisa membuat ulang tautan atau memeriksa konfigurasi. Pastikan juga Anda mengklik tautan yang benar dan menggunakan browser yang kompatibel.",
+                    "keywords": [
+                        "error",
+                        "tautan",
+                        "link",
+                        "tidak berfungsi"
+                    ]
+                },
+                {
+                    "id": "RD006",
+                    "question": "Tips untuk host rapat daring",
+                    "answer": "Hadir 5 menit lebih awal untuk memverifikasi tautan dan pengaturan audio/video. Sertakan agenda singkat di judul atau deskripsi. Kalau butuh fitur breakout room atau rekaman, tulis di catatan atau hubungi admin Info saat membuat permintaan.",
+                    "keywords": [
+                        "tips",
+                        "host",
+                        "persiapan",
+                        "rapat"
+                    ]
+                },
+                {
+                    "id": "RD007",
+                    "question": "Bagaimana jika waktu rapat bentrok dengan jadwal lain?",
+                    "answer": "Pilih slot lain atau gunakan Calendar untuk melihat slot kosong di provider lain. Sistem akan menampilkan slot merah untuk waktu yang sudah terpakai. Koordinasikan dengan peserta untuk menemukan waktu yang cocok untuk semua.",
+                    "keywords": [
+                        "bentrok",
+                        "konflik",
+                        "jadwal",
+                        "alternatif"
+                    ]
+                },
+                {
+                    "id": "RD008",
+                    "question": "Bisakah saya meminta fitur khusus seperti rekaman atau breakout room?",
+                    "answer": "Ya, tandai kebutuhan khusus saat membuat permintaan atau centang opsi 'Beritahu Bagian Informasi'. Tuliskan detail fitur yang dibutuhkan di catatan. Tim Info akan membantu mengatur fitur tersebut jika tersedia.",
+                    "keywords": [
+                        "fitur",
+                        "rekaman",
+                        "breakout",
+                        "khusus"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Pemesanan Kendaraan",
+            "questions": [
+                {
+                    "id": "K001",
+                    "question": "Bagaimana cara memesan kendaraan?",
+                    "answer": "1) Buka menu 'Pesan Kendaraan' 2) Isi nama dan departemen 3) Pilih durasi (Seharian/24 Jam/Kustom) 4) Isi tanggal mulai dan selesai 5) Isikan tujuan, jenis keperluan, area ganjil/genap 6) Pilih kendaraan (opsional) 7) Centang konfirmasi SIM A dan syarat 8) Kirim permintaan",
+                    "keywords": [
+                        "pesan",
+                        "kendaraan",
+                        "mobil",
+                        "booking"
+                    ]
+                },
+                {
+                    "id": "K002",
+                    "question": "Apa perbedaan mode 'Seharian', '24 Jam', dan 'Kustom'?",
+                    "answer": "Seharian: Default jam 08:00-17:00 (jam kerja). 24 Jam: Kendaraan dipakai selama 24 jam penuh untuk kebutuhan khusus. Kustom: Isi tanggal dan jam mulai/selesai sendiri sesuai kebutuhan spesifik Anda.",
+                    "keywords": [
+                        "mode",
+                        "durasi",
+                        "seharian",
+                        "24 jam",
+                        "kustom"
+                    ]
+                },
+                {
+                    "id": "K003",
+                    "question": "Apakah wajib memiliki SIM A untuk memesan kendaraan?",
+                    "answer": "Ya, untuk pengemudi wajib memiliki SIM A. Sistem meminta konfirmasi bahwa Anda memiliki SIM A sebelum mengirim permintaan. Tanpa SIM A, permintaan biasanya tidak akan disetujui karena alasan keamanan dan legal.",
+                    "keywords": [
+                        "sim",
+                        "sim a",
+                        "wajib",
+                        "persyaratan"
+                    ]
+                },
+                {
+                    "id": "K004",
+                    "question": "Apakah wajib memilih kendaraan tertentu?",
+                    "answer": "Tidak wajib. Anda bisa membiarkan kolom kendaraan kosong agar sistem memilih kendaraan yang tersedia secara otomatis. Jika kendaraan yang dipilih tidak tersedia pada tanggal/waktu yang diminta, opsi akan dinonaktifkan dan sistem meminta pilih kendaraan lain.",
+                    "keywords": [
+                        "pilih",
+                        "kendaraan",
+                        "wajib",
+                        "opsional"
+                    ]
+                },
+                {
+                    "id": "K005",
+                    "question": "Mengapa diminta upload foto saat pemesanan kendaraan?",
+                    "answer": "Foto berfungsi sebagai bukti kondisi kendaraan sebelum (check-out) dan sesudah (check-in) penggunaan. Ini untuk dokumentasi dan pengamanan, mencegah klaim kerusakan yang tidak perlu. Upload foto sebelum berangkat dan setelah kembali.",
+                    "keywords": [
+                        "foto",
+                        "bukti",
+                        "dokumentasi",
+                        "kondisi"
+                    ]
+                },
+                {
+                    "id": "K006",
+                    "question": "Bagaimana cara upload foto kendaraan?",
+                    "answer": "Ketika pemesanan berstatus approved atau returned: 1) Klik area 'Tambah foto' lalu pilih file dari perangkat 2) Bisa pilih banyak foto sekaligus 3) Jika pakai laptop, ada opsi webcam untuk ambil foto langsung 4) Setelah memilih, akan muncul preview 5) Tekan 'Unggah X Foto' untuk kirim ke server",
+                    "keywords": [
+                        "upload",
+                        "foto",
+                        "cara",
+                        "dokumentasi"
+                    ]
+                },
+                {
+                    "id": "K007",
+                    "question": "Apa arti status pemesanan kendaraan?",
+                    "answer": "pending: Permintaan baru menunggu persetujuan. approved: Disetujui, siap upload foto. on_progress: Sedang digunakan. returned: Kendaraan sudah dikembalikan (menunggu verifikasi foto). rejected: Ditolak dengan alasan. cancelled: Dibatalkan. completed: Proses selesai.",
+                    "keywords": [
+                        "status",
+                        "kendaraan",
+                        "arti",
+                        "pending",
+                        "approved"
+                    ]
+                },
+                {
+                    "id": "K008",
+                    "question": "Bagaimana cara melihat status pemesanan kendaraan?",
+                    "answer": "Buka menu 'Status Kendaraan', gunakan kolom pencarian untuk cari berdasarkan tujuan atau nama kendaraan. Gunakan filter untuk memilih kendaraan tertentu, status, atau urutan (terbaru/terdekat). Klik item untuk melihat detail lengkap.",
+                    "keywords": [
+                        "status",
+                        "cek",
+                        "lihat",
+                        "pemesanan"
+                    ]
+                },
+                {
+                    "id": "K009",
+                    "question": "Bagaimana jika saya ingin membatalkan pemesanan kendaraan?",
+                    "answer": "Jika ingin membatalkan sebelum disetujui, gunakan tombol batal (jika tersedia) atau hubungi admin. Jika perlu perubahan tanggal/waktu setelah disetujui, hubungi admin atau buat permintaan baru jika tidak memungkinkan diubah.",
+                    "keywords": [
+                        "batal",
+                        "cancel",
+                        "ubah",
+                        "perubahan"
+                    ]
+                },
+                {
+                    "id": "K010",
+                    "question": "Tips praktis saat memesan kendaraan",
+                    "answer": "Pilih kendaraan cadangan jika pilihanmu tidak tersedia. Upload foto jelas dan lengkap untuk menghindari klaim kerusakan. Jika ada area ganjil/genap, cantumkan info. Tuliskan tujuan singkat tapi jelas (mis. 'Antar Barang ke Cabang A') agar admin bisa menilai kebutuhan.",
+                    "keywords": [
+                        "tips",
+                        "praktis",
+                        "saran",
+                        "best practice"
+                    ]
+                },
+                {
+                    "id": "K011",
+                    "question": "Troubleshooting upload foto kendaraan gagal",
+                    "answer": "Cek koneksi internet. Coba compress gambar jika file terlalu besar. Periksa izin kamera di browser/HP jika kamera tidak aktif. Pastikan mode booking sesuai (kustom untuk jam manual). Jika kendaraan tidak muncul, artinya sedang tidak tersedia untuk waktu yang dipilih.",
+                    "keywords": [
+                        "error",
+                        "gagal",
+                        "upload",
+                        "foto"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Halaman Profil",
+            "questions": [
+                {
+                    "id": "P001",
+                    "question": "Apa saja informasi yang ditampilkan di halaman profil?",
+                    "answer": "Halaman profil menampilkan: Header profil (inisial/avatar, nama, email, status), Informasi pribadi (nama, email, telepon, ID karyawan, departemen, cabang, peran, tanggal bergabung), Form ubah sandi, dan Ringkasan akun (total tiket, booking ruangan, booking kendaraan).",
+                    "keywords": [
+                        "profil",
+                        "informasi",
+                        "data",
+                        "pribadi"
+                    ]
+                },
+                {
+                    "id": "P002",
+                    "question": "Bagaimana cara mengubah password?",
+                    "answer": "1) Scroll ke bagian 'Ubah Sandi' 2) Masukkan Sandi Saat Ini (wajib) 3) Masukkan Sandi Baru (minimal 8 karakter, berbeda dari sandi saat ini) 4) Masukkan Konfirmasi Sandi Baru 5) Tekan tombol 'Ubah Sandi' 6) Pesan 'Sandi berhasil diperbarui!' akan muncul.",
+                    "keywords": [
+                        "password",
+                        "sandi",
+                        "ubah",
+                        "ganti"
+                    ]
+                },
+                {
+                    "id": "P003",
+                    "question": "Apa syarat password yang aman?",
+                    "answer": "Password minimal 8 karakter dan harus berbeda dari sandi saat ini. Gunakan kombinasi huruf besar, huruf kecil, angka, dan simbol untuk keamanan maksimal. Jangan membagikan password ke siapapun.",
+                    "keywords": [
+                        "password",
+                        "syarat",
+                        "keamanan",
+                        "aman"
+                    ]
+                },
+                {
+                    "id": "P004",
+                    "question": "Bagaimana cara mengubah informasi pribadi seperti nomor telepon atau email?",
+                    "answer": "Untuk mengubah nomor telepon atau email, jika tidak ada form edit di profil, hubungi admin HR atau IT sesuai kebijakan organisasi. Pastikan data profil akurat untuk keperluan notifikasi dan verifikasi akses.",
+                    "keywords": [
+                        "ubah",
+                        "data",
+                        "email",
+                        "telepon"
+                    ]
+                },
+                {
+                    "id": "P005",
+                    "question": "Apa yang harus dilakukan jika lupa password?",
+                    "answer": "Jika lupa password, gunakan fitur 'Lupa Password' di halaman login (jika tersedia) atau hubungi admin IT untuk reset password. Jika curiga akun dimainkan orang lain, ganti password segera dan hubungi IT.",
+                    "keywords": [
+                        "lupa",
+                        "password",
+                        "reset",
+                        "bantuan"
+                    ]
+                },
+                {
+                    "id": "P006",
+                    "question": "Troubleshooting: Tidak bisa mengganti password",
+                    "answer": "Pastikan memasukkan sandi saat ini yang benar. Pastikan sandi baru memenuhi syarat (minimal 8 karakter, konfirmasi cocok). Jika masih bermasalah, hubungi IT untuk bantuan reset password.",
+                    "keywords": [
+                        "error",
+                        "gagal",
+                        "password",
+                        "ubah"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Manual Resepsionis",
+            "questions": [
+                {
+                    "id": "R001",
+                    "question": "Apa tugas utama resepsionis di sistem KRBS?",
+                    "answer": "Resepsionis mengelola: Room Management (booking, approval, history), Vehicle Management (booking, status, history), Guest Management (guestbook), dan DocPac Management (paket/dokumen). Resepsionis juga dapat membuat booking offline atas nama user.",
+                    "keywords": [
+                        "resepsionis",
+                        "tugas",
+                        "tanggung jawab",
+                        "role"
+                    ]
+                },
+                {
+                    "id": "R002",
+                    "question": "Bagaimana resepsionis membuat booking ruangan offline?",
+                    "answer": "1) Buka Booking Room → pilih 'Tambah Booking Ruangan (Offline)' 2) Isi nama pemohon atau cari dari daftar, pilih departemen 3) Pilih ruangan, tanggal, dan jam 4) Jika ada pilihan Other di requirements, tulis keterangan di catatan 5) Centang Inform Information Dept bila perlu bantuan teknis 6) Simpan; booking akan masuk dengan status Tertanda.",
+                    "keywords": [
+                        "booking",
+                        "offline",
+                        "resepsionis",
+                        "buat"
+                    ]
+                },
+                {
+                    "id": "R003",
+                    "question": "Bagaimana cara resepsionis menyetujui atau menolak booking?",
+                    "answer": "Buka Booking Approval, lihat Daftar Menunggu Persetujuan. Klik item untuk melihat detail (judul, pemohon, waktu, kebutuhan tambahan). Untuk approve: ubah status, tambahkan catatan jika perlu. Untuk reject: beri alasan yang jelas (alasan ditampilkan ke pemohon). Periksa konflik jadwal di calendar sebelum approve.",
+                    "keywords": [
+                        "approve",
+                        "reject",
+                        "setuju",
+                        "tolak"
+                    ]
+                },
+                {
+                    "id": "R004",
+                    "question": "Bagaimana resepsionis mengelola buku tamu?",
+                    "answer": "Buka GuestBook → klik Tambah/Isi form tamu. Isi data wajib: nama, telepon/email (jika ada), tujuan kunjungan. Simpan; sistem menyimpan timestamp kedatangan. Untuk riwayat, buka GuestBook History untuk melihat tamu yang pernah datang, bisa dicari berdasarkan nama, tanggal, atau tujuan.",
+                    "keywords": [
+                        "guestbook",
+                        "tamu",
+                        "visitor",
+                        "buku tamu"
+                    ]
+                },
+                {
+                    "id": "R005",
+                    "question": "Apa itu DocPac dan bagaimana cara mengelolanya?",
+                    "answer": "DocPac adalah pengelolaan paket/dokumen internal. Resepsionis input paket masuk/keluar di DocPac Form: pilih direction (in/out), type (document/package), storage lokasi. Isi pengirim/penerima, nomor resi, deskripsi. Upload foto bukti lalu simpan. Pantau status di DocPac Status dan lihat riwayat di DocPac History.",
+                    "keywords": [
+                        "docpac",
+                        "paket",
+                        "dokumen",
+                        "package"
+                    ]
+                },
+                {
+                    "id": "R006",
+                    "question": "Bagaimana resepsionis mengelola pemesanan kendaraan?",
+                    "answer": "Resepsionis dapat membuat pemesanan kendaraan atas nama user di Book Vehicle. Setelah approved, kelola unggahan foto check-out/check-in. Tinjau status di Vehicle Status dengan filter kendaraan/status. Setujui, tolak, atau minta dokumen tambahan. Minta pengemudi upload foto bukti jika ada klaim kerusakan.",
+                    "keywords": [
+                        "kendaraan",
+                        "vehicle",
+                        "resepsionis",
+                        "kelola"
+                    ]
+                },
+                {
+                    "id": "R007",
+                    "question": "Tips praktik kerja untuk resepsionis",
+                    "answer": "Selalu periksa slot/dates sebelum approve booking untuk menghindari konflik. Tambahkan catatan rinci saat menolak permintaan. Untuk pengembalian kendaraan/paket, minta foto bukti kondisi. Gunakan polling/refresh otomatis, tapi jika UI terlihat kacau, refresh manual browser. Saat ada insiden darurat, gunakan tombol Laporkan Bug atau kontak support.",
+                    "keywords": [
+                        "tips",
+                        "praktik",
+                        "resepsionis",
+                        "best practice"
+                    ]
+                },
+                {
+                    "id": "R008",
+                    "question": "Bagaimana menangani konflik jadwal setelah approve?",
+                    "answer": "Segera komunikasikan ke pemohon yang terdampak dan tawarkan opsi alternatif. Ubah jadwal jika memungkinkan. Catat perubahan di sistem dan pastikan semua pihak mendapat notifikasi. Untuk pencegahan, selalu cek calendar sebelum approve.",
+                    "keywords": [
+                        "konflik",
+                        "jadwal",
+                        "bentrok",
+                        "solusi"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Manual Admin",
+            "questions": [
+                {
+                    "id": "A001",
+                    "question": "Apa peran admin di sistem KRBS?",
+                    "answer": "Admin mengelola pengguna, konfigurasi utama, dan memantau operasi. Tugas meliputi: mengelola user/peran/izin, memantau kesehatan sistem lewat Dashboard, menangani dan eskalasi tiket support, mengelola booking ruangan/kendaraan/paket/dokumen, mengelola WiFi dan informasi internal.",
+                    "keywords": [
+                        "admin",
+                        "peran",
+                        "tugas",
+                        "tanggung jawab"
+                    ]
+                },
+                {
+                    "id": "A002",
+                    "question": "Apa yang ditampilkan di Dashboard Admin?",
+                    "answer": "Dashboard menampilkan ringkasan realtime: kartu statistik (total tiket, booking, entri informasi, top agent), grafik aktivitas mingguan (tickets, room, information), dan distribusi prioritas tiket. Halaman menggunakan wire:poll jadi data diperbarui otomatis. Klik kartu atau chart untuk membuka modul terkait.",
+                    "keywords": [
+                        "dashboard",
+                        "admin",
+                        "statistik",
+                        "monitoring"
+                    ]
+                },
+                {
+                    "id": "A003",
+                    "question": "Bagaimana admin mengelola tiket support?",
+                    "answer": "Buka Ticket dari sidebar, filter untuk menemukan tiket yang perlu ditindak. Klik tiket untuk buka detail. Di detail: tambahkan komentar, ubah status (Open → In Progress → Resolved → Closed), atau assign ke agent. Gunakan priority untuk memprioritaskan penanganan. Jangan tutup tiket tanpa memeriksa bukti lampiran.",
+                    "keywords": [
+                        "tiket",
+                        "admin",
+                        "kelola",
+                        "support"
+                    ]
+                },
+                {
+                    "id": "A004",
+                    "question": "Bagaimana cara admin mengelola user?",
+                    "answer": "Buka User Management → Tambah User. Isi nama, email, password, pilih role & department, lalu simpan. Gunakan filters & search untuk menemukan user. Klik user untuk edit atau hapus. Untuk keamanan, hindari memberi role admin/superadmin kecuali benar-benar perlu.",
+                    "keywords": [
+                        "user",
+                        "kelola",
+                        "tambah",
+                        "edit"
+                    ]
+                },
+                {
+                    "id": "A005",
+                    "question": "Bagaimana admin mengelola WiFi?",
+                    "answer": "Buka WiFi Management → Tambah WiFi Baru. Isi SSID & password, lokasi, toggle visibility untuk menampilkan atau menyembunyikan WiFi dari user. Simpan. Untuk edit atau delete WiFi yang ada, gunakan tombol di daftar WiFi.",
+                    "keywords": [
+                        "wifi",
+                        "kelola",
+                        "ssid",
+                        "password"
+                    ]
+                },
+                {
+                    "id": "A006",
+                    "question": "Apa fungsi Agent Report?",
+                    "answer": "Agent Report menampilkan kinerja agent: Average Handle Time (AHT), jumlah tiket per agent, fastest dan slowest agent. Klik agent untuk buka detail performa. Klik Download untuk mengunduh laporan PDF. Jika overlay 'Menyiapkan PDF' muncul terus, klik Sembunyikan atau refresh.",
+                    "keywords": [
+                        "report",
+                        "agent",
+                        "performa",
+                        "kpi"
+                    ]
+                },
+                {
+                    "id": "A007",
+                    "question": "Bagaimana admin mengelola pengumuman?",
+                    "answer": "Buka Information di sidebar. Proses item di Request Queue: publish, inform, atau reject. Gunakan modal create untuk menambah pengumuman: isi judul, isi, lampiran, tanggal berlaku. Pastikan tanggal berlaku benar sebelum publish. Modal bisa ditutup dengan Esc.",
+                    "keywords": [
+                        "pengumuman",
+                        "information",
+                        "announce",
+                        "kelola"
+                    ]
+                },
+                {
+                    "id": "A008",
+                    "question": "Troubleshooting grafik dashboard tidak muncul",
+                    "answer": "Refresh halaman dan cek console browser. Bila error parsing JSON, minta developer cek sumber data weeklyActivityData. Jika tombol download PDF tidak merespon, periksa console JS. Jika overlay menempel, klik Sembunyikan atau refresh. Jika user tidak dapat login setelah reset password, pastikan email aktivasi/konfigurasi mail berfungsi.",
+                    "keywords": [
+                        "error",
+                        "dashboard",
+                        "grafik",
+                        "troubleshoot"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Manual Superadmin",
+            "questions": [
+                {
+                    "id": "S001",
+                    "question": "Apa perbedaan Superadmin dengan Admin?",
+                    "answer": "Superadmin punya akses paling luas: mengelola akun admin, departemen, ruangan, kendaraan, dokumen/paket, dan fitur konfigurasi tingkat tinggi. Tugas tambahan meliputi: mengelola master data (department, room, requirement, storage), generate report lengkap (PDF/Excel), monitor KPI & SLA, dan akses penuh audit trail.",
+                    "keywords": [
+                        "superadmin",
+                        "perbedaan",
+                        "admin",
+                        "akses"
+                    ]
+                },
+                {
+                    "id": "S002",
+                    "question": "Apa yang ditampilkan di Dashboard Superadmin?",
+                    "answer": "Dashboard Superadmin menampilkan ringkasan KPI, statistik bulanan, snapshot SLA, dan grafik aktivitas. Lihat KPI utama (kpi cards), SLA snapshot, dan chart bulanan. Klik item chart atau KPI untuk buka modul terkait. Jika chart kosong, refresh; bila data salah, periksa sumber API atau filter tanggal.",
+                    "keywords": [
+                        "dashboard",
+                        "superadmin",
+                        "kpi",
+                        "sla"
+                    ]
+                },
+                {
+                    "id": "S003",
+                    "question": "Bagaimana Superadmin mengelola master data Department?",
+                    "answer": "Superadmin dapat menambah/edit/hapus department di modul Department Management. Atur department_name dan link ke user default. Perubahan department dapat mempengaruhi struktur organisasi dan akses user, jadi pastikan koordinasi dengan HR sebelum melakukan perubahan besar.",
+                    "keywords": [
+                        "department",
+                        "master data",
+                        "organisasi",
+                        "kelola"
+                    ]
+                },
+                {
+                    "id": "S004",
+                    "question": "Bagaimana Superadmin mengelola master data Room?",
+                    "answer": "Kelola ruangan di Room Management: nama, kapasitas, fasilitas. Perubahan room dapat mempengaruhi booking aktif - koordinasikan perubahan dengan tim terkait. Pastikan informasi kapasitas dan fasilitas akurat agar user dapat memilih ruangan yang sesuai kebutuhan.",
+                    "keywords": [
+                        "room",
+                        "ruangan",
+                        "master data",
+                        "kelola"
+                    ]
+                },
+                {
+                    "id": "S005",
+                    "question": "Apa fungsi Requirement dan Storage dalam master data?",
+                    "answer": "Requirement adalah daftar kebutuhan ruangan (proyektor, mic, whiteboard, dll) yang dipakai di booking form. Storage adalah lokasi penyimpanan paket/dokumen internal untuk tracking lokasi barang saat disimpan di gudang atau ruang penyimpanan. Kelola keduanya untuk memastikan data akurat.",
+                    "keywords": [
+                        "requirement",
+                        "storage",
+                        "master data",
+                        "kebutuhan"
+                    ]
+                },
+                {
+                    "id": "S006",
+                    "question": "Bagaimana Superadmin generate dan download report?",
+                    "answer": "Modul Report menyediakan KPI snapshot, SLA, charts, dan tabel data. Atur range tanggal & filter sebelum generate untuk hasil relevan. Tombol download menyiapkan PDF/Excel - overlay menampilkan progress. Bila overlay tidak hilang, klik Sembunyikan atau refresh.",
+                    "keywords": [
+                        "report",
+                        "download",
+                        "pdf",
+                        "excel"
+                    ]
+                },
+                {
+                    "id": "S007",
+                    "question": "Bagaimana Superadmin menangani eskalasi tiket?",
+                    "answer": "Superadmin memiliki tampilan lebih lengkap di Tickets Support: akses ke seluruh tiket, opsi assign ke agent, dan statistik. Gunakan view ini untuk oversight dan eskalasi ketika agent tidak menyelesaikan masalah sesuai SLA. Assign ke agent senior atau handle langsung untuk tiket kritis.",
+                    "keywords": [
+                        "eskalasi",
+                        "tiket",
+                        "sla",
+                        "oversight"
+                    ]
+                },
+                {
+                    "id": "S008",
+                    "question": "Praktik kerja dan SOP untuk Superadmin",
+                    "answer": "Audit trail: Selalu isi catatan singkat saat approve/reject/delete. Komunikasi: Jika menolak permintaan, tulis alasan jelas dan solusinya. Foto bukti: Wajib untuk kendaraan/paket saat status berubah ke returned/delivered. Backup data: Minta tim infra melakukan backup rutin untuk tabel master dan log.",
+                    "keywords": [
+                        "praktik",
+                        "sop",
+                        "superadmin",
+                        "audit"
+                    ]
+                },
+                {
+                    "id": "S009",
+                    "question": "Bagaimana mengelola Packagemanagement dan Documentsmanagement?",
+                    "answer": "Packagemanagement untuk paket internal (paket yang dikirim/diterima oleh perusahaan). Documentsmanagement untuk menyimpan data invoice/telepon/dokumen penting. Pastikan metadata terisi (nomor resi, tanggal, penerima) untuk kemudahan pelacakan dan audit.",
+                    "keywords": [
+                        "package",
+                        "document",
+                        "management",
+                        "kelola"
+                    ]
+                },
+                {
+                    "id": "S010",
+                    "question": "Troubleshooting umum untuk Superadmin",
+                    "answer": "Chart kosong atau data tidak sinkron: Refresh halaman, cek console browser untuk error JS. Overlay download menempel: Klik Sembunyikan atau refresh, laporkan jika terus terjadi. Modal tidak muncul: Bisa karena wire:key duplikat setelah Livewire update - refresh biasanya memperbaiki.",
+                    "keywords": [
+                        "troubleshoot",
+                        "error",
+                        "superadmin",
+                        "solusi"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Keamanan dan Privasi",
+            "questions": [
+                {
+                    "id": "K001",
+                    "question": "Bagaimana menjaga keamanan akun di sistem KRBS?",
+                    "answer": "Gunakan password yang kuat (minimal 8 karakter, kombinasi huruf besar/kecil/angka/simbol). Jangan bagikan password ke siapapun. Logout setelah selesai menggunakan sistem, terutama di perangkat bersama. Ganti password secara berkala. Jika curiga akun diakses orang lain, ganti password segera dan hubungi IT.",
+                    "keywords": [
+                        "keamanan",
+                        "security",
+                        "password",
+                        "akun"
+                    ]
+                },
+                {
+                    "id": "K002",
+                    "question": "Apa yang harus dilakukan dengan kredensial WiFi?",
+                    "answer": "Jangan membagikan kredensial WiFi publik secara sembarangan. WiFi internal hanya untuk karyawan resmi. Laporkan bila menemukan informasi sensitif yang tidak seharusnya muncul. Jangan screenshot atau foto password WiFi untuk dibagikan di media sosial.",
+                    "keywords": [
+                        "wifi",
+                        "kredensial",
+                        "keamanan",
+                        "privasi"
+                    ]
+                },
+                {
+                    "id": "K003",
+                    "question": "Bagaimana sistem menangani data pribadi?",
+                    "answer": "Data profil bersifat pribadi dan tidak dibagikan ke pihak yang tidak berwenang. Sistem menyimpan log aktivitas untuk audit keamanan. Lampiran tiket dan foto bukti disimpan untuk keperluan penanganan dan dokumentasi. Jangan upload informasi sensitif kecuali diminta dan sesuai kebijakan internal.",
+                    "keywords": [
+                        "privasi",
+                        "data pribadi",
+                        "gdpr",
+                        "perlindungan"
+                    ]
+                },
+                {
+                    "id": "K004",
+                    "question": "Apa yang harus dilakukan jika menemukan bug atau celah keamanan?",
+                    "answer": "Gunakan tombol 'Laporkan Bug' di halaman beranda atau kirim email ke support@krbs.id. Sertakan screenshot dan deskripsi singkat masalah. Jangan eksploitasi celah keamanan. Untuk masalah kritis yang mempengaruhi keamanan data, hubungi IT security langsung melalui kontak darurat.",
+                    "keywords": [
+                        "bug",
+                        "security",
+                        "celah",
+                        "lapor"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Tips dan Best Practices",
+            "questions": [
+                {
+                    "id": "BP001",
+                    "question": "Tips menulis deskripsi tiket yang baik",
+                    "answer": "Gunakan judul deskriptif (✅ 'Printer Lantai 3 - Paper Jam Berulang' vs ❌ 'Help'). Sertakan detail lengkap: kapan masalah terjadi, apa yang sudah dicoba, siapa yang terdampak. Lampirkan screenshot/foto jika relevan. Pilih prioritas dengan bijak sesuai dampak masalah.",
+                    "keywords": [
+                        "tips",
+                        "tiket",
+                        "deskripsi",
+                        "best practice"
+                    ]
+                },
+                {
+                    "id": "BP002",
+                    "question": "Tips memesan ruangan dengan efektif",
+                    "answer": "Cek jadwal di calendar sebelum booking untuk melihat ketersediaan. Isi judul jelas (mis. 'Rapat Koordinasi Marketing'). Jika butuh alat khusus, centang opsi atau tulis di Catatan Khusus. Untuk rapat mendesak, hindari pilih jam yang hampir lewat (sistem blok minimal 15 menit ke depan).",
+                    "keywords": [
+                        "tips",
+                        "ruangan",
+                        "booking",
+                        "efektif"
+                    ]
+                },
+                {
+                    "id": "BP003",
+                    "question": "Tips untuk agent/resepsionis",
+                    "answer": "Respon cepat: Acknowledge tiket dalam 1 jam. Komunikasi jelas: Gunakan bahasa mudah dimengerti, hindari jargon berlebihan. Dokumentasi lengkap: Catat semua tindakan, simpan bukti foto. Preventif > Reaktif: Identifikasi pola masalah berulang, usulkan solusi permanen, edukasi user.",
+                    "keywords": [
+                        "tips",
+                        "agent",
+                        "resepsionis",
+                        "best practice"
+                    ]
+                },
+                {
+                    "id": "BP004",
+                    "question": "Tips untuk admin/superadmin",
+                    "answer": "Monitor proaktif: Cek dashboard setiap hari, set alert untuk anomali. Audit regular: Periksa user permissions berkala, review log aktivitas. Optimasi berkelanjutan: Identifikasi bottleneck proses, automasi task repetitif. Keamanan first: Jangan share credentials, gunakan strong password, enable 2FA.",
+                    "keywords": [
+                        "tips",
+                        "admin",
+                        "superadmin",
+                        "best practice"
+                    ]
+                },
+                {
+                    "id": "BP005",
+                    "question": "Tips upload foto berkualitas",
+                    "answer": "Pastikan foto jelas dan terang. Tunjukkan detail yang relevan (nomor polisi, serial number, area kerusakan). Compress file jika terlalu besar sebelum upload. Untuk kendaraan, foto dari beberapa sudut. Untuk error screen, pastikan pesan error terbaca jelas.",
+                    "keywords": [
+                        "tips",
+                        "foto",
+                        "upload",
+                        "kualitas"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Troubleshooting Umum",
+            "questions": [
+                {
+                    "id": "TS001",
+                    "question": "Halaman tidak loading atau lambat",
+                    "answer": "Cek koneksi internet. Refresh browser (Ctrl+F5 atau Cmd+Shift+R). Clear cache dan cookies browser. Coba browser lain. Jika masih bermasalah, hubungi support dan sertakan screenshot error dari console browser (F12 → Console).",
+                    "keywords": [
+                        "loading",
+                        "lambat",
+                        "error",
+                        "tidak bisa akses"
+                    ]
+                },
+                {
+                    "id": "TS002",
+                    "question": "Upload file gagal",
+                    "answer": "Periksa koneksi internet. Cek ukuran file (jangan terlalu besar). Compress file jika perlu. Pastikan format file didukung (jpg/png/pdf/doc/xlsx/zip). Clear browser cache. Coba browser lain. Jika tetap gagal, hubungi support.",
+                    "keywords": [
+                        "upload",
+                        "gagal",
+                        "file",
+                        "error"
+                    ]
+                },
+                {
+                    "id": "TS003",
+                    "question": "Kamera tidak berfungsi untuk ambil foto",
+                    "answer": "Periksa izin kamera di browser (biasanya muncul popup izin). Di browser settings, pastikan site memiliki akses ke kamera. Pastikan kamera tidak digunakan aplikasi lain. Restart browser. Coba browser lain. Jika di HP, pastikan app memiliki permission kamera.",
+                    "keywords": [
+                        "kamera",
+                        "webcam",
+                        "tidak berfungsi",
+                        "error"
+                    ]
+                },
+                {
+                    "id": "TS004",
+                    "question": "Data tidak sinkron atau tidak update",
+                    "answer": "Refresh halaman (F5). Jika menggunakan fitur real-time, tunggu beberapa detik untuk polling otomatis. Clear cache browser. Logout dan login kembali. Jika masalah berlanjut, hubungi support dan sebutkan data mana yang tidak sinkron.",
+                    "keywords": [
+                        "sinkron",
+                        "update",
+                        "data",
+                        "tidak berubah"
+                    ]
+                },
+                {
+                    "id": "TS005",
+                    "question": "Modal atau popup tidak muncul",
+                    "answer": "Pastikan browser tidak memblokir popup. Disable ad blocker sementara. Refresh halaman. Clear cache browser. Coba browser lain. Jika issue setelah Livewire update, kemungkinan wire:key duplikat - refresh biasanya memperbaiki.",
+                    "keywords": [
+                        "modal",
+                        "popup",
+                        "tidak muncul",
+                        "error"
+                    ]
+                },
+                {
+                    "id": "TS006",
+                    "question": "Error saat submit form",
+                    "answer": "Pastikan semua field wajib terisi. Cek validasi (border merah pada field error). Periksa format data (tanggal, email, nomor). Pastikan koneksi internet stabil. Jika error persist, screenshot pesan error dan hubungi support.",
+                    "keywords": [
+                        "form",
+                        "submit",
+                        "error",
+                        "validasi"
+                    ]
+                },
+                {
+                    "id": "TS007",
+                    "question": "Tidak bisa login",
+                    "answer": "Pastikan email dan password benar (perhatikan huruf besar/kecil). Cek caps lock. Gunakan 'Lupa Password' jika lupa. Clear browser cache dan cookies. Coba browser lain. Pastikan akun sudah diaktivasi oleh admin. Hubungi admin IT jika masih tidak bisa login.",
+                    "keywords": [
+                        "login",
+                        "tidak bisa",
+                        "akses",
+                        "error"
+                    ]
+                },
+                {
+                    "id": "TS008",
+                    "question": "Tombol atau fitur tidak berfungsi",
+                    "answer": "Refresh halaman. Clear cache browser. Pastikan JavaScript enabled di browser. Disable browser extensions yang mungkin interfere. Coba browser lain. Screenshot issue dan hubungi support dengan info browser dan OS yang digunakan.",
+                    "keywords": [
+                        "tombol",
+                        "fitur",
+                        "tidak berfungsi",
+                        "error"
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Glossary dan Istilah",
+            "questions": [
+                {
+                    "id": "GL001",
+                    "question": "Apa itu Agent?",
+                    "answer": "Agent adalah pengguna yang menangani tiket support. Agent dapat melihat antrian tiket, mengklaim tiket, menambah komentar internal, dan mengubah status tiket untuk menyelesaikan masalah user.",
+                    "keywords": [
+                        "agent",
+                        "agen",
+                        "definisi",
+                        "istilah"
+                    ]
+                },
+                {
+                    "id": "GL002",
+                    "question": "Apa itu AHT (Average Handle Time)?",
+                    "answer": "AHT adalah waktu rata-rata yang dibutuhkan agent untuk menyelesaikan satu tiket, dari mulai diklaim hingga diselesaikan. Metrik ini digunakan untuk mengukur efisiensi agent dalam menangani tiket support.",
+                    "keywords": [
+                        "aht",
+                        "average handle time",
+                        "metrik",
+                        "kpi"
+                    ]
+                },
+                {
+                    "id": "GL003",
+                    "question": "Apa itu Badge dalam sistem?",
+                    "answer": "Badge adalah label visual yang menunjukkan status (pending, approved, rejected, completed, dll) atau informasi penting lainnya. Badge menggunakan warna berbeda untuk memudahkan identifikasi cepat status item.",
+                    "keywords": [
+                        "badge",
+                        "label",
+                        "status",
+                        "visual"
+                    ]
+                },
+                {
+                    "id": "GL004",
+                    "question": "Apa bedanya Booking Offline dan Online?",
+                    "answer": "Booking Offline: Pemesanan yang dibuat oleh resepsionis atas nama user, biasanya untuk tamu atau situasi khusus. Booking Online: Pemesanan yang dibuat langsung oleh user sendiri melalui sistem, untuk keperluan pribadi atau tim.",
+                    "keywords": [
+                        "booking",
+                        "offline",
+                        "online",
+                        "perbedaan"
+                    ]
+                },
+                {
+                    "id": "GL005",
+                    "question": "Apa itu DocPac?",
+                    "answer": "DocPac adalah sistem pengelolaan dokumen dan paket internal. Mencatat paket/dokumen masuk dan keluar, dengan fitur tracking lokasi penyimpanan, status pengiriman, dan dokumentasi foto bukti.",
+                    "keywords": [
+                        "docpac",
+                        "dokumen",
+                        "paket",
+                        "management"
+                    ]
+                },
+                {
+                    "id": "GL006",
+                    "question": "Apa itu SLA (Service Level Agreement)?",
+                    "answer": "SLA adalah standar waktu penyelesaian layanan yang disepakati. Misalnya, tiket prioritas tinggi harus direspon dalam 1 jam dan diselesaikan dalam 4 jam. SLA digunakan untuk memastikan kualitas layanan sesuai standar.",
+                    "keywords": [
+                        "sla",
+                        "service level",
+                        "standar",
+                        "waktu"
+                    ]
+                },
+                {
+                    "id": "GL007",
+                    "question": "Apa itu Slot dalam pemesanan?",
+                    "answer": "Slot adalah waktu tersedia untuk pemesanan, biasanya dalam interval 30 menit. Setiap slot dapat dipesan oleh satu user/rapat. Sistem menggunakan slot untuk membagi waktu dan mencegah konflik jadwal.",
+                    "keywords": [
+                        "slot",
+                        "waktu",
+                        "interval",
+                        "pemesanan"
+                    ]
+                },
+                {
+                    "id": "GL008",
+                    "question": "Apa itu Workspace untuk agent?",
+                    "answer": "Workspace adalah area kerja khusus agent untuk menangani tiket. Di workspace, agent dapat melihat antrian tiket lebih detail, filter tiket, mengklaim tiket, menambah komentar, mengubah status, dan mengelola tugas aktif mereka.",
+                    "keywords": [
+                        "workspace",
+                        "agent",
+                        "area kerja",
+                        "tiket"
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "total_categories": 12,
+        "total_questions": 150,
+        "coverage": "Comprehensive FAQ covering all sections of KRBS manual book including general info, homepage, ticketing, room booking (offline/online), vehicle booking, profile, receptionist manual, admin manual, superadmin manual, security, tips, and troubleshooting",
+        "usage": "This JSON can be directly imported into a chatbot system as knowledge base for intelligent Q&A functionality",
+        "language": "Indonesian (Bahasa Indonesia)",
+        "version": "1.0",
+        "last_updated": "2025-12-18"
+    }
+}
