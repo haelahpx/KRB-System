@@ -184,7 +184,7 @@ class Announcement extends Component
 
         $announcements = $base
             ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(10);
+            ->paginate(12);
 
         return view('livewire.pages.superadmin.announcement', compact('announcements'));
     }

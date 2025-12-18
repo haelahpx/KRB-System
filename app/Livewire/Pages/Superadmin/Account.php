@@ -390,7 +390,7 @@ class Account extends Component
             ->when($this->roleFilter, fn($q) => $q->where('role_id', (int)$this->roleFilter))
             ->when($this->departmentFilter, fn($q) => $q->where('department_id', (int)$this->departmentFilter)) // <--- NEW: Apply department filter
             ->orderByDesc('user_id')
-            ->paginate(10);
+            ->paginate(12);
 
         return view('livewire.pages.superadmin.account', [
             'users' => $users,

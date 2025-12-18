@@ -180,7 +180,7 @@ class Managerequirement extends Component
                 $q->where('name', 'like', "%{$this->req_search}%")
             )
             ->orderBy('name')
-            ->paginate(10, pageName: 'reqsPage');
+            ->paginate(12, pageName: 'reqsPage');
     }
 
     public function render()

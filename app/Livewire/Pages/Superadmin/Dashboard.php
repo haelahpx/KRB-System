@@ -38,7 +38,9 @@ class Dashboard extends Component
             ['label' => 'Total Users', 'value' => User::where('company_id', $companyId)->count()],
             ['label' => 'Total Departments', 'value' => Department::where('company_id', $companyId)->count()],
             ['label' => 'Total Announcements', 'value' => Announcement::where('company_id', $companyId)->count()],
+            ['label' => 'Total Tickets', 'value' => Ticket::where('company_id', $companyId)->count()],
         ];
+
 
         // ===== MONTHLY COUNTS (Filtered by Company) =====
         $roomBookings = BookingRoom::where('company_id', $companyId)

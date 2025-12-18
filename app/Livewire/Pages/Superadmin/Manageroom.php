@@ -135,7 +135,7 @@ class Manageroom extends Component
                 $q->where('room_name', 'like', "%{$this->search}%")
             )
             ->orderByDesc('created_at')
-            ->paginate(10, ['*'], 'roomsPage'); // <— page name as 3rd arg
+            ->paginate(12, ['*'], 'roomsPage'); // <— page name as 3rd arg
     }
 
     public function render()

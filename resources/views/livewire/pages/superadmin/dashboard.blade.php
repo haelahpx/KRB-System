@@ -18,8 +18,8 @@
             class="rounded-2xl bg-gradient-to-r from-gray-900 to-black text-white p-6 sm:p-8 shadow-2xl flex items-center gap-3">
             <x-heroicon-o-chart-bar class="w-8 h-8 text-white/80 shrink-0" />
             <div>
-                <h2 class="text-lg sm:text-xl font-semibold">Welcome, {{ $admin_name }}!</h2>
-                <p class="text-sm text-white/80">Here’s an overview of this year’s activity.</p>
+                <h2 class="text-lg sm:text-xl font-semibold">Selamat Datang, {{ $admin_name }}!</h2>
+                <p class="text-sm text-white/80">Berikut adalah ringkasan aktivitas tahun ini.</p>
             </div>
         </div>
 
@@ -36,7 +36,7 @@
         <section class="bg-white border border-gray-200 rounded-2xl shadow-sm p-4 sm:p-6">
             <h3 class="flex items-center gap-2 text-base sm:text-lg font-semibold text-gray-900 mb-4">
                 <x-heroicon-o-calendar class="w-5 h-5 text-gray-700 shrink-0" />
-                Monthly Statistics
+                Statistik Bulanan
             </h3>
             <div wire:ignore class="relative h-64 sm:h-80">
                 <canvas id="bookingChart" class="w-full h-full"></canvas>
@@ -51,9 +51,9 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
                     <h3 class="flex items-center gap-2 text-base font-semibold text-gray-900">
                         <x-heroicon-o-arrow-trending-up class="w-5 h-5 text-gray-700 shrink-0" />
-                        Ticket Priority Distribution
+                        Distribusi Prioritas Tiket
                     </h3>
-                    <span class="text-xs text-gray-500 shrink-0">Low=1, Med=2, High=3</span>
+                    <span class="text-xs text-gray-500 shrink-0">Rendah=1, Sedang=2, Tinggi=3</span>
                 </div>
                 <div wire:ignore class="relative h-64">
                     <canvas id="ticketPriorityBar" class="w-full h-full"></canvas>
@@ -65,7 +65,7 @@
             <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-4 sm:p-6">
                 <h3 class="flex items-center gap-2 text-base font-semibold text-gray-900 mb-4">
                     <x-heroicon-o-chart-pie class="w-5 h-5 text-gray-700 shrink-0" />
-                    Ticket Status Distribution
+                    Distribusi Status Tiket
                 </h3>
                 <div wire:ignore class="relative h-64">
                     <canvas id="ticketStatusPie" class="w-full h-full"></canvas>
@@ -77,7 +77,7 @@
             <div class="md:col-span-2 lg:col-span-1 bg-white border border-gray-200 rounded-2xl shadow-sm p-4 sm:p-6">
                 <h3 class="flex items-center gap-2 text-base font-semibold text-gray-900 mb-4">
                     <x-heroicon-o-presentation-chart-line class="w-5 h-5 text-gray-700 shrink-0" />
-                    Monthly Priority Average (This Year)
+                    Rata-rata Prioritas Bulanan (Tahun Ini)
                 </h3>
                 <div wire:ignore class="relative h-64">
                     <canvas id="ticketPriorityAvg" class="w-full h-full"></canvas>
@@ -107,9 +107,9 @@
                 data: {
                     labels,
                     datasets: [
-                        { label: 'Room Bookings', data: room, borderColor: '#1d4ed8', backgroundColor: 'rgba(29,78,216,.08)', tension: 0.35, pointRadius: 3 },
-                        { label: 'Vehicle Bookings', data: vehicle, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.08)', tension: 0.35, pointRadius: 3 },
-                        { label: 'Support Tickets', data: ticket, borderColor: '#dc2626', backgroundColor: 'rgba(220,38,38,.08)', tension: 0.35, pointRadius: 3 },
+                        { label: 'Pemesanan Ruangan', data: room, borderColor: '#1d4ed8', backgroundColor: 'rgba(29,78,216,.08)', tension: 0.35, pointRadius: 3 },
+                        { label: 'Pemesanan Kendaraan', data: vehicle, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.08)', tension: 0.35, pointRadius: 3 },
+                        { label: 'Tiket Dukungan', data: ticket, borderColor: '#dc2626', backgroundColor: 'rgba(220,38,38,.08)', tension: 0.35, pointRadius: 3 },
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
@@ -126,7 +126,7 @@
                 const data = @json(array_values($ticketCharts['priorityCounts']));
                 window.__ticketPriorityBar = new Chart(bar, {
                     type: 'bar',
-                    data: { labels: ['Low', 'Medium', 'High'], datasets: [{ data, backgroundColor: ['#93c5fd', '#fbbf24', '#f87171'] }] },
+                    data: { labels: ['Rendah', 'Sedang', 'Tinggi'], datasets: [{ data, backgroundColor: ['#93c5fd', '#fbbf24', '#f87171'] }] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
                 });
             }
@@ -137,7 +137,7 @@
                 const data = ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].map(k => map[k] || 0);
                 window.__ticketStatusPie = new Chart(pie, {
                     type: 'doughnut',
-                    data: { labels: ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'], datasets: [{ data, backgroundColor: ['#60a5fa', '#f59e0b', '#10b981', '#9ca3af'] }] },
+                    data: { labels: ['TERBUKA', 'DALAM PROSES', 'TERSELESAIKAN', 'DITUTUP'], datasets: [{ data, backgroundColor: ['#60a5fa', '#f59e0b', '#10b981', '#9ca3af'] }] },
                     options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '55%' }
                 });
             }
@@ -149,8 +149,8 @@
                 const labels = @json($ticketCharts['labels']);
                 window.__ticketPriorityAvg = new Chart(avg, {
                     type: 'line',
-                    data: { labels, datasets: [{ label: 'Avg Priority', data, borderColor: '#312e81', backgroundColor: 'rgba(49,46,129,.08)', tension: .35, pointRadius: 3 }] },
-                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 3, ticks: { stepSize: 1, callback: (v) => ({ 0: '', 1: 'Low', 2: 'Med', 3: 'High' }[v] || v) } } } }
+                    data: { labels, datasets: [{ label: 'Rata-rata Prioritas', data, borderColor: '#312e81', backgroundColor: 'rgba(49,46,129,.08)', tension: .35, pointRadius: 3 }] },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 3, ticks: { stepSize: 1, callback: (v) => ({ 0: '', 1: 'Rendah', 2: 'Sedang', 3: 'Tinggi' }[v] || v) } } } }
                 });
             }
         }

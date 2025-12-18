@@ -3,7 +3,7 @@
         $card = 'bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden';
         $label = 'block text-sm font-medium text-gray-700 mb-2';
         $input = 'w-full h-10 px-3 rounded-xl border border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 bg-white transition';
-        $select = $input; // same style, updated
+        $select = $input; // gaya sama, diperbarui
         $btnBlk = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-900 text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900/20 disabled:opacity-60 transition h-7';
         $btnRed = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 disabled:opacity-60 transition h-7';
         $chip = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-[10px] text-gray-600 font-medium';
@@ -26,7 +26,7 @@
                         <x-heroicon-o-information-circle class="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h2 class="text-lg sm:text-xl font-semibold">Information Management</h2>
+                        <h2 class="text-lg sm:text-xl font-semibold">Manajemen Informasi</h2>
                         <p class="text-sm text-white/80">
                             Cabang: <span
                                 class="font-semibold">{{ optional(Auth::user()->company)->company_name ?? '-' }}</span>
@@ -39,19 +39,19 @@
         {{-- CREATE FORM --}}
         <section class="{{ $card }}">
             <div class="px-5 py-4 border-b border-gray-200">
-                <h3 class="text-base font-semibold text-gray-900">Add New Information</h3>
+                <h3 class="text-base font-semibold text-gray-900">Tambah Informasi Baru</h3>
             </div>
             <form class="p-5" wire:submit.prevent="store">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
                     <div>
-                        <label class="{{ $label }}">Company</label>
+                        <label class="{{ $label }}">Perusahaan</label>
                         <input type="text" class="{{ $input }}"
                             value="{{ optional(Auth::user()->company)->company_name ?? '-' }}" readonly>
                     </div>
 
                     {{-- NEW: Department select --}}
                     <div>
-                        <label class="{{ $label }}">Department</label>
+                        <label class="{{ $label }}">Departemen</label>
                         <select class="{{ $select }}" wire:model.defer="department_id">
                             @foreach($departmentOptions as $opt)
                                 <option value="{{ $opt['id'] }}">{{ $opt['name'] }}</option>
@@ -62,15 +62,15 @@
                     </div>
 
                     <div class="md:col-span-2">
-                        <label class="{{ $label }}">Description</label>
+                        <label class="{{ $label }}">Deskripsi</label>
                         <input type="text" wire:model.defer="description" class="{{ $input }}"
-                            placeholder="e.g. New company policy update...">
+                            placeholder="misal: Pembaruan kebijakan perusahaan baru...">
                         @error('description') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="{{ $label }}">Event Date (Optional)</label>
+                        <label class="{{ $label }}">Tanggal Acara (Opsional)</label>
                         <input type="datetime-local" wire:model.defer="event_at" class="{{ $input }}">
                         @error('event_at') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
                         @enderror
@@ -82,11 +82,11 @@
                         class="inline-flex items-center gap-2 px-5 h-10 rounded-xl bg-gray-900 text-white text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 transition active:scale-95 hover:bg-black disabled:opacity-60 relative overflow-hidden">
                         <span class="flex items-center gap-2" wire:loading.remove wire:target="store">
                             <x-heroicon-o-check class="w-4 h-4" />
-                            Save Information
+                            Simpan Informasi
                         </span>
                         <span class="flex items-center gap-2" wire:loading wire:target="store">
                             <x-heroicon-o-arrow-path class="h-4 w-4 animate-spin" />
-                            Saving...
+                            Menyimpan...
                         </span>
                     </button>
                 </div>
@@ -97,7 +97,7 @@
         <div class="space-y-5">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div class="relative">
-                    <input type="text" wire:model.live="search" placeholder="Search information..."
+                    <input type="text" wire:model.live="search" placeholder="Cari informasi..."
                         class="{{ $input }} pl-10 w-full placeholder:text-gray-400 shadow-sm">
                     <x-heroicon-o-magnifying-glass class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
@@ -105,7 +105,7 @@
                 {{-- NEW: Department Filter --}}
                 <div class="relative">
                     <select class="{{ $select }} pl-10 w-full shadow-sm" wire:model.live="filter_department_id">
-                        <option value="">All Departments</option>
+                        <option value="">Semua Departemen</option>
                         @foreach($departmentOptions as $opt)
                             <option value="{{ $opt['id'] }}">{{ $opt['name'] }}</option>
                         @endforeach
@@ -114,7 +114,7 @@
                 </div>
             </div>
 
-            {{-- KOREKSI UTAMA: Mengganti grid-cols-1 menjadi grid responsif 2-4 kolom --}}
+            {{-- Grid responsif --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 @forelse ($information as $info)
                     @php $rowNo = (($information->firstItem() ?? 1) + $loop->index); @endphp
@@ -140,7 +140,7 @@
                             
                             {{-- Department chip --}}
                             <div class="flex items-center justify-between text-gray-500">
-                                <span class="font-medium">Department:</span>
+                                <span class="font-medium">Departemen:</span>
                                 @if($info->department)
                                     <span class="{{ $chip }} bg-white text-gray-700 border border-gray-200 w-fit">
                                         <x-heroicon-o-bars-3 class="w-3 h-3 text-gray-500" />
@@ -148,14 +148,14 @@
                                     </span>
                                 @else
                                     <span class="{{ $chip }} bg-white text-gray-500 border border-gray-200 w-fit">
-                                        General
+                                        Umum
                                     </span>
                                 @endif
                             </div>
 
                             @if($info->event_at)
                             <div class="flex items-center justify-between text-gray-500">
-                                <span class="font-medium">Event Date:</span>
+                                <span class="font-medium">Tgl Acara:</span>
                                 <span class="{{ $chip }} bg-white text-gray-700 border border-gray-200 w-fit">
                                     <x-heroicon-o-calendar class="w-3 h-3 text-gray-500" />
                                     <span class="font-medium">{{ $info->formatted_event_date }}</span>
@@ -164,7 +164,7 @@
                             @endif
 
                             <div class="flex items-center justify-between text-gray-500">
-                                <span class="font-medium">Created:</span>
+                                <span class="font-medium">Dibuat:</span>
                                 <span class="{{ $chip }} bg-white text-gray-700 border border-gray-200 w-fit">
                                     <span class="font-medium">{{ $info->formatted_created_date }}</span>
                                 </span>
@@ -177,25 +177,25 @@
                                 wire:loading.attr="disabled" wire:target="openEdit({{ $info->information_id }})"
                                 wire:key="btn-edit-info-{{ $info->information_id }}">
                                 <span wire:loading.remove
-                                    wire:target="openEdit({{ $info->information_id }})">Edit</span>
+                                    wire:target="openEdit({{ $info->information_id }})">Ubah</span>
                                 <span wire:loading
-                                    wire:target="openEdit({{ $info->information_id }})">Loading…</span>
+                                    wire:target="openEdit({{ $info->information_id }})">Memuat…</span>
                             </button>
 
                             <button wire:click="delete({{ $info->information_id }})"
-                                onclick="return confirm('Are you sure you want to delete this information?')"
+                                onclick="return confirm('Apakah Anda yakin ingin menghapus informasi ini?')"
                                 class="{{ $btnRed }}" wire:loading.attr="disabled"
                                 wire:target="delete({{ $info->information_id }})"
                                 wire:key="btn-del-info-{{ $info->information_id }}">
                                 <span wire:loading.remove
-                                    wire:target="delete({{ $info->information_id }})">Delete</span>
+                                    wire:target="delete({{ $info->information_id }})">Hapus</span>
                                 <span wire:loading
-                                    wire:target="delete({{ $info->information_id }})">Deleting…</span>
+                                    wire:target="delete({{ $info->information_id }})">Menghapus…</span>
                             </button>
                         </div>
                     </div>
                 @empty
-                    <div class="col-span-full py-14 text-center text-gray-500 text-sm bg-white rounded-xl border border-gray-200 shadow-sm">No information found.</div>
+                    <div class="col-span-full py-14 text-center text-gray-500 text-sm bg-white rounded-xl border border-gray-200 shadow-sm">Tidak ada informasi ditemukan.</div>
                 @endforelse
             </div>
 
@@ -212,13 +212,13 @@
         @if($modalEdit)
             <div class="fixed inset-0 z-[60] flex items-center justify-center" role="dialog" aria-modal="true"
                 wire:key="modal-edit-information" wire:keydown.escape.window="closeEdit">
-                <button type="button" class="absolute inset-0 bg-black/50" aria-label="Close overlay"
+                <button type="button" class="absolute inset-0 bg-black/50" aria-label="Tutup overlay"
                     wire:click="closeEdit"></button>
                 <div class="relative w-full max-w-xl mx-4 {{ $card }} focus:outline-none" tabindex="-1">
                     <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
-                        <h3 class="text-base font-semibold text-gray-900">Edit Information</h3>
+                        <h3 class="text-base font-semibold text-gray-900">Ubah Informasi</h3>
                         <button class="text-gray-500 hover:text-gray-700" type="button" wire:click="closeEdit"
-                            aria-label="Close">
+                            aria-label="Tutup">
                             <x-heroicon-o-x-mark class="w-5 h-5" />
                         </button>
                     </div>
@@ -226,7 +226,7 @@
                     <form class="p-5" wire:submit.prevent="update">
                         <div class="space-y-5">
                             <div>
-                                <label class="{{ $label }}">Description</label>
+                                <label class="{{ $label }}">Deskripsi</label>
                                 <input type="text" class="{{ $input }}" wire:model.defer="edit_description" autofocus>
                                 @error('edit_description') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}
                                 </p> @enderror
@@ -234,7 +234,7 @@
 
                             {{-- NEW: Department select --}}
                             <div>
-                                <label class="{{ $label }}">Department</label>
+                                <label class="{{ $label }}">Departemen</label>
                                 <select class="{{ $select }}" wire:model.defer="edit_department_id">
                                     @foreach($departmentOptions as $opt)
                                         <option value="{{ $opt['id'] }}">{{ $opt['name'] }}</option>
@@ -245,7 +245,7 @@
                             </div>
 
                             <div>
-                                <label class="{{ $label }}">Event Date (Optional)</label>
+                                <label class="{{ $label }}">Tanggal Acara (Opsional)</label>
                                 <input type="datetime-local" class="{{ $input }}" wire:model.defer="edit_event_at">
                                 @error('edit_event_at') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
                                 @enderror
@@ -255,16 +255,16 @@
                         <div class="mt-6 flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
                             <button type="button"
                                 class="px-4 h-10 rounded-xl border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-100 hover:border-gray-400 transition"
-                                wire:click="closeEdit">Cancel</button>
+                                wire:click="closeEdit">Batal</button>
                             <button type="submit" wire:loading.attr="disabled" wire:target="update"
                                 class="inline-flex items-center gap-2 px-5 h-10 rounded-xl bg-gray-900 text-white text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 transition active:scale-95 hover:bg-black disabled:opacity-60">
                                 <span class="flex items-center gap-2" wire:loading.remove wire:target="update">
                                     <x-heroicon-o-check class="w-4 h-4" />
-                                    Save Changes
+                                    Simpan Perubahan
                                 </span>
                                 <span class="flex items-center gap-2" wire:loading wire:target="update">
                                     <x-heroicon-o-arrow-path class="h-4 w-4 animate-spin" />
-                                    Saving...
+                                    Menyimpan...
                                 </span>
                             </button>
                         </div>

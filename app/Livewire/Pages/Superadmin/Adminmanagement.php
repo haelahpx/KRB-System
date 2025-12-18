@@ -26,7 +26,7 @@ class Adminmanagement extends Component
     // ===== UI State =====
     public string $mode = 'index'; // index|create|edit
     public string $search = '';
-    public int    $perPage = 10;
+    public int    $perPage = 12;
     public ?int   $editingId = null;
     public bool   $showEditModal = false;
     public bool   $showCreateModal = false; // <-- Variabel baru untuk modal buat di mobile/tablet

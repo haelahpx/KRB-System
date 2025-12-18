@@ -26,7 +26,7 @@
                         <x-heroicon-o-megaphone class="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h2 class="text-lg sm:text-xl font-semibold">Announcement Management</h2>
+                        <h2 class="text-lg sm:text-xl font-semibold">Manajemen Pengumuman</h2>
                         <p class="text-sm text-white/80">
                             Cabang: <span
                                 class="font-semibold">{{ optional(Auth::user()->company)->company_name ?? '-' }}</span>
@@ -39,24 +39,24 @@
         {{-- CREATE FORM (always visible) --}}
         <section class="{{ $card }}">
             <div class="px-5 py-4 border-b border-gray-200">
-                <h3 class="text-base font-semibold text-gray-900">Add New Announcement</h3>
+                <h3 class="text-base font-semibold text-gray-900">Tambah Pengumuman Baru</h3>
             </div>
             <form class="p-5" wire:submit.prevent="store">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div class="md:col-span-1">
-                        <label class="{{ $label }}">Company</label>
+                        <label class="{{ $label }}">Perusahaan</label>
                         <input type="text" class="{{ $input }}"
                             value="{{ optional(Auth::user()->company)->company_name ?? '-' }}" readonly>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="{{ $label }}">Description</label>
+                        <label class="{{ $label }}">Deskripsi</label>
                         <input type="text" wire:model.defer="description" class="{{ $input }}"
-                            placeholder="e.g. Company wide meeting next Monday...">
+                            placeholder="misal: Rapat umum perusahaan hari Senin depan...">
                         @error('description') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="md:col-span-1">
-                        <label class="{{ $label }}">Event Date (Optional)</label>
+                        <label class="{{ $label }}">Tanggal Acara (Opsional)</label>
                         <input type="datetime-local" wire:model.defer="event_at" class="{{ $input }}">
                         @error('event_at') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
                         @enderror
@@ -67,11 +67,11 @@
                         class="inline-flex items-center gap-2 px-5 h-10 rounded-xl bg-gray-900 text-white text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 transition active:scale-95 hover:bg-black disabled:opacity-60 relative overflow-hidden">
                         <span class="flex items-center gap-2" wire:loading.remove wire:target="store">
                             <x-heroicon-o-check class="w-4 h-4" />
-                            Save Announcement
+                            Simpan Pengumuman
                         </span>
                         <span class="flex items-center gap-2" wire:loading wire:target="store">
                             <x-heroicon-o-arrow-path class="h-4 w-4 animate-spin" />
-                            Saving...
+                            Menyimpan...
                         </span>
                     </button>
                 </div>
@@ -82,12 +82,12 @@
         <div class="space-y-5">
             {{-- Search Bar --}}
             <div class="relative">
-                <input type="text" wire:model.live="search" placeholder="Search announcements..."
+                <input type="text" wire:model.live="search" placeholder="Cari pengumuman..."
                     class="{{ $input }} pl-10 w-full placeholder:text-gray-400 shadow-sm">
                 <x-heroicon-o-magnifying-glass class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
 
-            {{-- Announcement Cards Grid (KOREKSI UTAMA: Mengganti grid-cols-1 menjadi grid responsif 2-4 kolom) --}}
+            {{-- Announcement Cards Grid --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 @forelse ($announcements as $announcement)
                     @php
@@ -116,7 +116,7 @@
                         <div class="flex flex-col space-y-1 text-xs pt-3 border-t border-gray-100">
                             @if($announcement->event_at)
                             <div class="flex items-center justify-between text-gray-500">
-                                <span class="font-medium">Event Date:</span>
+                                <span class="font-medium">Tgl Acara:</span>
                                 <span class="{{ $chip }} bg-white text-gray-700 border border-gray-200 w-fit">
                                     <x-heroicon-o-calendar class="w-3 h-3 text-gray-500" />
                                     <span class="font-medium">{{ $announcement->formatted_event_date }}</span>
@@ -124,7 +124,7 @@
                             </div>
                             @endif
                             <div class="flex items-center justify-between text-gray-500">
-                                <span class="font-medium">Created:</span>
+                                <span class="font-medium">Dibuat:</span>
                                 <span class="{{ $chip }} bg-white text-gray-700 border border-gray-200 w-fit">
                                     <span class="font-medium">{{ $announcement->formatted_created_date }}</span>
                                 </span>
@@ -138,25 +138,25 @@
                                 wire:target="openEdit({{ $announcement->announcements_id }})"
                                 wire:key="btn-edit-ann-{{ $announcement->announcements_id }}">
                                 <span wire:loading.remove
-                                    wire:target="openEdit({{ $announcement->announcements_id }})">Edit</span>
+                                    wire:target="openEdit({{ $announcement->announcements_id }})">Ubah</span>
                                 <span wire:loading
-                                    wire:target="openEdit({{ $announcement->announcements_id }})">Loading…</span>
+                                    wire:target="openEdit({{ $announcement->announcements_id }})">Memuat…</span>
                             </button>
 
                             <button wire:click="delete({{ $announcement->announcements_id }})"
-                                onclick="return confirm('Are you sure you want to delete this announcement?')"
+                                onclick="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')"
                                 class="{{ $btnRed }}" wire:loading.attr="disabled"
                                 wire:target="delete({{ $announcement->announcements_id }})"
                                 wire:key="btn-del-ann-{{ $announcement->announcements_id }}">
                                 <span wire:loading.remove
-                                    wire:target="delete({{ $announcement->announcements_id }})">Delete</span>
+                                    wire:target="delete({{ $announcement->announcements_id }})">Hapus</span>
                                 <span wire:loading
-                                    wire:target="delete({{ $announcement->announcements_id }})">Deleting…</span>
+                                    wire:target="delete({{ $announcement->announcements_id }})">Menghapus…</span>
                             </button>
                         </div>
                     </div>
                 @empty
-                    <div class="col-span-full py-14 text-center text-gray-500 text-sm bg-white rounded-xl border border-gray-200 shadow-sm">No announcements found.</div>
+                    <div class="col-span-full py-14 text-center text-gray-500 text-sm bg-white rounded-xl border border-gray-200 shadow-sm">Tidak ada pengumuman ditemukan.</div>
                 @endforelse
             </div>
             @if($announcements->hasPages())
@@ -176,7 +176,7 @@
                     wire:click="closeEdit"></button>
                 <div class="relative w-full max-w-xl mx-4 {{ $card }} focus:outline-none" tabindex="-1">
                     <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
-                        <h3 class="text-base font-semibold text-gray-900">Edit Announcement</h3>
+                        <h3 class="text-base font-semibold text-gray-900">Ubah Pengumuman</h3>
                         <button class="text-gray-500 hover:text-gray-700" type="button" wire:click="closeEdit"
                             aria-label="Close">
                             <x-heroicon-o-x-mark class="w-5 h-5" />
@@ -185,13 +185,13 @@
                     <form class="p-5" wire:submit.prevent="update">
                         <div class="space-y-5">
                             <div>
-                                <label class="{{ $label }}">📝 Description</label>
+                                <label class="{{ $label }}">📝 Deskripsi</label>
                                 <input type="text" class="{{ $input }}" wire:model.defer="edit_description" autofocus>
                                 @error('edit_description') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}
                                 </p> @enderror
                             </div>
                             <div>
-                                <label class="{{ $label }}">🗓️ Event Date (Optional)</label>
+                                <label class="{{ $label }}">🗓️ Tanggal Acara (Opsional)</label>
                                 <input type="datetime-local" class="{{ $input }}" wire:model.defer="edit_event_at">
                                 @error('edit_event_at') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
                                 @enderror
@@ -200,16 +200,16 @@
                         <div class="mt-6 flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
                             <button type="button"
                                 class="px-4 h-10 rounded-xl border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-100 hover:border-gray-400 transition"
-                                wire:click="closeEdit">Cancel</button>
+                                wire:click="closeEdit">Batal</button>
                             <button type="submit" wire:loading.attr="disabled" wire:target="update"
                                 class="inline-flex items-center gap-2 px-5 h-10 rounded-xl bg-gray-900 text-white text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 transition active:scale-95 hover:bg-black disabled:opacity-60">
                                 <span class="flex items-center gap-2" wire:loading.remove wire:target="update">
                                     <x-heroicon-o-check class="w-4 h-4" />
-                                    Save Changes
+                                    Simpan Perubahan
                                 </span>
                                 <span class="flex items-center gap-2" wire:loading wire:target="update">
                                     <x-heroicon-o-arrow-path class="h-4 w-4 animate-spin" />
-                                    Saving...
+                                    Menyimpan...
                                 </span>
                             </button>
                         </div>

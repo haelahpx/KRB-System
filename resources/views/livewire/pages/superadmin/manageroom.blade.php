@@ -26,7 +26,7 @@
                         <x-heroicon-o-bars-3 class="w-6 h-6 text-white" />
                     </div>
                     <div class="flex-1">
-                        <h2 class="text-lg sm:text-xl font-semibold">Manage Rooms</h2>
+                        <h2 class="text-lg sm:text-xl font-semibold">Manajemen Ruangan</h2>
                         <p class="text-sm text-white/80">
                             Cabang: <span
                                 class="font-semibold">{{ optional(Auth::user()->company)->company_name ?? '-' }}</span>

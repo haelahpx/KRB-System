@@ -92,6 +92,11 @@ class Vehiclestatus extends Component
             ->toArray();
     }
 
+    public function goToDetail(int $id): void
+    {
+        redirect()->route('receptionist.vehicle-booking-detail', ['id' => $id]);
+    }   
+
     public function render()
     {
         $bookings = VehicleBooking::query()
@@ -173,7 +178,7 @@ class Vehiclestatus extends Component
             report($e);
             $this->dispatch('toast', type: 'error', title: 'Error', message: 'Gagal menyetujui: ' . $e->getMessage());
         }
-    } 
+    }
 
     /** Open modal to ask for reject reason */
     public function confirmReject(int $id): void
@@ -318,7 +323,6 @@ class Vehiclestatus extends Component
 
             $this->showDetailModal = true;
             $this->resetErrorBag();
-
         } catch (\Throwable $e) {
             report($e);
             $this->dispatch('toast', type: 'error', title: 'Error', message: 'Gagal memuat detail: ' . $e->getMessage());

@@ -201,7 +201,7 @@ class Guestbookmanagement extends Component
         }
 
         $rows = $query->orderByDesc('created_at')
-            ->paginate(10, ['*'], 'guestbooksPage');
+            ->paginate(12, ['*'], 'guestbooksPage');
 
         return view('livewire.pages.superadmin.guestbookmanagement', [
             'rows' => $rows,

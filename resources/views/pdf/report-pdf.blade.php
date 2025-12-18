@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ $company['company_name'] ?? 'Company' }} — Laporan Operasional — {{ $year }}</title>
+    <title>{{ $company['company_name'] ?? 'Perusahaan' }} — Laporan Operasional — {{ $year }}</title>
     <style>
         * {
             margin: 0;
@@ -224,7 +224,7 @@
     @endphp
     @if(!empty($wm_src))
         <div class="wm">
-            <img src="{{ $wm_src }}" alt="Watermark Logo">
+            <img src="{{ $wm_src }}" alt="Logo Watermark">
         </div>
     @endif
 
@@ -232,7 +232,7 @@
 
         {{-- Header (tanpa logo, karena logo jadi watermark tengah) --}}
         <div class="report-header">
-            <div class="company-name">{{ $company['company_name'] ?? 'Company' }}</div>
+            <div class="company-name">{{ $company['company_name'] ?? 'Perusahaan' }}</div>
             <div class="report-title">Laporan Operasional</div>
             <div class="report-meta">
                 Periode: {{ $year }}<br>
@@ -241,7 +241,7 @@
             </div>
         </div>
 
-        {{-- Executive Summary --}}
+        {{-- Ringkasan Eksekutif --}}
         <div class="section">
             <h1 class="section-header">1. RINGKASAN EKSEKUTIF</h1>
 
@@ -310,42 +310,42 @@
                         <td class="table-label">Ruangan</td>
                         <td class="text-right">{{ number_format($analysis['kpi']['total_room'] ?? 0) }}</td>
                         <td class="text-right">
-                            {{ is_null($analysis['kpi']['growth_yoy']['room'] ?? null) ? 'N/A' : $analysis['kpi']['growth_yoy']['room'] . '%' }}
+                            {{ is_null($analysis['kpi']['growth_yoy']['room'] ?? null) ? 'T/A' : $analysis['kpi']['growth_yoy']['room'] . '%' }}
                         </td>
                     </tr>
                     <tr>
                         <td class="table-label">Kendaraan</td>
                         <td class="text-right">{{ number_format($analysis['kpi']['total_vehicle'] ?? 0) }}</td>
                         <td class="text-right">
-                            {{ is_null($analysis['kpi']['growth_yoy']['vehicle'] ?? null) ? 'N/A' : $analysis['kpi']['growth_yoy']['vehicle'] . '%' }}
+                            {{ is_null($analysis['kpi']['growth_yoy']['vehicle'] ?? null) ? 'T/A' : $analysis['kpi']['growth_yoy']['vehicle'] . '%' }}
                         </td>
                     </tr>
                     <tr>
                         <td class="table-label">Tiket Support</td>
                         <td class="text-right">{{ number_format($analysis['kpi']['total_ticket'] ?? 0) }}</td>
                         <td class="text-right">
-                            {{ is_null($analysis['kpi']['growth_yoy']['ticket'] ?? null) ? 'N/A' : $analysis['kpi']['growth_yoy']['ticket'] . '%' }}
+                            {{ is_null($analysis['kpi']['growth_yoy']['ticket'] ?? null) ? 'T/A' : $analysis['kpi']['growth_yoy']['ticket'] . '%' }}
                         </td>
                     </tr>
                     <tr>
                         <td class="table-label">Buku Tamu</td>
                         <td class="text-right">{{ number_format($analysis['kpi']['total_guestbook'] ?? 0) }}</td>
                         <td class="text-right">
-                            {{ is_null($analysis['kpi']['growth_yoy']['guestbook'] ?? null) ? 'N/A' : $analysis['kpi']['growth_yoy']['guestbook'] . '%' }}
+                            {{ is_null($analysis['kpi']['growth_yoy']['guestbook'] ?? null) ? 'T/A' : $analysis['kpi']['growth_yoy']['guestbook'] . '%' }}
                         </td>
                     </tr>
                     <tr>
                         <td class="table-label">Delivery</td>
                         <td class="text-right">{{ number_format($analysis['kpi']['total_delivery'] ?? 0) }}</td>
                         <td class="text-right">
-                            {{ is_null($analysis['kpi']['growth_yoy']['delivery'] ?? null) ? 'N/A' : $analysis['kpi']['growth_yoy']['delivery'] . '%' }}
+                            {{ is_null($analysis['kpi']['growth_yoy']['delivery'] ?? null) ? 'T/A' : $analysis['kpi']['growth_yoy']['delivery'] . '%' }}
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        {{-- Trend Analysis --}}
+        {{-- Analisis Tren --}}
         <div class="section">
             <h1 class="section-header">2. ANALISIS TREN</h1>
             <p class="summary-paragraph">
@@ -387,7 +387,7 @@
                 <thead>
                     <tr>
                         <th>Bulan</th>
-                        <th class="text-right">Overall</th>
+                        <th class="text-right">Keseluruhan</th>
                         <th class="text-right">Ruangan</th>
                         <th class="text-right">Kendaraan</th>
                         <th class="text-right">Tiket</th>
@@ -400,17 +400,17 @@
                         <tr>
                             <td class="table-label">{{ $m }}</td>
                             <td class="text-right">@php $v = $pad($mom['overall'] ?? [])[$i] ?? '—'; @endphp
-                                {{ is_null($v) ? 'N/A' : $v . '%' }}</td>
+                                {{ is_null($v) ? 'T/A' : $v . '%' }}</td>
                             <td class="text-right">@php $v = $pad($mom['room'] ?? [])[$i] ?? '—'; @endphp
-                                {{ is_null($v) ? 'N/A' : $v . '%' }}</td>
+                                {{ is_null($v) ? 'T/A' : $v . '%' }}</td>
                             <td class="text-right">@php $v = $pad($mom['vehicle'] ?? [])[$i] ?? '—'; @endphp
-                                {{ is_null($v) ? 'N/A' : $v . '%' }}</td>
+                                {{ is_null($v) ? 'T/A' : $v . '%' }}</td>
                             <td class="text-right">@php $v = $pad($mom['ticket'] ?? [])[$i] ?? '—'; @endphp
-                                {{ is_null($v) ? 'N/A' : $v . '%' }}</td>
+                                {{ is_null($v) ? 'T/A' : $v . '%' }}</td>
                             <td class="text-right">@php $v = $pad($mom['guestbook'] ?? [])[$i] ?? '—'; @endphp
-                                {{ is_null($v) ? 'N/A' : $v . '%' }}</td>
+                                {{ is_null($v) ? 'T/A' : $v . '%' }}</td>
                             <td class="text-right">@php $v = $pad($mom['delivery'] ?? [])[$i] ?? '—'; @endphp
-                                {{ is_null($v) ? 'N/A' : $v . '%' }}</td>
+                                {{ is_null($v) ? 'T/A' : $v . '%' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -425,7 +425,7 @@
             </p>
 
             <table>
-                <caption class="table-caption">Tabel 3. Moving Average 3 Bulan (Overall)</caption>
+                <caption class="table-caption">Tabel 3. Moving Average 3 Bulan (Keseluruhan)</caption>
                 <thead>
                     <tr>
                         @foreach(($monthly['labels'] ?? []) as $m) <th class="text-center">{{ $m }}</th> @endforeach
@@ -441,7 +441,7 @@
             </table>
         </div>
 
-        {{-- Appendix A: Monthly numbers --}}
+        {{-- Lampiran A: Detail Bulanan --}}
         <div class="section page-break">
             <h1 class="section-header">LAMPIRAN A: DETAIL BULANAN</h1>
             <table>
@@ -475,7 +475,7 @@
             </table>
         </div>
 
-        {{-- Appendix B: Yearly totals --}}
+        {{-- Lampiran B: Rekap Tahunan --}}
         <div class="section">
             <h1 class="section-header">LAMPIRAN B: REKAP TAHUNAN</h1>
             <table>
@@ -509,7 +509,7 @@
             </table>
         </div>
 
-        {{-- Appendix C: SLA Ticket Performance --}}
+        {{-- Lampiran C: Performa SLA Tiket --}}
         <div class="section page-break">
             <h1 class="section-header">LAMPIRAN C: PERFORMA PENANGANAN TIKET (SLA)</h1>
 
@@ -526,7 +526,7 @@
                     <li><strong>Avg (Rata-rata):</strong> gambaran umum kecepatan penyelesaian.</li>
                     <li><strong>Median:</strong> nilai tengah (lebih tahan outlier).</li>
                     <li><strong>P90:</strong> 90% tiket selesai ≤ angka ini (melihat “hampir semua” kasus).</li>
-                    <li><strong>SLA:</strong> target waktu penyelesaian (High 24 jam, Medium 48 jam, Low 72 jam).</li>
+                    <li><strong>SLA:</strong> target waktu penyelesaian (Tinggi 24 jam, Sedang 48 jam, Rendah 72 jam).</li>
                     <li><strong>Tepat SLA:</strong> persentase tiket yang selesai sesuai target SLA.</li>
                     <li><strong>Penilaian:</strong> <em>Cepat</em> (≥90%), <em>Sedang</em> (70–89%), <em>Perlu
                             Perbaikan</em> (&lt;70%).</li>
@@ -551,7 +551,7 @@
                 <tbody>
                     @php
                         $prioOrder = ['high', 'medium', 'low', 'unspecified'];
-                        $labelMap = ['high' => 'High', 'medium' => 'Medium', 'low' => 'Low', 'unspecified' => 'Tidak Ditentukan'];
+                        $labelMap = ['high' => 'Tinggi', 'medium' => 'Sedang', 'low' => 'Rendah', 'unspecified' => 'Tidak Ditentukan'];
                     @endphp
                     @foreach($prioOrder as $p)
                         @php $st = $ticket_perf['by_priority'][$p] ?? null; @endphp
@@ -566,9 +566,9 @@
                                 <td class="text-right">
                                     {{ is_null($st['p90_hours']) ? '—' : number_format($st['p90_hours'], 2) }}</td>
                                 <td class="text-right">
-                                    {{ is_null($st['sla_hours']) ? 'n/a' : number_format($st['sla_hours'], 0) }}</td>
+                                    {{ is_null($st['sla_hours']) ? 't/a' : number_format($st['sla_hours'], 0) }}</td>
                                 <td class="text-right">
-                                    {{ is_null($st['sla_hit_rate']) ? 'n/a' : (number_format($st['sla_hit_rate'], 0) . '%') }}
+                                    {{ is_null($st['sla_hit_rate']) ? 't/a' : (number_format($st['sla_hit_rate'], 0) . '%') }}
                                 </td>
                                 <td>{{ $st['grade'] ?? '—' }}</td>
                             </tr>
@@ -622,7 +622,7 @@
                             <td>
                                 @php
                                     $pkeys = ['high', 'medium', 'low', 'unspecified'];
-                                    $label = ['high' => 'High', 'medium' => 'Medium', 'low' => 'Low', 'unspecified' => '—'];
+                                    $label = ['high' => 'Tinggi', 'medium' => 'Sedang', 'low' => 'Rendah', 'unspecified' => '—'];
                                 @endphp
                                 @foreach($pkeys as $pk)
                                     @php $st = $row['by_priority'][$pk] ?? null; @endphp
@@ -646,7 +646,7 @@
 
         {{-- Footer --}}
         <div class="document-footer">
-            <p><strong>{{ $company['company_name'] ?? 'Company' }}</strong> — Laporan Operasional {{ $year }}</p>
+            <p><strong>{{ $company['company_name'] ?? 'Perusahaan' }}</strong> — Laporan Operasional {{ $year }}</p>
             <p>Dokumen ini bersifat rahasia dan hanya untuk keperluan internal.</p>
         </div>
 
