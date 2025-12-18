@@ -187,7 +187,7 @@
                                     <button class="{{ $btnBlk }}"
                                         wire:click="openEdit({{ $row->guestbook_id }})" wire:loading.attr="disabled"
                                         wire:target="openEdit({{ $row->guestbook_id }})">
-                                        <span wire:loading.remove wire:target="openEdit({{ $row->guestbook_id }})">Ubah</span>
+                                        <span wire:loading.remove wire:target="openEdit({{ $row->guestbook_id }})">Edit</span>
                                         <span wire:loading wire:target="openEdit({{ $row->guestbook_id }})">Memuat…</span>
                                     </button>
                                     <button class="{{ $btnRed }}" wire:click="delete({{ $row->guestbook_id }})"

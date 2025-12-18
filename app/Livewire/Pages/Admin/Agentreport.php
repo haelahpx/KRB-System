@@ -8,8 +8,9 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Models\Company;
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 #[Layout('layouts.admin')]
@@ -23,22 +24,137 @@ class Agentreport extends Component
     public $openAgent = null;
     public $search = '';
     public $companyId;
-    public $departmentId;
+
+    // Department switcher properties
+    public string $company_name = '-';
+    public string $department_name = '-';
+    public array $deptOptions = [];
+    public ?int $selected_department_id = null;
+    public ?int $primary_department_id = null;
+    public bool $showSwitcher = false;
+    public bool $is_superadmin_user = false;
+
+    private const ADMIN_ROLE_NAMES = ['Superadmin', 'Admin'];
 
     public function mount()
     {
-        /** @var User|null $authUser */
-        $authUser = Auth::user();
+        $user = Auth::user()->loadMissing(['company', 'department', 'role']);
+        
+        $this->is_superadmin_user = $this->isSuperadmin();
+        $this->company_name = optional($user->company)->company_name ?? '-';
+        $this->companyId = optional($user->company)->company_id;
+        $this->primary_department_id = $user->department_id ?: null;
 
-        if ($authUser) {
-            $user = User::with(['company', 'department'])->find($authUser->user_id);
-            if (!$user) {
-                $user = $authUser;
+        $this->loadUserDepartments();
+
+        if ($this->is_superadmin_user) {
+            $this->selected_department_id = null;
+            $this->department_name = 'SEMUA DEPARTEMEN';
+        } else {
+            if (!$this->selected_department_id) {
+                $this->selected_department_id = $this->primary_department_id
+                    ?: ($this->deptOptions[0]['id'] ?? null);
             }
-
-            $this->companyId = optional($user->company)->company_id;
-            $this->departmentId = optional($user->department)->department_id;
+            $this->department_name = $this->resolveDeptName($this->selected_department_id);
         }
+    }
+
+    protected function loadUserDepartments(): void
+    {
+        $user = Auth::user();
+
+        if ($this->is_superadmin_user) {
+            $rows = Department::where('company_id', $user->company_id)
+                ->orderBy('department_name')
+                ->get(['department_id as id', 'department_name as name']);
+        } else {
+            $rows = DB::table('user_departments as ud')
+                ->join('departments as d', 'd.department_id', '=', 'ud.department_id')
+                ->where('ud.user_id', $user->user_id)
+                ->orderBy('d.department_name')
+                ->get(['d.department_id as id', 'd.department_name as name']);
+        }
+
+        $this->deptOptions = $rows
+            ->map(fn($r) => ['id' => (int) $r->id, 'name' => (string) $r->name])
+            ->values()
+            ->all();
+
+        $primaryId = $user->department_id;
+        $isPrimaryInList = collect($this->deptOptions)->contains('id', $primaryId);
+
+        if ($primaryId && !$isPrimaryInList) {
+            $primaryName = Department::where('department_id', $primaryId)->value('department_name') ?? 'Unknown';
+            array_unshift($this->deptOptions, ['id' => (int)$primaryId, 'name' => (string)$primaryName]);
+        }
+        
+        if ($this->is_superadmin_user) {
+            array_unshift($this->deptOptions, ['id' => null, 'name' => 'SEMUA DEPARTEMEN']);
+        }
+
+        $this->showSwitcher = count($this->deptOptions) > 1;
+
+        if (!$this->is_superadmin_user && empty($this->deptOptions) && $this->primary_department_id) {
+            $name = Department::where('department_id', $this->primary_department_id)->value('department_name') ?? 'Unknown';
+            $this->deptOptions = [
+                ['id' => (int) $this->primary_department_id, 'name' => (string) $name],
+            ];
+            $this->showSwitcher = false;
+        }
+    }
+
+    protected function resolveDeptName(?int $deptId): string
+    {
+        if (!$deptId) {
+            return 'SEMUA DEPARTEMEN';
+        }
+
+        foreach ($this->deptOptions as $opt) {
+            if ($opt['id'] === (int) $deptId) {
+                return $opt['name'];
+            }
+        }
+
+        return Department::where('department_id', $deptId)->value('department_name') ?? '-';
+    }
+
+    public function updatedSelectedDepartment_id(): void
+    {
+        $this->updatedSelectedDepartmentId();
+    }
+
+    public function updatedSelectedDepartmentId(): void
+    {
+        $id = $this->selected_department_id;
+
+        if (!$this->is_superadmin_user) {
+            $allowed = collect($this->deptOptions)->pluck('id')->all();
+            $id = (int) $id;
+
+            if (!in_array($id, $allowed, true)) {
+                $this->selected_department_id = $this->primary_department_id
+                    ?: ($this->deptOptions[0]['id'] ?? null);
+                $id = $this->selected_department_id;
+            }
+        }
+        
+        $this->department_name = $this->resolveDeptName($id);
+        $this->resetPage();
+    }
+
+    protected function currentAdmin()
+    {
+        $user = Auth::user();
+        if ($user && !$user->relationLoaded('role')) {
+            $user->load('role');
+        }
+        return $user;
+    }
+
+    protected function isSuperadmin(): bool
+    {
+        $u = $this->currentAdmin();
+        return $u && $u->role && $u->role->name === 'Superadmin';
     }
 
     public function updatingPage()
@@ -53,18 +169,28 @@ class Agentreport extends Component
 
     public function render()
     {
+        $user = auth()->user();
+
         // MAIN AGENT QUERY
         $query = User::where('role_id', 3)
             ->with(['company', 'department'])
             ->whereIn('user_id', Ticket::select('user_id')->distinct())
-            ->when($this->companyId, fn($q) => $q->where('company_id', $this->companyId))
-            ->when($this->departmentId, fn($q) => $q->where('department_id', $this->departmentId))
-            ->when($this->search, function ($q) {
-                $q->where(function ($qq) {
-                    $qq->where('full_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('user_id', 'like', '%' . $this->search . '%');
-                });
+            ->when($this->companyId, fn($q) => $q->where('company_id', $this->companyId));
+
+        // Apply department filter
+        $deptId = $this->selected_department_id;
+        if ($deptId !== null) {
+            $query->where('department_id', $deptId);
+        } elseif (!$this->is_superadmin_user) {
+            $query->where('department_id', $user->department_id);
+        }
+
+        $query->when($this->search, function ($q) {
+            $q->where(function ($qq) {
+                $qq->where('full_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('user_id', 'like', '%' . $this->search . '%');
             });
+        });
 
         $agents = $query->orderBy('full_name')->paginate(9);
         $agentIds = $agents->pluck('user_id')->toArray();
@@ -75,7 +201,6 @@ class Agentreport extends Component
             ->orderByDesc('ticket_id')
             ->get();
 
-        // Calculate SLA status for each ticket
         $tickets = $tickets->map(function ($ticket) {
             $ticket->sla_state = $this->calculateSLAStatus($ticket);
             return $ticket;
@@ -92,12 +217,18 @@ class Agentreport extends Component
             ];
         });
 
-        // FULL DATASET QUERY (NO SEARCH FILTER)
+        // FULL DATASET QUERY
         $allAgentsQuery = User::where('role_id', 3)
             ->with(['company', 'department'])
             ->whereIn('user_id', Ticket::select('user_id')->distinct())
-            ->when($this->companyId, fn($q) => $q->where('company_id', $this->companyId))
-            ->when($this->departmentId, fn($q) => $q->where('department_id', $this->departmentId));
+            ->when($this->companyId, fn($q) => $q->where('company_id', $this->companyId));
+
+        // Apply department filter for all agents
+        if ($deptId !== null) {
+            $allAgentsQuery->where('department_id', $deptId);
+        } elseif (!$this->is_superadmin_user) {
+            $allAgentsQuery->where('department_id', $user->department_id);
+        }
 
         $allAgents = $allAgentsQuery->get();
         $allAgentIds = $allAgents->pluck('user_id')->toArray();
@@ -111,7 +242,7 @@ class Agentreport extends Component
                 return $ticket;
             });
 
-        // AHT (Average Handling Time) per agent: consider RESOLVED/CLOSED tickets
+        // AHT per agent
         $ahtPerAgent = $allTickets->groupBy('user_id')->map(function ($t) {
             $handled = $t->filter(fn($x) => in_array($x->status, ['RESOLVED', 'CLOSED']));
             $hours = $handled->map(function ($x) {
@@ -122,19 +253,16 @@ class Agentreport extends Component
             $count = count($hours);
             $avg = $count ? round(array_sum($hours) / $count, 2) : null;
 
-            return [
-                'avg_hours' => $avg,
-                'count' => $count,
-            ];
+            return ['avg_hours' => $avg, 'count' => $count];
         });
 
-        // Top agents by best (lowest) AHT — take up to 4 for display
+        // Top agents by best AHT
         $topAhtAgents = $allAgents
             ->sortBy(fn($a) => $ahtPerAgent[$a->user_id]['avg_hours'] ?? PHP_FLOAT_MAX)
             ->take(4)
             ->values();
 
-        // AHT summary: overall average (across resolved/closed tickets), fastest and slowest agents
+        // AHT summary
         $totalHours = 0.0;
         $totalHandled = 0;
         foreach ($ahtPerAgent as $uid => $data) {
@@ -219,12 +347,8 @@ class Agentreport extends Component
         ]);
     }
 
-    /**
-     * Calculate SLA status for a ticket
-     */
     private function calculateSLAStatus($ticket)
     {
-        // SLA LIMITS
         $priority = strtolower(trim((string) $ticket->priority));
         $slaLimit = match ($priority) {
             'high' => 24,
@@ -242,22 +366,16 @@ class Agentreport extends Component
             ];
         }
 
-        // SLA Start = created_at
         $startTime = $ticket->created_at;
 
-        // SLA End logic:
-        // If ticket is CLOSED or RESOLVED → SLA stops at updated_at
-        // If still OPEN or IN_PROGRESS → SLA continues until now
         if (in_array($ticket->status, ['CLOSED', 'RESOLVED'])) {
             $endTime = $ticket->updated_at ?? now();
         } else {
-            // SLA still running
             $endTime = now();
         }
 
         $hoursElapsed = max(0, $startTime->diffInRealSeconds($endTime) / 3600);
 
-        // SLA check
         if ($hoursElapsed > $slaLimit) {
             return [
                 'state' => 'expired',
@@ -277,13 +395,21 @@ class Agentreport extends Component
 
     public function downloadReport()
     {
-        // Same filters as the page
+        $user = auth()->user();
+        
         $agents = User::where('role_id', 3)
             ->with(['company', 'department'])
             ->whereIn('user_id', Ticket::select('user_id')->distinct())
-            ->when($this->companyId, fn($q) => $q->where('company_id', $this->companyId))
-            ->when($this->departmentId, fn($q) => $q->where('department_id', $this->departmentId))
-            ->when($this->search, fn($q) => $q->where(function ($qq) {
+            ->when($this->companyId, fn($q) => $q->where('company_id', $this->companyId));
+
+        $deptId = $this->selected_department_id;
+        if ($deptId !== null) {
+            $agents->where('department_id', $deptId);
+        } elseif (!$this->is_superadmin_user) {
+            $agents->where('department_id', $user->department_id);
+        }
+
+        $agents = $agents->when($this->search, fn($q) => $q->where(function ($qq) {
                 $qq->where('full_name', 'like', '%' . $this->search . '%')
                     ->orWhere('user_id', 'like', '%' . $this->search . '%');
             }))
@@ -307,7 +433,6 @@ class Agentreport extends Component
             ];
         });
 
-        // Compute AHT (Average Handling Time) similar to the page render method
         $ahtPerAgent = $allTickets->groupBy('user_id')->map(function ($t) {
             $handled = $t->filter(fn($x) => in_array($x->status, ['RESOLVED', 'CLOSED']));
             $hours = $handled->map(function ($x) {
@@ -318,13 +443,9 @@ class Agentreport extends Component
             $count = count($hours);
             $avg = $count ? round(array_sum($hours) / $count, 2) : null;
 
-            return [
-                'avg_hours' => $avg,
-                'count' => $count,
-            ];
+            return ['avg_hours' => $avg, 'count' => $count];
         });
 
-        // AHT summary: overall average and fastest/slowest
         $totalHours = 0.0;
         $totalHandled = 0;
         foreach ($ahtPerAgent as $uid => $data) {
@@ -372,7 +493,6 @@ class Agentreport extends Component
             'slowest' => $slowest,
         ];
 
-        // Top agents by total tickets
         $topAgents = $agents
             ->sortByDesc(fn($a) => $stats[$a->user_id]['Total'] ?? 0)
             ->take(4)

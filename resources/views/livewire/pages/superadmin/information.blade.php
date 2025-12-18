@@ -177,7 +177,7 @@
                                 wire:loading.attr="disabled" wire:target="openEdit({{ $info->information_id }})"
                                 wire:key="btn-edit-info-{{ $info->information_id }}">
                                 <span wire:loading.remove
-                                    wire:target="openEdit({{ $info->information_id }})">Ubah</span>
+                                    wire:target="openEdit({{ $info->information_id }})">Edit</span>
                                 <span wire:loading
                                     wire:target="openEdit({{ $info->information_id }})">Memuat…</span>
                             </button>

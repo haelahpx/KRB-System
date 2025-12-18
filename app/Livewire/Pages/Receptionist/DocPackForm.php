@@ -19,24 +19,21 @@ class DocPackForm extends Component
 {
     use WithFileUploads;
 
-    public string $direction = 'taken';   // taken | deliver
-    public string $itemType  = 'package'; // package | document
+    public string $direction = 'taken';
+    public string $itemType  = 'package';
 
-    // NOTE: jangan strict int untuk menghindari TypeError dari select (string)
-    public $departmentId = null; // departments.department_id
-    public $userId       = null; // users.user_id
-    public $storageId    = null; // storages.storage_id
+    public $departmentId = null;
+    public $userId       = null;
+    public $storageId    = null;
 
     public string $senderText   = '';
     public string $receiverText = '';
     public string $itemName     = '';
 
-    /** Bukti foto (upload / kamera) */
     public $photo = null;
 
-    /** Dropdown Data */
     public array $departments = [];
-    public array $users = [];     // [user_id => full_name]
+    public array $users = [];
     public array $storages = [];
 
     protected function rules(): array
@@ -44,14 +41,11 @@ class DocPackForm extends Component
         $base = [
             'direction'    => ['required', 'in:taken,deliver'],
             'itemType'     => ['required', 'in:package,document'],
-
-            // FIX: sesuai struktur tabel kamu
             'storageId'    => ['required', 'integer', 'exists:storages,storage_id'],
             'itemName'     => ['required', 'string', 'max:255'],
             'departmentId' => ['required', 'integer', 'exists:departments,department_id'],
             'userId'       => ['required', 'integer', 'exists:users,user_id'],
-
-            'photo'        => ['nullable', 'image', 'max:2048'], // 2MB
+            'photo'        => ['nullable', 'image', 'max:2048'],
         ];
 
         if ($this->direction === 'taken') {
@@ -77,7 +71,6 @@ class DocPackForm extends Component
             ->get(['storage_id as id', 'name'])
             ->toArray();
 
-        // optional: kalau departmentId sudah ke-set (misal dari old state), load users
         if ($this->departmentId) {
             $this->loadUsers();
         }
@@ -98,7 +91,6 @@ class DocPackForm extends Component
             return;
         }
 
-        // FIX: PK users adalah user_id (sesuai screenshot)
         $this->users = User::where('company_id', $companyId)
             ->where('department_id', (int) $this->departmentId)
             ->orderBy('full_name')
@@ -121,7 +113,6 @@ class DocPackForm extends Component
 
         $now = Carbon::now('Asia/Jakarta');
 
-        // FIX: jangan whereKey(), karena defaultnya cari kolom id
         $selectedUserName = User::where('user_id', (int) $this->userId)->value('full_name') ?? '—';
 
         if ($this->direction === 'taken') {
@@ -132,25 +123,19 @@ class DocPackForm extends Component
             $receiver = $this->receiverText;
         }
 
-        // SIMPAN FOTO KE FOLDER PUBLIC/images/deliveries
         $imagePath = null;
 
         if ($this->photo) {
-            $ext = strtolower($this->photo->getClientOriginalExtension() ?: 'png');
-            $filename = 'delivery_' . $now->format('Ymd_His') . '_' . uniqid() . '.' . $ext;
-
-            $publicDir = public_path('images/deliveries');
-            if (!is_dir($publicDir)) {
-                mkdir($publicDir, 0755, true);
-            }
-
-            $this->photo->move($publicDir, $filename);
-            $imagePath = 'images/deliveries/' . $filename;
+            $filename = 'delivery_' . $now->format('Ymd_His') . '_' . uniqid() . '.' . $this->photo->getClientOriginalExtension();
+            
+            $path = $this->photo->storeAs('deliveries', $filename, 'public');
+            
+            $imagePath = 'storage/' . $path;
         }
 
         Delivery::create([
             'company_id'      => Auth::user()->company_id,
-            'department_id'   => (int) $this->departmentId,  // ada di tabel deliveries
+            'department_id'   => (int) $this->departmentId,
             'receptionist_id' => Auth::id(),
             'item_name'       => $this->itemName,
             'type'            => $this->itemType,

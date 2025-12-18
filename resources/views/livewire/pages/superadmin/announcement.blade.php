@@ -138,7 +138,7 @@
                                 wire:target="openEdit({{ $announcement->announcements_id }})"
                                 wire:key="btn-edit-ann-{{ $announcement->announcements_id }}">
                                 <span wire:loading.remove
-                                    wire:target="openEdit({{ $announcement->announcements_id }})">Ubah</span>
+                                    wire:target="openEdit({{ $announcement->announcements_id }})">Edit</span>
                                 <span wire:loading
                                     wire:target="openEdit({{ $announcement->announcements_id }})">Memuat…</span>
                             </button>

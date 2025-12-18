@@ -492,7 +492,7 @@
                                 {{ is_null($roomFilterId) ? 'bg-gray-900 text-white' : 'text-gray-800 hover:bg-gray-100' }}">
                             <span class="flex items-center gap-2">
                                 <span class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-gray-300 text-[11px]">
-                                    Semua
+                                    All
                                 </span>
                                 <span>Semua Ruangan</span>
                             </span>
