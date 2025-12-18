@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 // ========== Controllers ==========
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\VehicleAttachmentController;
+use App\Http\Controllers\ManualBookController;
 
 // ========== Livewire Pages (User) ==========
 use App\Livewire\Pages\User\Home as UserHome;
@@ -185,6 +186,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/book-online', Meetonline::class)->name('user.meetonline');
     Route::get('/book-vehicle', Bookvehicle::class)->name('book-vehicle');
     Route::get('/profile', Profile::class)->name('profile');
+    Route::get('/manual-book', [ManualBookController::class, 'show'])->name('manual.book');
     Route::get('/package', UserPackage::class)->name('package');
     Route::get('/ticketstatus', Ticketstatus::class)->name('ticketstatus');
     Route::get('/vehiclestatus', Vehiclestatus::class)->name('vehiclestatus');

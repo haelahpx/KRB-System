@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="mb-6 border-b border-gray-100 pb-4">
                     <h3 class="text-lg font-bold text-gray-900">Informasi Pribadi</h3>
                     <p class="text-sm text-gray-500">Kelola informasi pribadi Anda, termasuk nomor telepon dan alamat email.</p>
@@ -116,6 +116,16 @@
                                 <x-heroicon-o-calendar class="w-4 h-4 text-gray-400" />
                                 <span x-text="profile.joinDate || '-'"></span>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Manual Book</label>
+                    <div class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm text-gray-700">Manual Book KRBS</p>
+                            <a href="{{ route('manual.book') }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-gray-900 text-white text-sm rounded hover:bg-gray-800">Buka</a>
                         </div>
                     </div>
                 </div>
