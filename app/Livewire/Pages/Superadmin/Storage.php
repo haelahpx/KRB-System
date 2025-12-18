@@ -201,7 +201,7 @@ class Storage extends Component
             });
         }
 
-        $rows = $query->orderByDesc('created_at')->paginate(10, pageName: 'storagesPage');
+        $rows = $query->orderByDesc('created_at')->paginate(12, pageName: 'storagesPage');
 
         return view('livewire.pages.superadmin.storage', [
             'rows' => $rows,

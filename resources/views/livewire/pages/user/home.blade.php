@@ -502,12 +502,8 @@
                     <x-heroicon-o-building-library class="w-64 h-64 text-white" />
                 </div>
                 <div class="relative z-10 h-full p-8 flex flex-col justify-center">
-                    <span
-                        class="inline-block w-fit px-3 py-1 rounded-sm bg-yellow-500 text-black text-[10px] font-black uppercase tracking-widest mb-6">
-                        KRBS System
-                    </span>
                     <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
-                        Selamat Datang Kembali, <br>
+                        Welcome, <br>
                         <span class="text-yellow-400">{{ $this->getUserName() }}</span>
                     </h1>
                     <p class="text-zinc-400 max-w-md leading-relaxed mb-8 font-medium">

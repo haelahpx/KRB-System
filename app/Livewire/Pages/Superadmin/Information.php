@@ -168,7 +168,7 @@ class Information extends Component
                 $query->where('description', 'like', "%{$this->search}%");
             })
             ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(10);
+            ->paginate(12);
 
         return view('livewire.pages.superadmin.information', [
             'information'       => $information,

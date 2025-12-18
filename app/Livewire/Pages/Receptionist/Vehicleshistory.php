@@ -129,6 +129,11 @@ class Vehicleshistory extends Component
         $this->resetPage();
     }
 
+    public function goToDetail(int $id): void
+    {
+        redirect()->route('receptionist.vehicle-booking-detail', ['id' => $id]);
+    }   
+
     public function render()
     {
         $user = Auth::user();

@@ -176,7 +176,7 @@ class Department extends Component
                 $q->where('department_name', 'like', "%{$this->search}%")
             )
             ->orderBy('department_name')
-            ->paginate(10);
+            ->paginate(12);
 
         return view('livewire.pages.superadmin.department', compact('rows'));
     }

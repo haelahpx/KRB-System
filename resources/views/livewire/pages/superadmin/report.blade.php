@@ -5,7 +5,7 @@
             <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-xs text-center">
                 <div class="mx-auto mb-3 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900"></div>
                 <p class="font-semibold text-gray-900">Menyiapkan PDF…</p>
-                <p class="text-xs text-gray-500 mt-1">Tunggu sampai dialog download muncul.</p>
+                <p class="text-xs text-gray-500 mt-1">Tunggu sampai dialog unduh muncul.</p>
                 <button id="hideOverlay" type="button" class="mt-4 text-xs text-gray-600 underline">Sembunyikan</button>
             </div>
         </div>
@@ -25,7 +25,7 @@
                     @endif
                     <div>
                         <h2 class="text-lg sm:text-xl font-semibold tracking-wide">
-                            {{ $company['company_name'] ?? '—' }} — Reports &amp; Evaluation
+                            {{ $company['company_name'] ?? '—' }} — Laporan &amp; Evaluasi
                         </h2>
                         <p class="text-xs text-white/70 flex items-center gap-1">
                             <x-heroicon-o-calendar class="h-4 w-4" />
@@ -49,13 +49,13 @@
                             <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="4"></path>
                         </svg>
                         <x-heroicon-o-arrow-down-tray id="btnIcon" class="h-4 w-4" />
-                        <span id="btnLabel">Download PDF</span>
+                        <span id="btnLabel">Unduh PDF</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        {{-- KPI Summary --}}
+        {{-- Ringkasan KPI --}}
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
                 <div class="flex items-center gap-2 text-gray-600">
@@ -84,13 +84,13 @@
             </div>
         </section>
 
-        {{-- SLA Snapshot (Blade Icons + warna) --}}
+        {{-- Gambaran SLA --}}
         @php
             $prio = $ticketPerf['by_priority'] ?? [];
             $cards = [
-                'high' => ['label'=>'High','bg'=>'bg-red-50','text'=>'text-red-700','ring'=>'ring-red-200','icon'=>'exclamation-triangle','iconClass'=>'text-red-600'],
-                'medium' => ['label'=>'Medium','bg'=>'bg-yellow-50','text'=>'text-yellow-700','ring'=>'ring-yellow-200','icon'=>'clock','iconClass'=>'text-yellow-600'],
-                'low' => ['label'=>'Low','bg'=>'bg-emerald-50','text'=>'text-emerald-700','ring'=>'ring-emerald-200','icon'=>'check-circle','iconClass'=>'text-emerald-600'],
+                'high' => ['label'=>'Tinggi','bg'=>'bg-red-50','text'=>'text-red-700','ring'=>'ring-red-200','icon'=>'exclamation-triangle','iconClass'=>'text-red-600'],
+                'medium' => ['label'=>'Sedang','bg'=>'bg-yellow-50','text'=>'text-yellow-700','ring'=>'ring-yellow-200','icon'=>'clock','iconClass'=>'text-yellow-600'],
+                'low' => ['label'=>'Rendah','bg'=>'bg-emerald-50','text'=>'text-emerald-700','ring'=>'ring-emerald-200','icon'=>'check-circle','iconClass'=>'text-emerald-600'],
             ];
             $badge = fn($label,$bg,$text) => "<span class='px-2 py-0.5 rounded-full text-xs font-semibold {$bg} {$text}'>$label</span>";
         @endphp
@@ -99,17 +99,17 @@
             <div class="flex items-center justify-between">
                 <h3 class="text-base font-semibold text-gray-900 flex items-center gap-2">
                     <x-heroicon-o-clock class="h-5 w-5 text-gray-900" />
-                    SLA Snapshot (Tahun {{ $year }})
+                    Gambaran SLA (Tahun {{ $year }})
                 </h3>
                 <div class="text-xs text-gray-500 flex items-center gap-3">
                     <span class="inline-flex items-center gap-1">
-                        <span class="h-2.5 w-2.5 rounded-full bg-red-500"></span> High
+                        <span class="h-2.5 w-2.5 rounded-full bg-red-500"></span> Tinggi
                     </span>
                     <span class="inline-flex items-center gap-1">
-                        <span class="h-2.5 w-2.5 rounded-full bg-yellow-400"></span> Medium
+                        <span class="h-2.5 w-2.5 rounded-full bg-yellow-400"></span> Sedang
                     </span>
                     <span class="inline-flex items-center gap-1">
-                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span> Low
+                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span> Rendah
                     </span>
                 </div>
             </div>
@@ -136,7 +136,7 @@
                             <div class="bg-white/70 rounded-lg p-2 text-gray-800">
                                 <div class="flex items-center gap-1">
                                     <x-heroicon-o-presentation-chart-line class="h-4 w-4" />
-                                    <span>Avg</span>
+                                    <span>Rata-rata</span>
                                 </div>
                                 <div class="font-semibold">{{ is_null($st['avg_hours'] ?? null) ? '—' : number_format($st['avg_hours'],2) }} j</div>
                             </div>
@@ -174,7 +174,7 @@
             </p>
         </section>
 
-        {{-- Charts --}}
+        {{-- Grafik --}}
         <section class="grid grid-cols-1 2xl:grid-cols-2 gap-6">
             <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
                 <h3 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -197,7 +197,7 @@
             </div>
         </section>
 
-        {{-- Data Table --}}
+        {{-- Tabel Data --}}
         <section class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
             <h3 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <x-heroicon-o-bars-3 class="h-5 w-5 text-gray-900" />
@@ -208,11 +208,11 @@
                     <thead>
                         <tr class="text-left text-gray-600">
                             <th class="py-2 pr-4">Bulan</th>
-                            <th class="py-2 pr-4">Room</th>
-                            <th class="py-2 pr-4">Vehicle</th>
-                            <th class="py-2 pr-4">Ticket</th>
-                            <th class="py-2 pr-4">Guestbook</th>
-                            <th class="py-2 pr-4">Delivery</th>
+                            <th class="py-2 pr-4">Ruangan</th>
+                            <th class="py-2 pr-4">Kendaraan</th>
+                            <th class="py-2 pr-4">Tiket</th>
+                            <th class="py-2 pr-4">Buku Tamu</th>
+                            <th class="py-2 pr-4">Pengiriman</th>
                             <th class="py-2 pr-4">Total</th>
                         </tr>
                     </thead>
@@ -256,12 +256,19 @@
             };
             const paletteFill = { ...paletteLine };
 
-            // Monthly
+            // Bulanan
             const mctx = document.getElementById('monthlyChart')?.getContext('2d');
             if (mctx) {
                 const keys = ['room','vehicle','ticket','guestbook','delivery'];
+                const labelMap = {
+                    room: 'Ruangan',
+                    vehicle: 'Kendaraan',
+                    ticket: 'Tiket',
+                    guestbook: 'Buku Tamu',
+                    delivery: 'Pengiriman'
+                };
                 const mDatasets = keys.filter(k => Array.isArray(monthly[k])).map(k => ({
-                    label: k.charAt(0).toUpperCase() + k.slice(1),
+                    label: labelMap[k],
                     data: monthly[k],
                     borderColor: paletteLine[k],
                     tension: .35,
@@ -279,12 +286,19 @@
                 });
             }
 
-            // Yearly
+            // Tahunan
             const yctx = document.getElementById('yearlyChart')?.getContext('2d');
             if (yctx) {
                 const keys = ['room','vehicle','ticket','guestbook','delivery'];
+                const labelMap = {
+                    room: 'Ruangan',
+                    vehicle: 'Kendaraan',
+                    ticket: 'Tiket',
+                    guestbook: 'Buku Tamu',
+                    delivery: 'Pengiriman'
+                };
                 const yDatasets = keys.filter(k => Array.isArray(yearly[k])).map(k => ({
-                    label: k.charAt(0).toUpperCase() + k.slice(1),
+                    label: labelMap[k],
                     data: yearly[k],
                     backgroundColor: paletteFill[k],
                 }));
@@ -330,7 +344,7 @@
             } else {
                 dlBtn.disabled = false;
                 btnSpinner?.classList.add('hidden');
-                btnLabel && (btnLabel.textContent = 'Download PDF');
+                btnLabel && (btnLabel.textContent = 'Unduh PDF');
                 dlOverlay?.classList.add('hidden');
             }
         }

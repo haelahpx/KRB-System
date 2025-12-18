@@ -196,7 +196,7 @@ class Vehicle extends Component
             });
         }
 
-        $rows = $query->orderByDesc('created_at')->paginate(10, pageName: 'vehiclesPage');
+        $rows = $query->orderByDesc('created_at')->paginate(12  , pageName: 'vehiclesPage');
 
         return view('livewire.pages.superadmin.vehicle', ['rows' => $rows]);
     }

@@ -85,7 +85,7 @@
                             <x-heroicon-o-calendar-days class="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h2 class="text-lg sm:text-xl font-semibold">Booking Room Management</h2>
+                            <h2 class="text-lg sm:text-xl font-semibold">Manajemen Peminjaman Ruangan</h2>
                             <p class="text-sm text-white/80">
                                 Cabang: <span class="font-semibold">{{ optional(Auth::user()->company)->company_name ?? '-' }}</span>
                             </p>

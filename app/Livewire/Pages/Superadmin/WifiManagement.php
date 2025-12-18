@@ -147,7 +147,7 @@ class WifiManagement extends Component
             });
         }
 
-        $wifis = $query->orderBy('created_at', 'desc')->paginate(10);
+        $wifis = $query->orderBy('created_at', 'desc')->paginate(12);
 
         return view('livewire.pages.superadmin.wifimanagement', [
             'wifis' => $wifis,
