@@ -22,7 +22,7 @@ class ChatModal extends Component
     public array $messages = [];
 
     /* =========================
-     | FLOW STATE
+     | FLOW STATE (TICKET)
      ========================= */
     public bool $waitingForProblemDescription = false;
     public bool $needsConfirmation = false;
@@ -34,6 +34,11 @@ class ChatModal extends Component
     public string $aiReasoning = '';
 
     public array $availableDepartments = [];
+
+    /* =========================
+     | NLU STATE
+     ========================= */
+    public string $detectedIntent = 'unknown';
 
     private const FAQ_FILE_PATH = 'faq_data.json';
 
@@ -64,7 +69,7 @@ class ChatModal extends Component
 Anda adalah Asisten AI internal Kebun Raya (PT Mitra Natura Raya).
 
 ATURAN WAJIB:
-- KRS = Kebun Raya System
+- KRS / KRBS = Sistem internal Kebun Raya
 - Jangan gunakan konteks kampus, mahasiswa, atau SKS
 - Jangan membuat tiket tanpa masalah yang jelas
 - Jika user minta tiket → minta penjelasan masalah dulu
@@ -92,9 +97,9 @@ PROMPT;
         $this->messages[] = ['role' => 'user', 'text' => $text];
         $this->currentMessage = '';
 
-        $lower = strtolower($text);
+        $this->detectedIntent = $this->detectIntent($text);
 
-        /* BLOCK INPUT DURING CONFIRMATION */
+        /* BLOCK DURING CONFIRM */
         if ($this->needsConfirmation) {
             $this->messages[] = [
                 'role' => 'model',
@@ -104,7 +109,7 @@ PROMPT;
         }
 
         /* GREETING */
-        if (in_array($lower, ['halo', 'hai', 'hi', 'hello'])) {
+        if ($this->detectedIntent === 'greeting') {
             $this->messages[] = [
                 'role' => 'model',
                 'text' => 'Halo! Ada yang bisa saya bantu?'
@@ -112,11 +117,10 @@ PROMPT;
             return;
         }
 
-        /* USER WANTS TO CREATE TICKET */
+        /* START TICKET FLOW (UNCHANGED) */
         if (
             !$this->waitingForProblemDescription &&
-            preg_match('/\b(bantu|buat|bikin|tolong)\b/i', $lower) &&
-            str_contains($lower, 'tiket')
+            $this->detectedIntent === 'create_ticket'
         ) {
             $this->waitingForProblemDescription = true;
             $this->messages[] = [
@@ -126,7 +130,7 @@ PROMPT;
             return;
         }
 
-        /* USER DESCRIBES THE PROBLEM */
+        /* USER DESCRIBES PROBLEM */
         if ($this->waitingForProblemDescription) {
             $this->waitingForProblemDescription = false;
             $this->ticketQuestion = $text;
@@ -134,40 +138,112 @@ PROMPT;
             return;
         }
 
-        /* FAQ FIRST */
-        $faq = $this->matchFaq($text);
-        if ($faq) {
+        /* FAQ FIRST (SMART) */
+        $faq = $this->matchFaqAdvanced($text);
+
+        if ($faq && in_array($this->detectedIntent, ['ask_faq', 'ask_definition'])) {
             $this->messages[] = [
                 'role' => 'model',
-                'text' => $faq['jawaban']
+                'text' => $faq['answer']
             ];
             return;
         }
 
-        /* NORMAL AI RESPONSE */
+        /* AI FALLBACK */
         $this->ticketQuestion = $text;
         $this->dispatch('startAiResponse');
     }
 
     /* =========================
-     | FAQ
+     | INTENT + NORMALIZATION
      ========================= */
-    private function loadFaq(): array
+    private function detectIntent(string $text): string
+    {
+        $text = $this->normalizeText($text);
+
+        if (preg_match('/\b(halo|hai|hi|hello)\b/', $text)) return 'greeting';
+        if (preg_match('/\b(apa itu|apakah|jelaskan|arti|maksud)\b/', $text)) return 'ask_definition';
+        if (preg_match('/\b(tiket|lapor|bantu|error|masalah)\b/', $text)) return 'create_ticket';
+
+        return 'ask_faq';
+    }
+
+    private function normalizeText(string $text): string
+    {
+        $text = strtolower($text);
+
+        $map = [
+            'apasi' => 'apa sih',
+            'apasih' => 'apa sih',
+            'apaan' => 'apa',
+            'dong' => '',
+            '?' => '',
+        ];
+
+        $text = str_replace(array_keys($map), array_values($map), $text);
+        $text = preg_replace('/[^a-z0-9\s]/', '', $text);
+        $text = preg_replace('/\s+/', ' ', $text);
+
+        return trim($text);
+    }
+
+    /* =========================
+     | FAQ LOADER (NEW STRUCTURE)
+     ========================= */
+    private function loadFaqQuestions(): array
     {
         $path = storage_path('app/' . self::FAQ_FILE_PATH);
         if (!File::exists($path)) return [];
-        return json_decode(File::get($path), true) ?? [];
+
+        $json = json_decode(File::get($path), true);
+        if (!$json || !isset($json['categories'])) return [];
+
+        $items = [];
+
+        foreach ($json['categories'] as $category) {
+            foreach ($category['questions'] ?? [] as $q) {
+                $items[] = [
+                    'id' => $q['id'] ?? null,
+                    'question' => $q['question'] ?? '',
+                    'answer' => $q['answer'] ?? '',
+                    'keywords' => $q['keywords'] ?? [],
+                    'category' => $category['category'] ?? 'Umum',
+                ];
+            }
+        }
+
+        return $items;
     }
 
-    private function matchFaq(string $input): ?array
+    private function matchFaqAdvanced(string $input): ?array
     {
-        $input = strtolower($input);
+        $inputNorm = $this->normalizeText($input);
+        $bestScore = 0;
+        $best = null;
 
-        foreach ($this->loadFaq() as $faq) {
-            similar_text($input, strtolower($faq['pertanyaan']), $p);
-            if ($p > 45) return $faq;
+        foreach ($this->loadFaqQuestions() as $faq) {
+            $score = 0;
+
+            /* KEYWORD MATCH (STRONG) */
+            foreach ($faq['keywords'] as $kw) {
+                $kwNorm = $this->normalizeText($kw);
+                if ($kwNorm && str_contains($inputNorm, $kwNorm)) {
+                    $score += 5;
+                }
+            }
+
+            /* SEMANTIC MATCH */
+            $qNorm = $this->normalizeText($faq['question']);
+            similar_text($inputNorm, $qNorm, $sim);
+            $score += ($sim / 10);
+
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $best = $faq;
+            }
         }
-        return null;
+
+        return $bestScore >= 6 ? $best : null;
     }
 
     /* =========================
@@ -190,6 +266,17 @@ PROMPT;
                 'content' => $m['text']
             ])->toArray();
 
+            /* Inject FAQ context (compact) */
+            $faqContext = collect($this->loadFaqQuestions())
+                ->take(30)
+                ->map(fn ($f) => "- {$f['question']}: {$f['answer']}")
+                ->implode("\n");
+
+            array_unshift($history, [
+                'role' => 'system',
+                'content' => "FAQ INTERNAL KRBS:\n" . $faqContext
+            ]);
+
             $res = Http::post(
                 env('OLLAMA_API_URL', 'http://localhost:11434/api/chat'),
                 [
@@ -208,11 +295,10 @@ PROMPT;
     }
 
     /* =========================
-     | AI OUTPUT (JSON HIDDEN)
+     | AI OUTPUT + TICKET FLOW
      ========================= */
     private function handleAiOutput(string $responseText)
     {
-        // If no JSON → normal chat
         if (!preg_match('/\{.*"action".*\}/s', $responseText, $matches)) {
             $this->messages[] = [
                 'role' => 'model',
@@ -221,11 +307,9 @@ PROMPT;
             return;
         }
 
-        // Parse JSON silently
         $data = json_decode($matches[0], true);
         if (!$data || ($data['action'] ?? '') !== 'create_ticket') return;
 
-        // Safety check
         if (!$this->ticketQuestion || strlen($this->ticketQuestion) < 10) {
             $this->messages[] = [
                 'role' => 'model',
@@ -234,27 +318,21 @@ PROMPT;
             return;
         }
 
-        /* STORE DATA */
-        $this->ticketSummary  = $data['summary'] ?? $this->ticketQuestion;
+        $this->ticketSummary = $data['summary'] ?? $this->ticketQuestion;
         $this->ticketPriority = $data['priority'] ?? 'medium';
-        $this->aiReasoning    = $data['reason'] ?? '';
-
-        // Match department
-        $this->selectedDepartmentId = null;
-        $targetDept = strtoupper(trim($data['department'] ?? ''));
+        $this->aiReasoning = $data['reason'] ?? '';
 
         foreach ($this->availableDepartments as $dept) {
-            if (strtoupper($dept['department_name']) === $targetDept) {
+            if (strtoupper($dept['department_name']) === strtoupper($data['department'] ?? '')) {
                 $this->selectedDepartmentId = $dept['department_id'];
                 break;
             }
         }
 
-        /* SHOW CONFIRMATION (NO JSON) */
         $this->messages[] = [
             'role' => 'model',
             'text' =>
-                "Saya bisa membantu membuat tiket untuk masalah berikut:\n\n" .
+                "Saya bisa membantu membuat tiket:\n\n" .
                 "📝 {$this->ticketSummary}\n" .
                 "📌 Prioritas: " . strtoupper($this->ticketPriority) . "\n\n" .
                 "Silakan konfirmasi untuk melanjutkan."
@@ -329,9 +407,6 @@ PROMPT;
         $this->dispatch('chat-modal-status', isOpen: $this->isOpen);
     }
 
-    /* =========================
-     | RENDER
-     ========================= */
     public function render()
     {
         return view('livewire.components.ui.chat-modal');
