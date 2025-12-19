@@ -31,8 +31,8 @@ class CreateTicket extends Component
     public string $temp_items_json = '[]';
 
     // per-file & total limits (MB)
-    public int $per_file_max_mb = 10;
-    public int $total_quota_mb = 15;
+    public int $per_file_max_mb = 25;
+    public int $total_quota_mb = 100;
 
     public function mount(): void
     {
