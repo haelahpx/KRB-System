@@ -278,7 +278,6 @@
   </div>
 </div>
 
-{{-- ===== CLIENT JS: Upload + Webcam Logic ===== --}}
 <script>
   function getFileIconBlade() {
     return '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-gray-400 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.812A2.25 2.25 0 0017.25 9H9.75A2.25 2.25 0 007.5 11.25V14.25m12 0H7.5m12 0A2.25 2.25 0 0117.25 16.5H9.75A2.25 2.25 0 017.5 14.25m12 0a2.25 2.25 0 000-4.5m-4.5-5.25v1.5a2.25 2.25 0 01-2.25 2.25h-1.5a2.25 2.25 0 01-2.25-2.25v-1.5m4.5 5.25h-4.5" /></svg>';
@@ -286,10 +285,9 @@
 
   (function () {
     const ALLOWED = ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'doc', 'docx', 'xlsx', 'zip'];
-    const MAX10 = 10 * 1080 * 1080;
+    const MAX10 = 10 * 1024 * 1024; // Diperbaiki ke 10MB sesungguhnya
     const tmpKey = document.getElementById('tmp_key').value;
 
-    // Main Elements
     const fileInput = document.getElementById('file-upload');
     const mobileCamInput = document.getElementById('mobile-camera-upload');
     const listEl = document.getElementById('preview-list');
@@ -299,7 +297,6 @@
     const progPct = document.getElementById('progpercent');
     const progMsg = document.getElementById('progmsg');
 
-    // Webcam Elements
     const btnOpenCam = document.getElementById('btn-webcam-open');
     const btnCloseCam = document.getElementById('btn-webcam-close');
     const btnCapture = document.getElementById('btn-webcam-capture');
@@ -309,7 +306,6 @@
 
     let tempItems = JSON.parse(hidden.value || '[]');
 
-    // --- 1. UI Helpers ---
     function setProgress(p, msg) {
       if (!progWrap) return;
       progWrap.classList.remove('hidden');
@@ -377,7 +373,48 @@
       });
     }
 
-    // --- 2. Upload Logic ---
+    function compressImage(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            const max_size = 1600;
+
+            if (width > height) {
+              if (width > max_size) {
+                height *= max_size / width;
+                width = max_size;
+              }
+            } else {
+              if (height > max_size) {
+                width *= max_size / height;
+                height = max_size;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob((blob) => {
+              if (!blob) return reject(new Error('Canvas empty'));
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+              });
+              resolve(compressedFile);
+            }, 'image/jpeg', 0.7);
+          };
+        };
+        reader.onerror = (e) => reject(e);
+      });
+    }
+
     async function uploadSingle(file) {
       return new Promise((resolve, reject) => {
         const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
@@ -390,12 +427,9 @@
 
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/attachments/temp');
-        try {
-          xhr.setRequestHeader('X-CSRF-TOKEN', csrf);
-        } catch (e) { }
-
+        
         xhr.upload.onprogress = (evt) => {
-          if (evt.lengthComputable) setProgress((evt.loaded / evt.total) * 100, `Uploading ${file.name}…`);
+          if (evt.lengthComputable) setProgress((evt.loaded / evt.total) * 100, `Mengunggah ${file.name}…`);
         };
 
         xhr.onload = () => {
@@ -403,45 +437,54 @@
             try {
               resolve(JSON.parse(xhr.responseText));
             } catch (e) {
-              reject(new Error('Invalid server response'));
+              reject(new Error('Respon server tidak valid'));
             }
           } else {
-            reject(new Error('Upload failed: ' + xhr.status));
+            reject(new Error('Gagal: ' + xhr.status));
           }
         };
-        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.onerror = () => reject(new Error('Kesalahan jaringan'));
         xhr.send(fd);
       });
     }
 
     async function processFiles(files) {
       if (!files || !files.length) return;
-
-      // Close modal if it was open
       closeWebcamModal();
 
       for (const f of files) {
         const ext = (f.name.split('.').pop() || 'jpg').toLowerCase();
-        if (!ALLOWED.includes(ext) && f.type !== 'image/jpeg') {
-          alert('Format not allowed: ' + f.name);
+        if (!ALLOWED.includes(ext) && !f.type.startsWith('image/')) {
+          alert('Format tidak diizinkan: ' + f.name);
           continue;
         }
-        if (f.size > MAX10) {
-          alert('File too large: ' + f.name);
+
+        let fileToUpload = f;
+        if (f.type.startsWith('image/') && f.size > 1024 * 1024) {
+          try {
+            setProgress(5, 'Mengompresi gambar...');
+            fileToUpload = await compressImage(f);
+          } catch (err) {
+            console.warn('Gagal kompresi', err);
+          }
+        }
+
+        if (fileToUpload.size > MAX10) {
+          alert('File terlalu besar setelah kompresi: ' + fileToUpload.name);
           continue;
         }
 
         try {
-          setProgress(5, 'Meminta unggahan…');
-          const data = await uploadSingle(f);
+          setProgress(10, 'Menyiapkan unggahan...');
+          const data = await uploadSingle(fileToUpload);
           if (data && data.public_id) {
             tempItems.push({
               public_id: data.public_id,
               secure_url: data.secure_url || data.url,
-              bytes: data.bytes || f.size,
+              bytes: data.bytes || fileToUpload.size,
               resource_type: data.resource_type,
               format: data.format,
-              original_filename: data.original_filename || f.name
+              original_filename: data.original_filename || fileToUpload.name
             });
             syncHidden();
             renderList();
@@ -457,10 +500,9 @@
 
     function handleInputChange(e) {
       processFiles(Array.from(e.target.files || []));
-      e.target.value = ''; // Reset
+      e.target.value = '';
     }
 
-    // --- 3. Webcam Modal Functions ---
     async function openWebcamModal() {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         alert('Browser tidak mendukung akses kamera.');
@@ -491,14 +533,11 @@
 
     function captureFromWebcam() {
       if (!videoStream) return;
-
       const canvas = document.createElement('canvas');
       canvas.width = videoEl.videoWidth;
       canvas.height = videoEl.videoHeight;
       const ctx = canvas.getContext('2d');
-
-      ctx.drawImage(videoEl, 0, 0); // Standard
-
+      ctx.drawImage(videoEl, 0, 0);
       canvas.toBlob(blob => {
         if (blob) {
           const file = new File([blob], "webcam_" + Date.now() + ".jpg", {
@@ -506,13 +545,11 @@
           });
           processFiles([file]);
         }
-      }, 'image/jpeg', 0.85);
+      }, 'image/jpeg', 0.8);
     }
 
-    // --- 4. Bind Events ---
     if (fileInput) fileInput.addEventListener('change', handleInputChange);
     if (mobileCamInput) mobileCamInput.addEventListener('change', handleInputChange);
-
     if (btnOpenCam) btnOpenCam.addEventListener('click', openWebcamModal);
     if (btnCloseCam) btnCloseCam.addEventListener('click', closeWebcamModal);
     if (btnCapture) btnCapture.addEventListener('click', captureFromWebcam);
