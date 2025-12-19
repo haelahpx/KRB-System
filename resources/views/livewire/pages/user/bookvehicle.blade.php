@@ -95,7 +95,12 @@
                             <label for="mobile-camera-input" class="md:hidden cursor-pointer group flex flex-col items-center justify-center py-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all bg-white/50">
                                 <x-heroicon-o-camera class="w-6 h-6 mb-1 text-gray-400 group-hover:text-gray-600" />
                                 <span class="text-[11px] font-bold text-gray-700 uppercase">Kamera HP</span>
-                                <input id="mobile-camera-input" type="file" wire:model="temp_photos" accept="image/*" capture="environment" class="hidden" />
+                                <input id="mobile-camera-input"
+                                    type="file"
+                                    accept="image/*"
+                                    capture="environment"
+                                    class="hidden"
+                                    @change="compressAndUpload($event)" />
                             </label>
 
                             {{-- 3. WEBCAM PC (Hanya Muncul di Desktop) --}}
@@ -553,6 +558,58 @@
 </div>
 
 <script>
+    async function compressAndUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Tampilkan loading manual jika perlu
+        const options = {
+            maxSizeMB: 1, // Maksimal ukuran 1MB
+            maxWidthOrHeight: 1280 // Maksimal resolusi 1280px
+        };
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Logika resize
+                if (width > height) {
+                    if (width > options.maxWidthOrHeight) {
+                        height *= options.maxWidthOrHeight / width;
+                        width = options.maxWidthOrHeight;
+                    }
+                } else {
+                    if (height > options.maxWidthOrHeight) {
+                        width *= options.maxWidthOrHeight / height;
+                        height = options.maxWidthOrHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Kompres kualitas ke 0.7 (70%)
+                canvas.toBlob((blob) => {
+                    const compressedFile = new File([blob], file.name, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    });
+
+                    // Kirim ke Livewire
+                    @this.upload('temp_photos', compressedFile);
+                }, 'image/jpeg', 0.7);
+            };
+        };
+    }
+
     function webcamHandler() {
         return {
             show: false,
