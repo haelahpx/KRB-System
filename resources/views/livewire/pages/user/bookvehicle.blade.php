@@ -554,6 +554,50 @@
 </div>
 
 <script>
+// Fungsi pembantu kompresi yang bisa digunakan oleh semua handler
+function compressImage(file, quality = 0.7, maxSize = 1600) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > maxSize) {
+                        height *= maxSize / width;
+                        width = maxSize;
+                    }
+                } else {
+                    if (height > maxSize) {
+                        width *= maxSize / height;
+                        height = maxSize;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (!blob) return reject(new Error('Canvas empty'));
+                    const compressedFile = new File([blob], file.name, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    });
+                    resolve(compressedFile);
+                }, 'image/jpeg', quality);
+            };
+        };
+        reader.onerror = (e) => reject(e);
+    });
+}
+
 function webcamHandler() {
     return {
         show: false,
@@ -577,17 +621,25 @@ function webcamHandler() {
             }
             this.show = false;
         },
-        capture() {
+        async capture() {
             const video = this.$refs.video;
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
             
-            canvas.toBlob(blob => {
+            canvas.toBlob(async (blob) => {
                 if (blob) {
-                    const file = new File([blob], "webcam_" + Date.now() + ".jpg", { type: "image/jpeg" });
-                    @this.upload('temp_photos', file);
+                    let file = new File([blob], "webcam_" + Date.now() + ".jpg", { type: "image/jpeg" });
+                    
+                    // Kompresi sebelum upload ke Livewire
+                    try {
+                        const compressedFile = await compressImage(file, 0.7, 1600);
+                        @this.upload('temp_photos', compressedFile);
+                    } catch (e) {
+                        console.warn("Gagal kompres, mengunggah file asli", e);
+                        @this.upload('temp_photos', file);
+                    }
                 }
                 this.close();
             }, 'image/jpeg', 0.9);
