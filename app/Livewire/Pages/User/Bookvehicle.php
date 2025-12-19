@@ -87,9 +87,8 @@ class Bookvehicle extends Component
     public function updatedTempPhotos()
     {
         $this->validate([
-            'temp_photos.*' => 'image|max:5120', // Max 5MB per file
+            'temp_photos.*' => 'image|max:25600',
         ]);
-
         // Pindahkan dari temp ke collected (Append)
         foreach ($this->temp_photos as $photo) {
             $this->collected_photos[] = $photo;
@@ -245,7 +244,6 @@ class Bookvehicle extends Component
 
                 $this->booking->update(['status' => 'on_progress']);
                 session()->flash('success', 'Check-out photos uploaded successfully.');
-
             } elseif ($this->booking->status == 'returned') {
                 // LOOP SEMUA FOTO DI ANTRIAN
                 foreach ($this->collected_photos as $photo) {
@@ -260,7 +258,6 @@ class Bookvehicle extends Component
 
             // Reset setelah sukses
             $this->reset(['collected_photos', 'temp_photos']);
-
         } catch (\Exception $e) {
             session()->flash('error', 'Upload failed: ' . $e->getMessage());
         }
