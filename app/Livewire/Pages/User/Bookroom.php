@@ -21,7 +21,6 @@ class Bookroom extends Component
     public ?Carbon $selectedDate = null;
     public ?Carbon $currentWeek = null;
 
-    // Form Properties
     public string $meeting_title = '';
     public $room_id = '';
     public string $date = '';
@@ -32,7 +31,6 @@ class Bookroom extends Component
     public string $special_notes = '';
     public bool $informInfo = false;
 
-    // Modal State
     public bool $showQuickModal = false;
 
     public array $rooms = [];
@@ -88,7 +86,6 @@ class Bookroom extends Component
         $now = Carbon::now($this->tz);
         if ($this->date === $now->toDateString()) {
             $this->minStart = $now->format('H:i');
-            // Only auto-bump time if we are NOT in the modal (to prevent modal jumping)
             if (!$this->showQuickModal && $this->start_time < $this->minStart) {
                 $bumped = $this->roundUpToSlot($now->copy()->addMinutes($this->leadMinutes));
                 $this->start_time = $bumped->format('H:i');
@@ -107,7 +104,6 @@ class Bookroom extends Component
         }
     }
 
-    // --- Calendar Navigation ---
     public function previousWeek(): void
     {
         $this->selectedDate = Carbon::parse($this->date, $this->tz)->subWeek();
@@ -160,27 +156,22 @@ class Bookroom extends Component
         $this->recalculateAvailability();
     }
 
-    // --- Interaction: Open Modal from Calendar ---
     public function selectCalendarSlot(int $roomId, string $date, string $startTime): void
     {
-        // 1. Security: Check if past
         $slotTime = Carbon::parse("$date $startTime", $this->tz);
         if ($slotTime->lt(Carbon::now($this->tz)->addMinutes($this->leadMinutes))) {
             $this->dispatch('toast', type: 'error', title: 'Unavailable', message: 'Cannot book a time slot in the past.', duration: 3000);
             return;
         }
 
-        // 2. Pre-fill Form Data
         $this->room_id = $roomId;
         $this->date = $date;
         $this->start_time = $startTime;
         
-        // Auto-calculate end time (Start + 30 mins)
         $this->end_time = Carbon::createFromFormat('H:i', $startTime)
             ->addMinutes($this->slotMinutes)
             ->format('H:i');
 
-        // 3. Clear specific fields for new booking
         $this->meeting_title = '';
         $this->number_of_attendees = '';
         $this->requirements = [];
@@ -188,7 +179,6 @@ class Bookroom extends Component
         $this->informInfo = false;
         $this->confirmCapacityOverride = false;
 
-        // 4. Open Modal
         $this->showQuickModal = true;
     }
 
@@ -226,10 +216,70 @@ class Bookroom extends Component
     public function updatedRoomId(): void
     {
         $this->confirmCapacityOverride = false;
+        $this->checkCapacityWarning();
     }
+    
     public function updatedNumberOfAttendees(): void
     {
         $this->confirmCapacityOverride = false;
+        $this->checkCapacityWarning();
+    }
+
+    protected function checkCapacityWarning(): void
+    {
+        if (!$this->room_id || !$this->number_of_attendees) {
+            return;
+        }
+
+        $companyId = Auth::user()->company_id;
+        $maxCap = Room::query()
+            ->where('company_id', $companyId)
+            ->where('room_id', (int) $this->room_id)
+            ->value('capacity');
+
+        if ($maxCap && (int)$this->number_of_attendees > (int)$maxCap) {
+            $roomName = collect($this->rooms)->firstWhere('id', (int)$this->room_id)['name'] ?? 'Ruangan';
+            $this->dispatch('toast', 
+                type: 'warning', 
+                title: 'Peringatan Kapasitas', 
+                message: "Jumlah peserta ({$this->number_of_attendees}) melebihi kapasitas {$roomName} ({$maxCap} orang). Anda tetap bisa melanjutkan booking.", 
+                duration: 6000
+            );
+        }
+    }
+
+    public function addMinutes(int $minutes): void
+    {
+        $currentStart = Carbon::createFromFormat('Y-m-d H:i', "{$this->date} {$this->start_time}", $this->tz);
+        $newStart = $currentStart->addMinutes($minutes);
+        
+        $this->date = $newStart->toDateString();
+        $this->start_time = $newStart->format('H:i');
+        $this->end_time = $newStart->copy()->addMinutes($this->slotMinutes)->format('H:i');
+        
+        $this->selectedDate = $newStart->copy();
+        $this->updateMinStart();
+        $this->recalculateAvailability();
+    }
+
+    public function subtractMinutes(int $minutes): void
+    {
+        $currentStart = Carbon::createFromFormat('Y-m-d H:i', "{$this->date} {$this->start_time}", $this->tz);
+        $newStart = $currentStart->subMinutes($minutes);
+        
+        $now = Carbon::now($this->tz)->addMinutes($this->leadMinutes);
+        if ($newStart->lt($now)) {
+            $this->dispatch('toast', type: 'warning', title: 'Cannot Go Back', message: 'Cannot set time in the past.', duration: 3000);
+            return;
+        }
+        
+        $this->date = $newStart->toDateString();
+        $this->start_time = $newStart->format('H:i');
+        $this->end_time = $newStart->copy()->addMinutes($this->slotMinutes)->format('H:i');
+        
+        $this->selectedDate = $newStart->copy();
+        $this->updateMinStart();
+        $this->recalculateAvailability();
     }
 
     public function nextRoomPage(): void
@@ -303,18 +353,17 @@ class Bookroom extends Component
             ->where('company_id', $companyId)
             ->where('room_id', $this->room_id)
             ->where('date', $this->date)
-            ->whereIn('status', ['pending', 'approved'])
+            ->whereIn('status', ['pending', 'approved']) // Perubahan: Blokir jika ada yang pending atau approved
             ->where('start_time', '<', $endDt)
             ->where('end_time', '>', $startDt)
             ->exists();
 
         if ($overlap) {
-            $this->dispatch('toast', type: 'error', title: 'Bentrok', message: 'Slot waktu sudah terpakai (pending/approved).', duration: 5000);
+            $this->dispatch('toast', type: 'error', title: 'Bentrok', message: 'Slot waktu sudah terpakai atau dalam proses pengajuan.', duration: 5000);
             return;
         }
 
         DB::transaction(function () use ($startDt, $endDt, $companyId) {
-            // 1. Create the booking and capture the model instance
             $booking = BookingRoom::create([ 
                 'room_id' => (int) $this->room_id,
                 'company_id' => $companyId,
@@ -323,7 +372,6 @@ class Bookroom extends Component
                 'meeting_title' => $this->meeting_title,
                 'date' => $this->date,
                 'number_of_attendees' => (int) $this->number_of_attendees,
-                // Use Carbon objects for saving DateTime consistency
                 'start_time' => $startDt,
                 'end_time' => $endDt,
                 'special_notes' => $this->special_notes,
@@ -334,15 +382,13 @@ class Bookroom extends Component
             ]);
 
             if (!empty($this->requirements)) {
-                // 2. Get the IDs of the requirements based on their names
                 $ids = Requirement::where('company_id', $companyId)
                     ->whereIn('name', $this->requirements)
                     ->pluck('requirement_id')
                     ->toArray();
                 
-                // 3. ATTACH the requirement IDs to the newly created booking
                 if (!empty($ids)) {
-                    $booking->requirements()->attach($ids); // <-- FIX APPLIED HERE
+                    $booking->requirements()->attach($ids);
                 }
             }
         });
@@ -350,7 +396,7 @@ class Bookroom extends Component
         $this->loadRecentBookings();
         $this->recalculateAvailability();
         $this->confirmCapacityOverride = false;
-        $this->showQuickModal = false; // Close modal
+        $this->showQuickModal = false;
         $this->resetForm(true);
 
         $this->dispatch('toast', type: 'success', title: 'Berhasil', message: 'Booking tersimpan (pending approval).', duration: 4000);
@@ -442,7 +488,7 @@ class Bookroom extends Component
                     ->where('company_id', $companyId)
                     ->where('room_id', $r['id'])
                     ->where('date', $reqStart->toDateString())
-                    ->whereIn('status', ['pending', 'approved'])
+                    ->whereIn('status', ['pending', 'approved']) // Perubahan: Anggap sibuk jika ada pending/approved
                     ->where('start_time', '<', $reqEnd)
                     ->where('end_time', '>', $reqStart)
                     ->exists();

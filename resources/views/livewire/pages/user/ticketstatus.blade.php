@@ -95,7 +95,6 @@
             $unreadCount = $t->unread_comments_count ?? 0;
             @endphp
 
-            {{-- TICKET CARD - Responsive: Accordion on Mobile / Full Card on Desktop --}}
             <div class="group relative">
 
                 {{-- MOBILE (Accordion) --}}
@@ -103,18 +102,16 @@
 
                     <div x-data="{ open: false }">
 
-                        {{-- Accordion Toggler --}}
                         <button
                             class="w-full flex items-center justify-between px-4 py-3"
                             @click="open = !open">
 
-                            <div class="flex flex-col text-left">
-                                <span class="text-base font-bold text-gray-900 truncate flex items-center gap-1">
-                                    {{ $t->subject }}
+                            <div class="flex flex-col text-left min-w-0 flex-1 mr-2">
+                                <span class="text-base font-bold text-gray-900 flex items-center gap-1">
+                                    <span class="truncate">{{ $t->subject }}</span>
 
-                                    {{-- unread --}}
                                     @if ($unreadCount > 0)
-                                    <span class="text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded-full font-bold leading-none">
+                                    <span class="shrink-0 text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded-full font-bold leading-none">
                                         {{ $unreadCount }}
                                     </span>
                                     @endif
@@ -125,24 +122,20 @@
                                 </span>
                             </div>
 
-                            <span class="transition-transform duration-200"
+                            <span class="transition-transform duration-200 shrink-0"
                                 :class="open ? 'rotate-180' : ''">
                                 <x-heroicon-o-chevron-down class="w-5 h-5 text-gray-600" />
                             </span>
                         </button>
 
-                        {{-- ACCORDION CONTENT --}}
                         <div x-show="open" x-collapse class="px-4 pb-4 space-y-3">
 
-                            {{-- Badge row --}}
                             <div class="flex flex-wrap items-center gap-1.5 text-[10px]">
 
-                                {{-- Ticket ID --}}
                                 <span class="font-mono font-medium bg-gray-100 px-2 py-1 rounded flex items-center gap-1">
                                     <x-heroicon-o-hashtag class="w-3 h-3" /> {{ $t->ticket_id }}
                                 </span>
 
-                                {{-- Priority --}}
                                 @php
                                 $isHigh = $priority==='high';
                                 $isMed = $priority==='medium';
@@ -156,7 +149,6 @@
                                     {{ ucfirst($priority ?: 'low') }}
                                 </span>
 
-                                {{-- Department --}}
                                 @if ($t->department)
                                 <span class="px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 flex items-center gap-1">
                                     <x-heroicon-o-building-office-2 class="w-3 h-3" />
@@ -164,7 +156,6 @@
                                 </span>
                                 @endif
 
-                                {{-- Creator --}}
                                 <span class="px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 flex items-center gap-1">
                                     <span class="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center text-[10px] font-bold text-gray-600">
                                         {{ $initial }}
@@ -174,7 +165,6 @@
 
                             </div>
 
-                            {{-- Status Badge --}}
                             <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border
                             @if($isOpen) bg-yellow-100 text-yellow-800 border-yellow-200 @endif
                             @if($isAssignedOrProgress) bg-blue-100 text-blue-800 border-blue-200 @endif
@@ -182,12 +172,10 @@
                                 {{ $statusLabel }}
                             </span>
 
-                            {{-- Description --}}
                             <p class="text-xs text-gray-600">
                                 {{ $t->description }}
                             </p>
 
-                            {{-- Timestamps --}}
                             <div class="text-[10px] text-gray-500 space-y-1">
                                 <div class="flex items-center gap-1">
                                     <x-heroicon-o-clock class="w-3 h-3" />
@@ -199,10 +187,8 @@
                                 </div>
                             </div>
 
-                            {{-- Action button --}}
                             @if (in_array($statusUp, ['OPEN','ASSIGNED','IN_PROGRESS','RESOLVED','CLOSED'], true))
                             <div class="mt-1">
-                                {{-- Mark as Resolved --}}
                                 @if (in_array($statusUp, ['OPEN','ASSIGNED','IN_PROGRESS'], true))
                                 <button
                                     @disabled(!$hasAgent)
@@ -221,7 +207,6 @@
                                     Tandai Selesai
                                 </button>
 
-                                {{-- Close Ticket --}}
                                 @elseif ($statusUp === 'RESOLVED')
                                 <button
                                     wire:click.stop="markComplete({{ (int) $t->ticket_id }})"
@@ -233,7 +218,6 @@
                                     Tutup Tiket
                                 </button>
 
-                                {{-- Closed --}}
                                 @elseif ($statusUp === 'CLOSED')
                                 <span class="w-full flex items-center justify-center gap-2 px-4 py-2 text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 rounded-lg uppercase tracking-wide">
                                     <x-heroicon-o-lock-closed class="w-3 h-3" />
@@ -244,7 +228,6 @@
                             </div>
                             @endif
 
-                            {{-- BUTTON to open ticket --}}
                             <div class="mt-1">
                                 <a href="{{ route('user.ticket.show', $t) }}"
                                     class="block w-full text-center px-4 py-2 bg-gray-900 text-white rounded-lg text-xs font-medium hover:bg-gray-800">
@@ -260,35 +243,31 @@
                 <div class="hidden md:block">
                     <div class="relative bg-white rounded-xl border-2 border-black p-5 hover:shadow-md transition-shadow duration-200">
 
-                        {{-- Clickable wrapper --}}
                         <a href="{{ route('user.ticket.show', $t) }}"
                             class="absolute inset-0 z-20 rounded-xl"></a>
 
-                        {{-- HEADER --}}
-                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-3 relative z-0 pointer-events-none">
+                        <div class="flex flex-row items-start justify-between gap-4 mb-3 relative z-0 pointer-events-none">
 
                             <div class="flex-1 min-w-0">
 
-                                {{-- Subject --}}
-                                <div class="flex items-center gap-1.5 mb-1">
-                                    <h3 class="text-lg font-bold text-gray-900 truncate">{{ $t->subject }}</h3>
+                                <div class="flex items-center gap-1.5 mb-1 overflow-hidden">
+                                    <h3 class="text-lg font-bold text-gray-900 truncate">
+                                        {{ $t->subject }}
+                                    </h3>
 
                                     @if ($unreadCount > 0)
-                                    <span class="text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded-full font-bold leading-none animate-pulse shrink-0">
+                                    <span class="shrink-0 text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded-full font-bold leading-none animate-pulse">
                                         {{ $unreadCount }}
                                     </span>
                                     @endif
                                 </div>
 
-                                {{-- BADGES --}}
                                 <div class="flex flex-wrap items-center gap-1.5 text-xs">
 
-                                    {{-- Ticket ID --}}
                                     <span class="font-mono font-medium text-gray-800 inline-flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
                                         <x-heroicon-o-hashtag class="w-3 h-3" /> {{ $t->ticket_id }}
                                     </span>
 
-                                    {{-- Priority --}}
                                     @php
                                     $isHigh = $priority === 'high';
                                     $isMedium = $priority === 'medium';
@@ -303,14 +282,12 @@
                                         <x-heroicon-o-bolt class="w-3 h-3" /> {{ ucfirst($priority ?: 'low') }}
                                     </span>
 
-                                    {{-- Department --}}
                                     @if ($t->department)
                                     <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 font-medium">
                                         <x-heroicon-o-building-office-2 class="w-3 h-3" /> {{ $t->department->department_name }}
                                     </span>
                                     @endif
 
-                                    {{-- Creator --}}
                                     <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700">
                                         <span class="w-4 h-4 bg-gray-200 text-[10px] font-bold rounded-full flex items-center justify-center">
                                             {{ $initial }}
@@ -318,7 +295,6 @@
                                         {{ $userName }}
                                     </span>
 
-                                    {{-- Agent --}}
                                     @if ($hasAgent)
                                     <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800 font-medium">
                                         <x-heroicon-o-user-circle class="w-3 h-3" />
@@ -328,9 +304,8 @@
                                 </div>
                             </div>
 
-                            {{-- Status badge --}}
                             <span
-                                class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide border
+                                class="shrink-0 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide border
                                 @if($isOpen) bg-yellow-100 text-yellow-800 border-yellow-200 @endif
                                 @if($isAssignedOrProgress) bg-blue-100 text-blue-800 border-blue-200 @endif
                                 @if($isResolvedOrClosed) bg-green-100 text-green-800 border-green-200 @endif">
@@ -338,15 +313,12 @@
                             </span>
                         </div>
 
-                        {{-- DESCRIPTION --}}
                         <p class="text-sm text-gray-600 line-clamp-2 mb-3 relative z-0 pointer-events-none">
                             {{ $t->description }}
                         </p>
 
-                        {{-- FOOTER --}}
                         <div class="flex flex-row items-end justify-between pt-3 border-t border-gray-100">
 
-                            {{-- Timestamps --}}
                             <div class="text-[11px] text-gray-500 flex flex-col gap-1">
                                 <div class="flex items-center gap-1">
                                     <x-heroicon-o-clock class="w-3 h-3" />
@@ -358,11 +330,9 @@
                                 </div>
                             </div>
 
-                            {{-- Action button --}}
                             @if (in_array($statusUp, ['OPEN','ASSIGNED','IN_PROGRESS','RESOLVED','CLOSED'], true))
                             <div class="relative z-30">
 
-                                {{-- Mark as Resolved --}}
                                 @if (in_array($statusUp, ['OPEN','ASSIGNED','IN_PROGRESS'], true))
                                 <button
                                     @disabled(!$hasAgent)
@@ -381,7 +351,6 @@
                                     Tandai Selesai
                                 </button>
 
-                                {{-- Close Ticket --}}
                                 @elseif ($statusUp === 'RESOLVED')
                                 <button
                                     wire:click.stop="markComplete({{ (int) $t->ticket_id }})"
@@ -393,7 +362,6 @@
                                     Tutup Tiket
                                 </button>
 
-                                {{-- Closed --}}
                                 @elseif ($statusUp === 'CLOSED')
                                 <span class="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] md:text-xs font-bold text-gray-600 bg-gray-100 border border-gray-200 rounded-lg uppercase tracking-wide">
                                     <x-heroicon-o-lock-closed class="w-3 h-3" />
@@ -422,5 +390,4 @@
         {{ $tickets->links() }}
     </div>
     @endif
-</div>
 </div>

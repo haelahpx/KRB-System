@@ -13,7 +13,7 @@
             {{-- Navigation Tabs --}}
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <div class="flex rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-full lg:w-auto">
-                    
+
                     {{-- Book Vehicle Tab --}}
                     <a href="{{ route('book-vehicle') }}" wire:navigate
                         class="flex-1 lg:flex-none px-3 md:px-4 py-2 text-sm font-medium text-center
@@ -83,43 +83,48 @@
                             </span>
                         </div>
 
-                        {{-- TOMBOL ADD PHOTOS --}}
-                        <div class="mb-4">
-                            <label for="file-queue-input" class="cursor-pointer group flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all">
-                                <div class="flex flex-col items-center justify-center pt-2 pb-3">
-                                    {{-- ORIGINAL SVG: Cloud Upload (simple lines) --}}
-                                    <x-heroicon-o-cloud-arrow-up class="w-6 h-6 mb-1 text-gray-400 group-hover:text-gray-600" />
-                                    <p class="text-xs text-gray-500 group-hover:text-gray-700 text-center">
-                                        <span class="font-bold">Klik untuk tambah foto</span><br>
-                                        (Bisa pilih satu-satu atau sekaligus)
-                                    </p>
-                                </div>
-                                {{-- INPUT HIDDEN: Mapped to temp_photos --}}
+                        {{-- TOMBOL ACTION --}}
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+                            {{-- 1. UPLOAD FILE --}}
+                            <label for="file-queue-input" class="cursor-pointer group flex flex-col items-center justify-center py-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all bg-white/50">
+                                <x-heroicon-o-cloud-arrow-up class="w-6 h-6 mb-1 text-gray-400 group-hover:text-gray-600" />
+                                <span class="text-[11px] font-bold text-gray-700 uppercase">Tambah Foto</span>
                                 <input id="file-queue-input" type="file" wire:model="temp_photos" multiple accept="image/*" class="hidden" />
                             </label>
 
-                            {{-- Loading State saat memilih file --}}
-                            <div wire:loading wire:target="temp_photos" class="w-full text-center mt-2">
-                                <span class="text-xs text-blue-600 font-medium animate-pulse">Memproses gambar...</span>
-                            </div>
+                            {{-- 2. CAMERA MOBILE (Hanya di Mobile) --}}
+                            <label for="mobile-camera-input" class="lg:hidden cursor-pointer group flex flex-col items-center justify-center py-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all bg-white/50">
+                                <x-heroicon-o-camera class="w-6 h-6 mb-1 text-gray-400 group-hover:text-gray-600" />
+                                <span class="text-[11px] font-bold text-gray-700 uppercase">Kamera HP</span>
+                                <input id="mobile-camera-input" type="file" wire:model="temp_photos" accept="image/*" capture="environment" class="hidden" />
+                            </label>
 
-                            @error('temp_photos.*') <span class="text-xs text-red-600 block mt-1">{{ $message }}</span> @enderror
-                            @error('collected_photos') <span class="text-xs text-red-600 block mt-1">{{ $message }}</span> @enderror
+                            {{-- 3. WEBCAM PC (Selalu muncul di Desktop) --}}
+                            <button type="button" @click="$dispatch('open-webcam')" class="flex flex-col items-center justify-center py-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all bg-white/50">
+                                <x-heroicon-o-video-camera class="w-6 h-6 mb-1 text-gray-400 group-hover:text-gray-600" />
+                                <span class="text-[11px] font-bold text-gray-700 uppercase">Webcam PC</span>
+                            </button>
                         </div>
+
+                        {{-- Loading State saat memilih file --}}
+                        <div wire:loading wire:target="temp_photos" class="w-full text-center mt-2">
+                            <span class="text-xs text-blue-600 font-medium animate-pulse">Memproses gambar...</span>
+                        </div>
+
+                        @error('temp_photos.*') <span class="text-xs text-red-600 block mt-1">{{ $message }}</span> @enderror
+                        @error('collected_photos') <span class="text-xs text-red-600 block mt-1">{{ $message }}</span> @enderror
 
                         {{-- GALLERY PREVIEW GRID --}}
                         @if(!empty($collected_photos))
-                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-4">
                             @foreach($collected_photos as $index => $photo)
-                            <div class="relative group aspect-square bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                            <div class="relative group aspect-square bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden" wire:key="photo-{{ $index }}">
                                 {{-- Image --}}
                                 @php
                                 $tempUrl = null;
                                 try {
                                 $tempUrl = $photo->temporaryUrl();
-                                } catch (\Exception $e) {
-                                // Silent error
-                                }
+                                } catch (\Exception $e) {}
                                 @endphp
 
                                 @if($tempUrl)
@@ -134,7 +139,6 @@
                                 <button type="button" wire:click="removePhoto({{ $index }})"
                                     class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600 transition-colors z-10"
                                     title="Hapus foto ini">
-                                    {{-- ORIGINAL SVG: X Mark --}}
                                     <x-heroicon-o-x-mark class="h-3 w-3" />
                                 </button>
                             </div>
@@ -158,7 +162,6 @@
                                 Unggah {{ count($collected_photos) }} Foto
                             </span>
                             <span wire:loading wire:target="handlePhotoUpload" class="flex items-center gap-2">
-                                {{-- ORIGINAL SVG: Spinner --}}
                                 <x-heroicon-o-arrow-path class="animate-spin h-4 w-4 text-white" />
                                 Mengunggah...
                             </span>
@@ -222,7 +225,6 @@
 
                         <div>
                             <label class="block text-xs font-medium text-gray-900 mb-1.5">Tanggal Selesai <span class="text-red-600">*</span></label>
-                            {{-- wire:key is crucial for forced updates --}}
                             <input wire:model.live="date_to" wire:key="to-{{ $booking_mode }}-{{ $date_from }}" type="date"
                                 @if($booking_mode !=='custom' ) readonly @endif
                                 class="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 {{ $booking_mode !== 'custom' ? 'bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed' : 'border-gray-300' }}">
@@ -293,11 +295,100 @@
                         </div>
                     </div>
 
-                    {{-- Footer --}}
-                    <div class="pt-4 border-t border-gray-100">
-                        <label class="flex items-center gap-2 cursor-pointer"><input wire:model="has_sim_a" type="checkbox" class="rounded border-gray-300 text-gray-900 focus:ring-gray-900"><span class="text-sm text-gray-700">Saya memiliki SIM A (Wajib)</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer mt-2"><input wire:model="agree_terms" type="checkbox" class="rounded border-gray-300 text-gray-900 focus:ring-gray-900"><span class="text-sm text-gray-700">Saya Menyetujui Syarat & Ketentuan</span></label>
+                    {{-- Footer with Terms Modal --}}
+                    <div class="pt-4 border-t border-gray-100" x-data="{ showTerms: false }">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input wire:model="has_sim_a" type="checkbox" class="rounded border-gray-300 text-gray-900 focus:ring-gray-900">
+                            <span class="text-sm text-gray-700">Saya memiliki SIM A (Wajib)</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer mt-2">
+                            <input wire:model="agree_terms" type="checkbox" class="rounded border-gray-300 text-gray-900 focus:ring-gray-900">
+                            <span class="text-sm text-gray-700">
+                                Saya Menyetujui
+                                <button type="button" @click="showTerms = true" class="text-blue-600 hover:text-blue-800 underline font-medium">
+                                    Syarat & Ketentuan
+                                </button>
+                            </span>
+                        </label>
+
+                        {{-- Terms Modal --}}
+                        <div x-show="showTerms"
+                            x-cloak
+                            @click.self="showTerms = false"
+                            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+                            style="display: none;">
+
+                            <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+                                @click.stop>
+
+                                {{-- Modal Header --}}
+                                <div class="sticky top-0 bg-gray-900 text-white px-6 py-4 flex items-center justify-between border-b-2 border-black">
+                                    <h3 class="text-lg font-bold">Syarat dan Ketentuan Peminjaman Kendaraan</h3>
+                                    <button @click="showTerms = false" class="text-white hover:text-gray-300">
+                                        <x-heroicon-o-x-mark class="h-6 w-6" />
+                                    </button>
+                                </div>
+
+                                {{-- Modal Body --}}
+                                <div class="p-6 overflow-y-auto max-h-[calc(90vh-180px)] space-y-4 text-sm text-gray-700">
+
+                                    <div>
+                                        <h4 class="font-bold text-gray-900 mb-2">1. Persyaratan Umum</h4>
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            <li>Peminjam harus memiliki SIM A yang masih berlaku</li>
+                                            <li>Peminjam harus karyawan aktif perusahaan</li>
+                                            <li>Usia peminjam minimal 21 tahun</li>
+                                            <li>Peminjaman harus disetujui oleh kepala departemen</li>
+                                        </ul>
+                                    </div>
+
+                                    <div>
+                                        <h4 class="font-bold text-gray-900 mb-2">2. Tanggung Jawab Peminjam</h4>
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            <li>Bertanggung jawab penuh atas keselamatan kendaraan selama masa peminjaman</li>
+                                            <li>Wajib melakukan pengecekan kondisi kendaraan sebelum dan sesudah penggunaan</li>
+                                            <li>Wajib mengembalikan kendaraan dalam kondisi bersih dan bahan bakar penuh</li>
+                                            <li>Menanggung segala biaya kerusakan yang terjadi akibat kelalaian</li>
+                                            <li>Wajib melaporkan segera jika terjadi kecelakaan atau kerusakan</li>
+                                        </ul>
+                                    </div>
+
+                                    <div>
+                                        <h4 class="font-bold text-gray-900 mb-2">3. Penggunaan Kendaraan</h4>
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            <li>Kendaraan hanya boleh digunakan untuk keperluan dinas perusahaan</li>
+                                            <li>Dilarang menggunakan kendaraan untuk keperluan pribadi tanpa izin</li>
+                                            <li>Dilarang meminjamkan kendaraan kepada pihak lain</li>
+                                            <li>Wajib mematuhi peraturan lalu lintas yang berlaku</li>
+                                            <li>Dilarang menggunakan kendaraan dalam kondisi tidak fit (mengantuk, sakit, dll)</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-6">
+                                        <p class="text-sm font-medium text-yellow-800">
+                                            <strong>Perhatian:</strong> Dengan mencentang persetujuan, Anda menyatakan telah membaca, memahami, dan menyetujui seluruh syarat dan ketentuan yang berlaku.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {{-- Modal Footer --}}
+                                <div class="sticky bottom-0 bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+                                    <button type="button"
+                                        @click="showTerms = false"
+                                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                                        Tutup
+                                    </button>
+                                    <button type="button"
+                                        @click="showTerms = false; $wire.set('agree_terms', true)"
+                                        class="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800">
+                                        Saya Setuju
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="flex items-center gap-3 pt-2">
                         <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 inline-flex items-center gap-1.5">
                             <x-heroicon-o-check-circle class="w-4 h-4" />
@@ -356,7 +447,7 @@
                 </div>
             </div>
 
-            {{-- Recent Vehicle Usage (Accordion for Mobile) --}}
+            {{-- Recent Vehicle Usage --}}
             <div
                 x-data="{ open: window.innerWidth >= 1024 }"
                 x-init="window.addEventListener('resize', () => open = window.innerWidth >= 1024)"
@@ -371,7 +462,6 @@
                         <p class="text-xs text-gray-500 mt-1 leading-none">3 log terakhir</p>
                     </div>
 
-                    {{-- Arrow --}}
                     <svg class="w-4 h-4 text-gray-700 transition-transform lg:hidden"
                         :class="open ? 'rotate-90' : ''"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -432,4 +522,76 @@
             </div>
         </div>
     </div>
+
+    {{-- MODAL WEBCAM --}}
+    <div x-data="webcamHandler()" 
+         x-show="show" 
+         x-on:open-webcam.window="open()" 
+         class="fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center p-4" 
+         x-cloak>
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden" @click.stop>
+            <div class="bg-gray-900 text-white px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span class="text-sm font-medium uppercase">Kamera Langsung</span>
+                </div>
+                <button type="button" @click="close()" class="text-white hover:text-gray-300">
+                    <x-heroicon-o-x-mark class="w-6 h-6" />
+                </button>
+            </div>
+            <div class="p-4 space-y-4">
+                <div class="bg-black rounded-lg overflow-hidden flex items-center justify-center aspect-video relative">
+                    <video x-ref="video" autoplay playsinline class="w-full h-full object-cover transform scale-x-[-1]"></video>
+                </div>
+                <button type="button" @click="capture()" 
+                    class="w-full py-3 bg-gray-900 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+                    <x-heroicon-o-camera class="w-5 h-5" />
+                    AMBIL FOTO
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+function webcamHandler() {
+    return {
+        show: false,
+        stream: null,
+        open() {
+            this.show = true;
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(stream => {
+                    this.stream = stream;
+                    this.$refs.video.srcObject = stream;
+                })
+                .catch(err => {
+                    alert("Kamera tidak ditemukan atau akses ditolak.");
+                    this.show = false;
+                });
+        },
+        close() {
+            if (this.stream) {
+                this.stream.getTracks().forEach(track => track.stop());
+                this.stream = null;
+            }
+            this.show = false;
+        },
+        capture() {
+            const video = this.$refs.video;
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            canvas.toBlob(blob => {
+                if (blob) {
+                    const file = new File([blob], "webcam_" + Date.now() + ".jpg", { type: "image/jpeg" });
+                    @this.upload('temp_photos', file);
+                }
+                this.close();
+            }, 'image/jpeg', 0.9);
+        }
+    }
+}
+</script>

@@ -73,7 +73,7 @@
                                 <option value="">Pilih ruangan</option>
                                 @foreach($rooms as $room)
                                 <option value="{{ $room['id'] }}" {{ !$room['available_req'] ? 'disabled' : '' }}>
-                                    {{ $room['name'] }} {{ !$room['available_req'] ? '(Ditempati)' : '' }}
+                                    {{ $room['name'] }} {{ !$room['available_req'] ? '(Pending  )' : '' }}
                                 </option>
                                 @endforeach
                             </select>
@@ -96,6 +96,8 @@
                         </div>
                     </div>
 
+
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-gray-900 mb-1.5">Waktu Mulai</label>
@@ -109,6 +111,45 @@
                                 class="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                             @error('end_time') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
+                    </div>
+
+                    {{-- Quick Time Navigation --}}
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" wire:click="subtractMinutes(60)"
+                            class="px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 transition-all inline-flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                            </svg>
+                            <span>1h</span>
+                        </button>
+                        <button type="button" wire:click="subtractMinutes(30)"
+                            class="px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 transition-all inline-flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                            </svg>
+                            <span>30m</span>
+                        </button>
+                        <button type="button" wire:click="addMinutes(30)"
+                            class="px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 transition-all inline-flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>30m</span>
+                        </button>
+                        <button type="button" wire:click="addMinutes(60)"
+                            class="px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 transition-all inline-flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>1h</span>
+                        </button>
+                        <button type="button" wire:click="addMinutes(1440)"
+                            class="px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 transition-all inline-flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>1d</span>
+                        </button>
                     </div>
 
                     <div>
@@ -146,7 +187,7 @@
                             <input type="checkbox" wire:model.live="informInfo"
                                 class="mt-0.5 rounded border-gray-300 text-gray-900 focus:ring-gray-900">
                             <span class="text-sm text-gray-700">
-                                Minta Departemen Informasi menginformasikan rapat ini (akan disimpan sebagai <span class="font-semibold text-gray-900">permintaan</span>)
+                                Centang untuk kirim info booking ke departemen. <span class="font-semibold text-gray-900"></span>
                             </span>
                         </label>
                     </div>
@@ -180,7 +221,6 @@
 
                     <h3 class="text-lg font-semibold text-gray-900">Ketersediaan Ruangan</h3>
 
-                    {{-- Arrow (right → down) --}}
                     <span class="lg:hidden transition-transform -rotate-90" id="arrowAvailability">
                         <x-heroicon-o-chevron-down class="w-5 h-5 text-gray-600" />
                     </span>
@@ -197,11 +237,11 @@
                     <div class="space-y-3">
                         @foreach($rooms as $room)
                         <div class="flex items-center justify-between p-3 border rounded-lg
-                    {{ $room['available_req'] ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200' }}">
+                    {{ $room['available_req'] ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200' }}">
 
                             <div class="flex items-center space-x-2">
                                 <div class="w-2 h-2 rounded-full
-                            {{ $room['available_req'] ? 'bg-green-500' : 'bg-red-500' }}">
+                            {{ $room['available_req'] ? 'bg-green-500' : 'bg-amber-500' }}">
                                 </div>
 
                                 <span class="font-medium text-sm text-gray-900">
@@ -210,8 +250,8 @@
                             </div>
 
                             <span class="text-xs font-bold uppercase
-                        {{ $room['available_req'] ? 'text-green-700' : 'text-red-700' }}">
-                                {{ $room['available_req'] ? 'Tersedia' : 'Ditempati' }}
+                        {{ $room['available_req'] ? 'text-green-700' : 'text-amber-700' }}">
+                                {{ $room['available_req'] ? 'Tersedia' : 'Pending' }}
                             </span>
                         </div>
                         @endforeach
@@ -237,7 +277,6 @@
 
                     <h3 class="text-lg font-semibold text-gray-900">Pemesanan Terbaru</h3>
 
-                    {{-- Arrow (right → down) --}}
                     <span class="lg:hidden transition-transform -rotate-90" id="arrowRecent">
                         <x-heroicon-o-chevron-down class="w-5 h-5 text-gray-600" />
                     </span>
@@ -300,7 +339,7 @@
     {{-- Calendar View (Mobile Optimized) --}}
     <div wire:poll.60s class="bg-white rounded-xl border-2 border-black/80 shadow-md overflow-hidden">
 
-            {{-- Header --}}
+        {{-- Header --}}
         <div class="bg-gray-50 border-b-2 border-black/10 p-4">
 
             {{-- 1. TITLE + DATE --}}
@@ -368,7 +407,6 @@
             {{-- 5. COMPACT ROOM PAGINATION --}}
             <div class="mt-2 flex justify-center gap-2 whitespace-nowrap">
 
-                {{-- COMPACT VERSION: [ < ] Rooms [ > ] --}}
                 <button wire:click="prevRoomPage"
                     class="px-2 py-1 border border-gray-300 bg-white rounded-md text-[11px] font-medium hover:bg-gray-50 disabled:opacity-50"
                     {{ $roomsPage <= 1 ? 'disabled' : '' }}>
@@ -447,9 +485,13 @@
 
                                 {{-- Booked --}}
                                 @if($slotBooking)
-                                <div class="w-full h-full bg-red-100 flex items-center justify-center px-2 cursor-not-allowed"
-                                    title="{{ $slotBooking['meeting_title'] }}">
-                                    <div class="truncate text-[10px] text-red-900 font-medium text-center">
+                                @php
+                                    $bgColor = $slotBooking['status'] === 'approved' ? 'bg-red-100' : 'bg-yellow-100';
+                                    $textColor = $slotBooking['status'] === 'approved' ? 'text-red-900' : 'text-yellow-900';
+                                @endphp
+                                <div class="w-full h-full {{ $bgColor }} flex items-center justify-center px-2 cursor-not-allowed"
+                                    title="{{ $slotBooking['meeting_title'] }} ({{ ucfirst($slotBooking['status']) }})">
+                                    <div class="truncate text-[10px] {{ $textColor }} font-medium text-center">
                                         {{ $slotBooking['meeting_title'] }}
                                     </div>
                                 </div>
@@ -487,7 +529,10 @@
         <div class="bg-gray-50 border-t border-gray-200 p-3">
             <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-gray-600">
                 <span class="inline-flex items-center gap-2">
-                    <span class="w-3 h-3 bg-red-100 border border-red-200 rounded inline-block"></span> Booked
+                    <span class="w-3 h-3 bg-red-100 border border-red-200 rounded inline-block"></span> Approved
+                </span>
+                <span class="inline-flex items-center gap-2">
+                    <span class="w-3 h-3 bg-yellow-100 border border-yellow-200 rounded inline-block"></span> Pending
                 </span>
                 <span class="inline-flex items-center gap-2">
                     <span class="w-3 h-3 bg-gray-100 border border-gray-200 rounded inline-block"></span> Past/Closed
@@ -505,8 +550,7 @@
     @endif
 
     @if($showQuickModal)
-    {{-- programmer's simple documentation: Changed z-index to z-[40] as requested. --}}
-    <div class="fixed inset-0 **z-[40]**">
+    <div class="fixed inset-0 z-[40]">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
             wire:click="closeQuickModal"></div>
 

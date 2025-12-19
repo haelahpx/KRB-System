@@ -111,8 +111,21 @@
                     </div>
                     <div>
                         <label class="{{ $label }}">Employee ID</label>
-                        <input type="text" class="{{ $input }}" wire:model.defer="employee_id" placeholder="e.g. EMP-00123">
-                        @error('employee_id') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                        <div class="relative mt-1">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <x-heroicon-s-lock-closed class="h-4 w-4 text-gray-400" />
+                            </div>
+
+                            <input
+                                type="text"
+                                class="{{ $input }} pl-10 bg-gray-50 cursor-not-allowed"
+                                wire:model.defer="employee_id"
+                                placeholder="e.g. EMP-00123"
+                                readonly>
+                        </div>
+                        @error('employee_id')
+                        <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="{{ $label }}">Password</label>
@@ -399,9 +412,9 @@
                                     {{-- Action Button --}}
                                     <div class="pt-2">
                                         @if($canEdit)
-                                        <button class="{{ $btnBlk }} w-full justify-center" 
+                                        <button class="{{ $btnBlk }} w-full justify-center"
                                             wire:click="openEdit({{ $u->user_id }})"
-                                            wire:loading.attr="disabled" 
+                                            wire:loading.attr="disabled"
                                             wire:target="openEdit({{ $u->user_id }})"
                                             wire:key="btn-edit-mobile-{{ $u->user_id }}">
                                             <span class="inline-flex items-center gap-1.5"

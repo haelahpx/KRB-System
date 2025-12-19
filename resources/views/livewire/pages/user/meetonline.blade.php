@@ -102,7 +102,7 @@
                             <input type="checkbox" wire:model="informInfo"
                                 class="mt-0.5 rounded border-gray-300 text-gray-900 focus:ring-gray-900">
                             <span class="text-sm text-gray-700">
-                                Minta Information Dept menginformasikan meeting ini (akan disimpan sebagai <span class="font-semibold text-gray-900">request</span>)
+                                Centang untuk kirim info booking ke departemen. <span class="font-semibold text-gray-900"></span>
                             </span>
                         </label>
                     </div>

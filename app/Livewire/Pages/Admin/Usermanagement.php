@@ -21,12 +21,10 @@ class Usermanagement extends Component
 
     protected string $paginationTheme = 'tailwind';
 
-    /** Filters */
     public string $search = '';
     public string $roleFilter = '';
-    public string $agentFilter = ''; // '' = semua, 'yes' = hanya agent, 'no' = non agent
+    public string $agentFilter = '';
 
-    /** Create form */
     public string $full_name = '';
     public string $email = '';
     public ?string $phone_number = null;
@@ -34,41 +32,31 @@ class Usermanagement extends Component
     public ?string $password = null;
     public ?string $role_key = null;
 
-    /** Edit (modal) */
     public bool $modalEdit = false;
     public ?int $editingId = null;
     public string $edit_full_name = '';
     public string $edit_email = '';
     public ?string $edit_phone_number = null;
     public ?string $edit_employee_id = null;
-    public ?string $edit_password = null; // optional
+    public ?string $edit_password = null;
     public ?string $edit_role_key = null;
 
-    /** Derived from auth */
     public int $company_id;
     public ?int $primary_department_id = null;
     public string $company_name = '-';
-    public string $department_name = '-'; // label yg mengikuti selection
+    public string $department_name = '-';
 
-    /** Department switcher */
-    /** @var array<int, array{id:int,name:string}> */
-    public array $departmentOptions = []; // renamed variable
-    public ?int $selected_department_id = null;  // pilihan aktif
-    public bool $showSwitcher = false;  // control visibility of the department switcher
-    
-    // **[NEW PROPERTY]** Flag for Superadmin
+    public array $departmentOptions = [];
+    public ?int $selected_department_id = null;
+    public bool $showSwitcher = false;
     public bool $is_superadmin_user = false;
 
-    /** Options */
-    /** @var array<int, array{id:int,name:string}> */
     public array $roles = [];
     public array $roleOptions = [];
 
     protected $casts = [
         'modalEdit' => 'bool',
     ];
-
-    /* ======================== Utility Methods ======================== */
 
     protected function isSuperadmin(): bool
     {
@@ -79,28 +67,19 @@ class Usermanagement extends Component
         return optional($user->role)->name === 'Superadmin';
     }
 
-
-    /* ======================== Lifecycle ======================== */
-
     public function mount(): void
     {
         $auth = Auth::user()->loadMissing(['company', 'department', 'role']);
-        
-        // **[CHANGE]** Set Superadmin flag
         $this->is_superadmin_user = $this->isSuperadmin();
-
         $this->company_id = (int)($auth->company_id ?? 0);
         $this->primary_department_id = $auth->department_id ?: null;
         $this->company_name = optional($auth->company)->company_name ?? '-';
 
-        // load switcher options
         $this->loadUserDepartments();
 
-        // **[CHANGE]** Handle default selection for Superadmin
         if ($this->is_superadmin_user) {
-            $this->selected_department_id = null; // Default to 'View All'
+            $this->selected_department_id = null;
         } else {
-            // pilih default: primary -> first option -> null
             $this->selected_department_id = $this->primary_department_id
                 ?: ($this->departmentOptions[0]['id'] ?? null);
         }
@@ -108,7 +87,6 @@ class Usermanagement extends Component
         $this->department_name = $this->resolveDeptName($this->selected_department_id)
             ?: (optional($auth->department)->department_name ?? '-');
 
-        // Roles dropdown: hide superadmin & receptionist
         $this->roles = Role::query()
             ->whereNotIn('name', ['superadmin', 'receptionist'])
             ->orderBy('name')
@@ -126,6 +104,26 @@ class Usermanagement extends Component
             }
         }
         $this->roleOptions = $options;
+
+        $this->employee_id = $this->generateEmployeeId();
+    }
+
+    private function generateEmployeeId(): string
+    {
+        $prefix = 'KR-';
+        $lastUser = User::where('company_id', $this->company_id)
+            ->where('employee_id', 'like', $prefix . '%')
+            ->orderByRaw('CAST(SUBSTRING(employee_id, 5) AS UNSIGNED) DESC')
+            ->first();
+
+        if (!$lastUser) {
+            return $prefix . '00001';
+        }
+
+        $lastNumber = (int) substr($lastUser->employee_id, 4);
+        $nextNumber = $lastNumber + 1;
+
+        return $prefix . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }
 
     protected function loadUserDepartments(): void
@@ -133,13 +131,11 @@ class Usermanagement extends Component
         $user = Auth::user();
         $companyId = $user->company_id;
 
-        // **[CHANGE]** If Superadmin, load ALL departments for the company
         if ($this->is_superadmin_user) {
             $rows = Department::where('company_id', $companyId)
                 ->orderBy('department_name')
                 ->get(['department_id as id', 'department_name as name']);
         } else {
-            // Original logic for non-Superadmin
             $rows = DB::table('user_departments as ud')
                 ->join('departments as d', 'd.department_id', '=', 'ud.department_id')
                 ->where('ud.user_id', $user->user_id)
@@ -155,16 +151,13 @@ class Usermanagement extends Component
         $primaryId = $user->department_id;
         $isPrimaryInList = collect($options)->contains('id', $primaryId);
 
-        // Add the primary department if not already included
         if ($primaryId && !$isPrimaryInList) {
             $primaryName = Department::where('department_id', $primaryId)->value('department_name') ?? 'Unknown';
             array_unshift($options, ['id' => (int)$primaryId, 'name' => (string)$primaryName]);
         }
         
-        // **[CRITICAL CHANGE]** Deduplicate list by ID
         $options = collect($options)->unique('id')->values()->all();
 
-        // **[CHANGE]** Add "View All" option (null ID) for Superadmins
         if ($this->is_superadmin_user) {
             array_unshift($options, ['id' => null, 'name' => 'SEMUA DEPARTEMEN']);
         }
@@ -172,7 +165,6 @@ class Usermanagement extends Component
         $this->departmentOptions = $options;
         $this->showSwitcher = count($this->departmentOptions) > 1;
 
-        // fallback jika pivot kosong namun user punya primary (only runs for non-superadmin)
         if (!$this->is_superadmin_user && empty($this->departmentOptions) && $this->primary_department_id) {
             $name = Department::where('department_id', $this->primary_department_id)->value('department_name') ?? 'Unknown';
             $this->departmentOptions = [
@@ -184,7 +176,6 @@ class Usermanagement extends Component
 
     protected function resolveDeptName(?int $deptId): string
     {
-        // **[CHANGE]** Return 'SEMUA DEPARTEMEN' when ID is null
         if (!$deptId) return 'SEMUA DEPARTEMEN';
 
         foreach ($this->departmentOptions as $opt) {
@@ -193,26 +184,12 @@ class Usermanagement extends Component
         return Department::where('department_id', $deptId)->value('department_name') ?? '-';
     }
 
-    public function resetToPrimaryDepartment(): void
-    {
-        if ($this->primary_department_id) {
-            $this->selected_department_id = $this->primary_department_id;
-            $this->department_name = $this->resolveDeptName($this->selected_department_id);
-            $this->resetPage();
-        }
-    }
-
-    // Livewire 3 naming tolerance
-    public function updatedSelectedDepartment_id(): void { $this->updatedSelectedDepartmentId(); }
     public function updatedSelectedDepartmentId(): void
     {
-        $id = $this->selected_department_id; // Preserve null for Superadmin 'View All'
+        $id = $this->selected_department_id;
 
-        // Validation only applies if not Superadmin or if a specific ID is selected
         if (!$this->is_superadmin_user || $id !== null) {
             $allowed = collect($this->departmentOptions)->pluck('id')->all();
-            
-            // Cast to int only if it's not null, otherwise in_array check fails for null
             $checkId = $id === null ? null : (int) $id;
 
             if (!in_array($checkId, $allowed, true)) {
@@ -229,15 +206,13 @@ class Usermanagement extends Component
     public function updatingRoleFilter(): void { $this->resetPage(); }
     public function updatingAgentFilter(): void { $this->resetPage(); }
 
-    /* ======================== Validation ======================== */
-
     protected function createRules(): array
     {
         return [
             'full_name'    => ['required', 'string', 'max:255'],
             'email'        => ['required', 'email', 'unique:users,email,NULL,user_id,deleted_at,NULL'],
             'phone_number' => ['nullable', 'string', 'max:30'],
-            'employee_id'  => ['nullable', 'string', 'max:100'],
+            'employee_id'  => ['required', 'string', 'max:100'],
             'password'     => ['required', 'string', 'min:6'],
             'role_key'      => [
                 'required',
@@ -263,17 +238,16 @@ class Usermanagement extends Component
         ];
     }
 
-    /* ======================== Create ======================== */
-
     public function store(): void
     {
+        $this->employee_id = $this->generateEmployeeId();
+        
         $data = $this->validate($this->createRules());
 
-        // A user MUST be assigned to a specific department.
         $deptId = $this->selected_department_id ?: $this->primary_department_id;
         
         if (!$deptId) {
-             $this->dispatch('toast', type: 'error', title: 'Gagal', message: 'Tidak ada departemen terpilih untuk menempatkan user.', duration: 5000);
+             $this->dispatch('toast', type: 'error', title: 'Gagal', message: 'Tidak ada departemen terpilih.', duration: 5000);
              return;
         }
 
@@ -282,7 +256,7 @@ class Usermanagement extends Component
         User::create([
             'full_name'     => $data['full_name'],
             'email'         => strtolower($data['email']),
-            'employee_id'   => $data['employee_id'] ?? null,
+            'employee_id'   => $this->employee_id,
             'phone_number'  => $data['phone_number'] ?? null,
             'password'      => $this->password,
             'role_id'       => (int) $roleId,
@@ -292,6 +266,7 @@ class Usermanagement extends Component
         ]);
 
         $this->resetCreateForm();
+        $this->employee_id = $this->generateEmployeeId();
         $this->dispatch('toast', type: 'success', title: 'Dibuat', message: 'User dibuat.', duration: 3000);
         $this->resetPage();
     }
@@ -302,37 +277,31 @@ class Usermanagement extends Component
             'full_name',
             'email',
             'phone_number',
-            'employee_id',
             'password',
             'role_key',
         ]);
         $this->resetValidation();
     }
 
-    /* ======================== Edit ======================== */
-
     public function openEdit(int $id): void
     {
         $this->resetErrorBag();
         $this->resetValidation();
 
-        // The query must allow finding users across all departments if Superadmin 'View All' is active.
         $deptId = $this->selected_department_id; 
 
         $query = User::with(['role', 'department'])
             ->where('company_id', $this->company_id)
             ->where('user_id', $id);
 
-        // **[CHANGE]** Only filter by department if a specific department is selected
         if ($deptId !== null) {
-            $query->where('department_id', $deptId); // lock to selected dept
+            $query->where('department_id', $deptId);
         }
             
         $u = $query->firstOrFail();
 
         $targetRole = strtolower($u->role->name ?? '');
 
-        // Aturan: admin/superadmin hanya boleh edit dirinya sendiri
         if (in_array($targetRole, ['admin', 'superadmin'], true) && $u->user_id !== Auth::id()) {
             $this->dispatch('toast', type: 'warning', title: 'Ditolak', message: 'Anda tidak bisa mengedit akun Admin lain.', duration: 4000);
             return;
@@ -368,16 +337,14 @@ class Usermanagement extends Component
     {
         if (!$this->editingId) return;
 
-        // The query must allow finding users across all departments if Superadmin 'View All' is active.
         $deptId = $this->selected_department_id; 
 
         $query = User::with('role')
             ->where('company_id', $this->company_id)
             ->where('user_id', $this->editingId);
 
-        // **[CHANGE]** Only filter by department if a specific department is selected
         if ($deptId !== null) {
-            $query->where('department_id', $deptId); // lock to selected dept
+            $query->where('department_id', $deptId);
         }
             
         $u = $query->firstOrFail();
@@ -412,17 +379,13 @@ class Usermanagement extends Component
         $this->dispatch('toast', type: 'success', title: 'Diupdate', message: 'User diupdate.', duration: 3000);
     }
 
-    /* ======================== Render ======================== */
-
     public function render()
     {
-        // $deptId will be null for Superadmin 'View All'
         $deptId = $this->selected_department_id;
 
         $users = User::query()
             ->with(['role', 'department'])
             ->where('company_id', $this->company_id)
-            // **[CHANGE]** Only apply department filter if $deptId is NOT null
             ->when($deptId, fn($q) => $q->where('department_id', $deptId))
             ->whereHas('role', fn($q) => $q->where('name', '!=', 'superadmin'))
             ->leftJoin('roles', 'roles.role_id', '=', 'users.role_id')

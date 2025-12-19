@@ -36,7 +36,7 @@
 
             <div class="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-4">
 
-                {{-- Search (always full width on mobile) --}}
+                {{-- Search --}}
                 <div class="relative md:col-span-1 col-span-1">
                     <input type="text"
                         wire:model.live.debounce.400ms="q"
@@ -48,7 +48,6 @@
                         class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 </div>
 
-                {{-- Second row on mobile: 3 equal columns --}}
                 <div class="grid grid-cols-3 gap-3 md:col-span-3 col-span-1 md:grid-cols-3">
 
                     {{-- Vehicle Filter --}}
@@ -99,7 +98,6 @@
             $timeStr = $start->format('H:i').'–'.$end->format('H:i');
             $vehicleName = $vehicleMap[$b->vehicle_id] ?? 'Unknown';
 
-            // Status Configuration
             $statusConfig = match($b->status) {
             'pending' => ['class' => 'bg-yellow-100 text-yellow-800 border-yellow-200', 'icon' => 'clock'],
             'approved' => ['class' => 'bg-green-100 text-green-800 border-green-200', 'icon' => 'check-circle'],
@@ -111,155 +109,182 @@
             default => ['class' => 'bg-gray-50 text-gray-600 border-gray-200', 'icon' => 'question-mark-circle'],
             };
 
-            // Photo Counts
             $currentPhotoCounts = $photoCounts[$b->vehiclebooking_id] ?? [];
             $beforeC = $currentPhotoCounts['before'] ?? 0;
             $afterC = $currentPhotoCounts['after'] ?? 0;
 
-            // Clickable Logic
             $isClickable = in_array($b->status, ['approved', 'returned']);
+            $needsUpload = $isClickable && (($b->status == 'approved' && $beforeC == 0) || ($b->status == 'returned' && $afterC == 0));
             $cardTag = $isClickable ? 'a' : 'div';
-            $cardLink = $isClickable ? route('book-vehicle', ['id' => $b->vehiclebooking_id]) : null;
             @endphp
 
-            <{{ $cardTag }}
-                @if($isClickable)
-                href="{{ $cardLink }}"
-                wire:navigate
-                class="group relative block bg-white rounded-xl border-2 border-black p-5 hover:shadow-md transition-shadow duration-200"
-                @else
-                class="group relative block bg-white rounded-xl border-2 border-black p-5 hover:shadow-md transition-shadow duration-200"
-                @endif>
-                {{-- Clickable Notification Badge --}}
-                @if($isClickable)
-                <div class="absolute top-4 right-4 md:right-auto md:left-1/2 md:-translate-x-1/2 z-10">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border animate-pulse
-                                {{ $b->status == 'approved' ? 'bg-green-100 text-green-800 border-green-300' : 'bg-indigo-100 text-indigo-800 border-indigo-300' }}">
-                        <x-heroicon-o-arrow-up-tray class="w-3 h-3" />
-                        {{ $b->status == 'approved' ? 'Unggah Foto Sebelumnya' : 'Unggah Foto Sesudahnya' }}
-                    </span>
-                </div>
-                @endif
-
-                <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-3">
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-lg font-bold text-gray-900 mb-2 truncate group-hover:text-blue-600 transition-colors">
-                            {{ $b->purpose ? ucfirst($b->purpose) : 'Pemesanan Kendaraan' }}
-                        </h3>
-
-                        <div class="flex flex-wrap items-center gap-2 text-xs">
-                            <span class="font-mono font-medium text-gray-800 inline-flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
-                                <x-heroicon-o-hashtag class="w-3 h-3" /> {{ $b->vehiclebooking_id }}
-                            </span>
-
-                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 font-medium">
-                                <x-heroicon-o-truck class="w-3 h-3" />
-                                {{ $vehicleName }}
-                            </span>
-
-                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 font-medium">
-                                <x-heroicon-o-calendar-days class="w-3 h-3" />
-                                {{ $dateStr }}
-                            </span>
-
-                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 font-medium">
-                                <x-heroicon-o-clock class="w-3 h-3" />
-                                {{ $timeStr }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <span class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border {{ $statusConfig['class'] }}">
-                        @if($statusConfig['icon'] === 'clock') <x-heroicon-o-clock class="w-3.5 h-3.5" />
-                        @elseif($statusConfig['icon'] === 'check-circle') <x-heroicon-o-check-circle class="w-3.5 h-3.5" />
-                        @elseif($statusConfig['icon'] === 'play-circle') <x-heroicon-o-play-circle class="w-3.5 h-3.5" />
-                        @elseif($statusConfig['icon'] === 'x-circle') <x-heroicon-o-x-circle class="w-3.5 h-3.5" />
-                        @elseif($statusConfig['icon'] === 'no-symbol') <x-heroicon-o-no-symbol class="w-3.5 h-3.5" />
-                        @else <x-heroicon-o-archive-box class="w-3.5 h-3.5" />
+            <div class="group relative">
+                {{-- MOBILE (Accordion) --}}
+                <div class="block md:hidden">
+                    <{{ $cardTag }}
+                        @if($isClickable)
+                        href="{{ route('book-vehicle', ['id' => $b->vehiclebooking_id]) }}"
+                        wire:navigate
                         @endif
-                        {{ str_replace('_',' ', ucfirst($b->status)) }}
-                    </span>
-                </div>
+                        class="block bg-white rounded-xl border border-gray-200 overflow-hidden
+                        {{ $isClickable ? 'hover:shadow-lg hover:border-gray-300 transition-all duration-200 cursor-pointer' : '' }}
+                        {{ $needsUpload ? 'ring-2 ring-yellow-400 ring-offset-2' : '' }}"
+                    >
+                        <div x-data="{ open: false }">
+                            {{-- Header - Always Visible --}}
+                            <div class="flex items-center justify-between px-4 py-3 gap-3">
+                                <div class="flex flex-col text-left flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-base font-bold text-gray-900 truncate">
+                                            {{ $b->purpose ? ucfirst($b->purpose) : 'Pemesanan Kendaraan' }}
+                                        </span>
+                                        @if($needsUpload)
+                                        <span class="shrink-0 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase bg-yellow-100 text-yellow-800 border border-yellow-300">
+                                            <x-heroicon-o-camera class="w-3 h-3" />
+                                            Foto
+                                        </span>
+                                        @endif
+                                    </div>
+                                    <span class="text-[11px] text-gray-600">
+                                        #{{ $b->vehiclebooking_id }} • {{ $vehicleName }}
+                                    </span>
+                                </div>
 
-                {{-- Details Grid --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 mb-4 pt-3 border-t border-dashed border-gray-200">
-                    @if(!empty($b->borrower_name))
-                    <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Peminjam</span>
-                        <span class="text-sm text-gray-900 font-medium">{{ $b->borrower_name }}</span>
-                    </div>
-                    @endif
-                    @if(!empty($b->destination))
-                    <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Tujuan</span>
-                        <span class="text-sm text-gray-900 font-medium truncate">{{ $b->destination }}</span>
-                    </div>
-                    @endif
-                    @if(isset($b->odd_even_area))
-                    <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Area Ganjil/Genap</span>
-                        <span class="text-sm text-gray-900 font-medium">{{ ucfirst($b->odd_even_area) }}</span>
-                    </div>
-                    @endif
-                    @if(!empty($b->purpose_type))
-                    <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Jenis</span>
-                        <span class="text-sm text-gray-900 font-medium">{{ ucfirst($b->purpose_type) }}</span>
-                    </div>
-                    @endif
-                </div>
+                                <button 
+                                    @click.prevent.stop="open = !open" 
+                                    class="shrink-0 p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                    type="button"
+                                >
+                                    <span class="transition-transform duration-200 block" :class="open ? 'rotate-180' : ''">
+                                        <x-heroicon-o-chevron-down class="w-5 h-5 text-gray-600" />
+                                    </span>
+                                </button>
+                            </div>
 
-                {{-- Notes / Rejection --}}
-                @if($b->status === 'rejected' && !empty($b->notes))
-                <div class="mb-4 rounded-lg border border-red-200 bg-red-50 p-3">
-                    <div class="text-xs font-bold text-red-800 inline-flex items-center gap-1 mb-1">
-                        <x-heroicon-o-exclamation-circle class="w-4 h-4" />
-                        Alasan Penolakan
-                    </div>
-                    <div class="text-sm text-red-700">{{ $b->notes }}</div>
-                </div>
-                @elseif(!empty($b->notes))
-                <div class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
-                    <div class="text-xs font-bold text-gray-600 inline-flex items-center gap-1 mb-1">
-                        <x-heroicon-o-chat-bubble-left-ellipsis class="w-4 h-4" />
-                        Catatan
-                    </div>
-                    <div class="text-sm text-gray-700">{{ $b->notes }}</div>
-                </div>
-                @endif
+                            {{-- Status Badge --}}
+                            <div class="px-4 pb-3">
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border {{ $statusConfig['class'] }}">
+                                    {{ str_replace('_',' ', ucfirst($b->status)) }}
+                                </span>
+                            </div>
 
-                {{-- Footer (Photos & Dates) --}}
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-gray-100">
-                    <div class="flex items-center gap-2">
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200" title="Foto Sebelumnya">
-                            <x-heroicon-o-camera class="w-3.5 h-3.5" />
-                            Sebelumnya: {{ $beforeC }}
-                        </span>
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200" title="Foto Sesudahnya">
-                            <x-heroicon-o-camera class="w-3.5 h-3.5" />
-                            Sesudahnya: {{ $afterC }}
-                        </span>
-                    </div>
+                            {{-- Expandable Details --}}
+                            <div x-show="open" x-collapse @click.stop class="px-4 pb-4 space-y-3 border-t border-gray-100 pt-3">
+                                <div class="flex flex-wrap items-center gap-1.5 text-[10px]">
+                                    <span class="px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 flex items-center gap-1">
+                                        <x-heroicon-o-calendar-days class="w-3 h-3" /> {{ $dateStr }}
+                                    </span>
+                                    <span class="px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 flex items-center gap-1">
+                                        <x-heroicon-o-clock class="w-3 h-3" /> {{ $timeStr }}
+                                    </span>
+                                </div>
 
-                    <div class="text-[10px] text-gray-400 flex items-center gap-3">
-                        <div class="flex items-center gap-1">
-                            <x-heroicon-o-pencil-square class="w-3 h-3" />
-                            Dibuat {{ optional($b->created_at)->format('d M Y') }}
+                                <div class="space-y-2">
+                                    <div class="flex flex-col">
+                                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Tujuan</span>
+                                        <span class="text-xs text-gray-900 font-medium">{{ $b->destination ?? '-' }}</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Peminjam</span>
+                                        <span class="text-xs text-gray-900 font-medium">{{ $b->borrower_name ?? '-' }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
+                                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200">
+                                        <x-heroicon-o-camera class="w-3.5 h-3.5" /> Sebelum: {{ $beforeC }}
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200">
+                                        <x-heroicon-o-camera class="w-3.5 h-3.5" /> Sesudah: {{ $afterC }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        @if($b->updated_at != $b->created_at)
-                        <div class="flex items-center gap-1">
-                            <x-heroicon-o-arrow-path class="w-3 h-3" />
-                            Diperbarui {{ optional($b->updated_at)->diffForHumans() }}
+                    </{{ $cardTag }}>
+                </div>
+
+                {{-- DESKTOP (Full Card) --}}
+                <{{ $cardTag }}
+                    @if($isClickable)
+                    href="{{ route('book-vehicle', ['id' => $b->vehiclebooking_id]) }}"
+                    wire:navigate
+                    @endif
+                    class="hidden md:block bg-white rounded-xl border border-gray-200 p-5 
+                    {{ $isClickable ? 'hover:shadow-lg hover:border-gray-300 transition-all duration-200 cursor-pointer' : '' }}
+                    {{ $needsUpload ? 'ring-2 ring-yellow-400 ring-offset-2' : '' }}"
+                >
+                    {{-- Header Section --}}
+                    <div class="flex items-start justify-between gap-4 mb-4">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-lg font-bold text-gray-900 truncate">
+                                    {{ $b->purpose ? ucfirst($b->purpose) : 'Pemesanan Kendaraan' }}
+                                </h3>
+                                @if($needsUpload)
+                                <span class="shrink-0 inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-yellow-100 text-yellow-800 border border-yellow-300">
+                                    <x-heroicon-o-camera class="w-4 h-4" />
+                                    Perlu Upload Foto
+                                </span>
+                                @endif
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-2 text-xs">
+                                <span class="font-mono font-medium text-gray-800 inline-flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
+                                    <x-heroicon-o-hashtag class="w-3 h-3" /> {{ $b->vehiclebooking_id }}
+                                </span>
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 font-medium">
+                                    <x-heroicon-o-truck class="w-3 h-3" /> {{ $vehicleName }}
+                                </span>
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 font-medium">
+                                    <x-heroicon-o-calendar-days class="w-3 h-3" /> {{ $dateStr }}
+                                </span>
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-gray-200 bg-gray-50 text-gray-700 font-medium">
+                                    <x-heroicon-o-clock class="w-3 h-3" /> {{ $timeStr }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <span class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border {{ $statusConfig['class'] }}">
+                            {{ str_replace('_',' ', ucfirst($b->status)) }}
+                        </span>
+                    </div>
+
+                    {{-- Details Section --}}
+                    <div class="grid grid-cols-2 gap-4 pt-3 border-t border-dashed border-gray-200">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1">Tujuan</span>
+                            <span class="text-sm text-gray-900 font-medium truncate">{{ $b->destination ?? '-' }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1">Peminjam</span>
+                            <span class="text-sm text-gray-900 font-medium">{{ $b->borrower_name ?? '-' }}</span>
+                        </div>
+                    </div>
+
+                    {{-- Footer Section --}}
+                    <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-500">Foto:</span>
+                            <span class="text-xs font-medium px-2 py-0.5 bg-gray-100 rounded border">Sebelum: {{ $beforeC }}</span>
+                            <span class="text-xs font-medium px-2 py-0.5 bg-gray-100 rounded border">Sesudah: {{ $afterC }}</span>
+                        </div>
+                        @if($isClickable)
+                        <div class="flex items-center gap-2 text-xs text-gray-500">
+                            <span>Klik untuk upload foto</span>
+                            <x-heroicon-o-arrow-right class="w-4 h-4" />
+                        </div>
+                        @else
+                        <div class="text-[10px] text-gray-400">
+                            Dibuat {{ optional($b->created_at)->format('d/m/Y H:i') }}
                         </div>
                         @endif
                     </div>
-                </div>
-            </{{ $cardTag }}>
+                </{{ $cardTag }}>
+            </div>
             @empty
             <div class="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
                 <x-heroicon-o-truck class="mx-auto h-12 w-12 text-gray-400" />
                 <h3 class="mt-2 text-sm font-medium text-gray-900">Tidak ada pemesanan ditemukan</h3>
-                <p class="mt-1 text-sm text-gray-500">Coba sesuaikan filter di atas.</p>
             </div>
             @endforelse
         </div>
@@ -271,3 +296,12 @@
         @endif
     </div>
 </div>
+
+<script>
+    document.addEventListener('livewire:navigated', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
