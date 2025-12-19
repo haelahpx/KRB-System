@@ -1,4 +1,3 @@
-{{-- A simple comment like an actual programmer's simple documentation --}}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     {{-- Header --}}
@@ -92,15 +91,15 @@
                                 <input id="file-queue-input" type="file" wire:model="temp_photos" multiple accept="image/*" class="hidden" />
                             </label>
 
-                            {{-- 2. CAMERA MOBILE (Hanya di Mobile) --}}
-                            <label for="mobile-camera-input" class="lg:hidden cursor-pointer group flex flex-col items-center justify-center py-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all bg-white/50">
+                            {{-- 2. CAMERA MOBILE (Hanya Muncul di Mobile) --}}
+                            <label for="mobile-camera-input" class="md:hidden cursor-pointer group flex flex-col items-center justify-center py-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all bg-white/50">
                                 <x-heroicon-o-camera class="w-6 h-6 mb-1 text-gray-400 group-hover:text-gray-600" />
                                 <span class="text-[11px] font-bold text-gray-700 uppercase">Kamera HP</span>
                                 <input id="mobile-camera-input" type="file" wire:model="temp_photos" accept="image/*" capture="environment" class="hidden" />
                             </label>
 
-                            {{-- 3. WEBCAM PC (Selalu muncul di Desktop) --}}
-                            <button type="button" @click="$dispatch('open-webcam')" class="flex flex-col items-center justify-center py-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all bg-white/50">
+                            {{-- 3. WEBCAM PC (Hanya Muncul di Desktop) --}}
+                            <button type="button" @click="$dispatch('open-webcam')" class="hidden md:flex flex-col items-center justify-center py-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 transition-all bg-white/50">
                                 <x-heroicon-o-video-camera class="w-6 h-6 mb-1 text-gray-400 group-hover:text-gray-600" />
                                 <span class="text-[11px] font-bold text-gray-700 uppercase">Webcam PC</span>
                             </button>
@@ -131,7 +130,7 @@
                                 <img src="{{ $tempUrl }}" class="w-full h-full object-cover">
                                 @else
                                 <div class="flex items-center justify-center h-full bg-gray-100 text-[10px] text-red-500">
-                                    Error Loading
+                                    Format Error
                                 </div>
                                 @endif
 
@@ -245,7 +244,7 @@
                                 class="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 {{ $booking_mode !== 'custom' ? 'bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed' : 'border-gray-300' }}">
                         </div>
 
-                        {{-- Rest of Form --}}
+                        {{-- Keperluan --}}
                         <div class="md:col-span-2">
                             <label class="block text-xs font-medium text-gray-900 mb-1.5">Keperluan <span class="text-red-600">*</span></label>
                             <input wire:model="purpose" type="text" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-900 focus:outline-none">
@@ -523,12 +522,12 @@
         </div>
     </div>
 
-    {{-- MODAL WEBCAM --}}
-    <div x-data="webcamHandler()" 
-         x-show="show" 
-         x-on:open-webcam.window="open()" 
-         class="fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center p-4" 
-         x-cloak>
+    {{-- MODAL WEBCAM (Aksesibilitas Terjaga) --}}
+    <div x-data="webcamHandler()"
+        x-show="show"
+        x-on:open-webcam.window="open()"
+        class="fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center p-4"
+        x-cloak>
         <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden" @click.stop>
             <div class="bg-gray-900 text-white px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -543,7 +542,7 @@
                 <div class="bg-black rounded-lg overflow-hidden flex items-center justify-center aspect-video relative">
                     <video x-ref="video" autoplay playsinline class="w-full h-full object-cover transform scale-x-[-1]"></video>
                 </div>
-                <button type="button" @click="capture()" 
+                <button type="button" @click="capture()"
                     class="w-full py-3 bg-gray-900 text-white rounded-lg font-bold flex items-center justify-center gap-2">
                     <x-heroicon-o-camera class="w-5 h-5" />
                     AMBIL FOTO
@@ -554,96 +553,50 @@
 </div>
 
 <script>
-// Fungsi pembantu kompresi yang bisa digunakan oleh semua handler
-function compressImage(file, quality = 0.7, maxSize = 1600) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-
-                if (width > height) {
-                    if (width > maxSize) {
-                        height *= maxSize / width;
-                        width = maxSize;
-                    }
-                } else {
-                    if (height > maxSize) {
-                        width *= maxSize / height;
-                        height = maxSize;
-                    }
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-
-                canvas.toBlob((blob) => {
-                    if (!blob) return reject(new Error('Canvas empty'));
-                    const compressedFile = new File([blob], file.name, {
-                        type: 'image/jpeg',
-                        lastModified: Date.now()
+    function webcamHandler() {
+        return {
+            show: false,
+            stream: null,
+            open() {
+                this.show = true;
+                navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: "environment"
+                        }
+                    })
+                    .then(stream => {
+                        this.stream = stream;
+                        this.$refs.video.srcObject = stream;
+                    })
+                    .catch(err => {
+                        alert("Kamera tidak ditemukan atau akses ditolak.");
+                        this.show = false;
                     });
-                    resolve(compressedFile);
-                }, 'image/jpeg', quality);
-            };
-        };
-        reader.onerror = (e) => reject(e);
-    });
-}
+            },
+            close() {
+                if (this.stream) {
+                    this.stream.getTracks().forEach(track => track.stop());
+                    this.stream = null;
+                }
+                this.show = false;
+            },
+            async capture() {
+                const video = this.$refs.video;
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
 
-function webcamHandler() {
-    return {
-        show: false,
-        stream: null,
-        open() {
-            this.show = true;
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                .then(stream => {
-                    this.stream = stream;
-                    this.$refs.video.srcObject = stream;
-                })
-                .catch(err => {
-                    alert("Kamera tidak ditemukan atau akses ditolak.");
-                    this.show = false;
-                });
-        },
-        close() {
-            if (this.stream) {
-                this.stream.getTracks().forEach(track => track.stop());
-                this.stream = null;
-            }
-            this.show = false;
-        },
-        async capture() {
-            const video = this.$refs.video;
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            
-            canvas.toBlob(async (blob) => {
-                if (blob) {
-                    let file = new File([blob], "webcam_" + Date.now() + ".jpg", { type: "image/jpeg" });
-                    
-                    // Kompresi sebelum upload ke Livewire
-                    try {
-                        const compressedFile = await compressImage(file, 0.7, 1600);
-                        @this.upload('temp_photos', compressedFile);
-                    } catch (e) {
-                        console.warn("Gagal kompres, mengunggah file asli", e);
+                canvas.toBlob(async (blob) => {
+                    if (blob) {
+                        let file = new File([blob], "webcam_" + Date.now() + ".jpg", {
+                            type: "image/jpeg"
+                        });
                         @this.upload('temp_photos', file);
                     }
-                }
-                this.close();
-            }, 'image/jpeg', 0.9);
+                    this.close();
+                }, 'image/jpeg', 0.8);
+            }
         }
     }
-}
 </script>
