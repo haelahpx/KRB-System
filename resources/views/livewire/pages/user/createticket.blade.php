@@ -286,7 +286,7 @@
 
   (function () {
     const ALLOWED = ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'doc', 'docx', 'xlsx', 'zip'];
-    const MAX10 = 10 * 1024 * 1024;
+    const MAX10 = 10 * 1080 * 1080;
     const tmpKey = document.getElementById('tmp_key').value;
 
     // Main Elements
